@@ -26,13 +26,13 @@ export function ResultsBar({
   const chips = activeFilterChips(filters);
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2">
-      <p aria-live="polite" className="mr-1 text-subhead text-label-2">
+      <p aria-live="polite" className="mr-1 text-small text-ink-2">
         {count === null ? '' : `${count} ${count === 1 ? 'vehicle' : 'vehicles'}`}
       </p>
       {chips.map((chip) => (
         <span
           key={chip.key}
-          className="inline-flex h-8 items-center gap-1 rounded-full bg-accent-tint pr-1 pl-3 text-subhead font-medium text-accent-text"
+          className="inline-flex h-8 items-center gap-1 rounded-full bg-accent-tint pr-1 pl-3 text-small font-medium text-accent"
         >
           {chip.label}
           <button
@@ -46,7 +46,7 @@ export function ResultsBar({
         </span>
       ))}
       {chips.length > 0 && (
-        <Button variant="plain" size="sm" onClick={onClearAll}>
+        <Button variant="quiet" size="sm" onClick={onClearAll}>
           Clear All
         </Button>
       )}

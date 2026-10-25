@@ -28,7 +28,7 @@ export function SelectField({
     <div className={className}>
       <label
         htmlFor={selectId}
-        className={cn('mb-1.5 block text-subhead font-medium text-label', hideLabel && 'sr-only')}
+        className={cn('mb-1.5 block text-small font-medium text-ink', hideLabel && 'sr-only')}
       >
         {label}
       </label>
@@ -38,8 +38,8 @@ export function SelectField({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
           className={cn(
-            'h-11 w-full cursor-pointer appearance-none rounded-field border border-border-control bg-surface pr-10 pl-3 text-body text-label',
-            'aria-invalid:border-2 aria-invalid:border-danger-text',
+            'h-11 w-full cursor-pointer appearance-none rounded-md border border-line-strong bg-surface pr-10 pl-3 text-body text-ink',
+            'aria-invalid:border-2 aria-invalid:border-danger',
           )}
           {...rest}
         >
@@ -51,11 +51,11 @@ export function SelectField({
         </select>
         <ChevronDown
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-label-2"
+          className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-ink-2"
         />
       </div>
       {error && (
-        <p id={errorId} className="mt-1.5 text-footnote text-danger-text">
+        <p id={errorId} className="mt-1.5 text-micro text-danger">
           {error}
         </p>
       )}

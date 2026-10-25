@@ -42,10 +42,10 @@ function RestockForm({ vehicle, onDone }: { vehicle: Vehicle; onDone: () => void
 
   return (
     <div className="flex flex-col gap-4 pb-2">
-      <p className="text-headline font-semibold">
+      <p className="text-body font-semibold">
         {vehicle.make} {vehicle.model}
       </p>
-      <div className="flex items-center justify-between gap-3 rounded-field bg-surface-2 px-4 py-2.5">
+      <div className="flex items-center justify-between gap-3 rounded-md bg-plate px-4 py-2.5">
         <span className="text-body">Units to add</span>
         <Stepper
           label="Units to add"
@@ -56,7 +56,7 @@ function RestockForm({ vehicle, onDone }: { vehicle: Vehicle; onDone: () => void
           initialFocus
         />
       </div>
-      <p aria-live="polite" className="text-callout text-label-2 tabular-nums">
+      <p aria-live="polite" className="text-body text-ink-2 tabular-nums">
         Stock after restock: {vehicle.quantity} → {vehicle.quantity + units}
       </p>
       {restock.error && (

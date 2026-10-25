@@ -97,16 +97,16 @@ function PurchaseForm({
           className="h-[45px] w-[72px] shrink-0 rounded-[8px]"
         />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-headline font-semibold">
+          <p className="truncate text-body font-semibold">
             {vehicle.make} {vehicle.model}
           </p>
-          <p className="truncate text-subhead text-label-2">
+          <p className="truncate text-small text-ink-2">
             {vehicle.year} · {vehicle.color} · {categoryLabel(vehicle.category)}
           </p>
         </div>
       </div>
 
-      <dl className="divide-y divide-separator rounded-field bg-surface-2">
+      <dl className="divide-y divide-line rounded-md bg-plate">
         <div className="flex items-center justify-between px-4 py-3">
           <dt className="text-body">Price per vehicle</dt>
           <dd className="text-body tabular-nums">{formatINR(vehicle.price)}</dd>
@@ -114,7 +114,7 @@ function PurchaseForm({
         <div className="flex items-center justify-between gap-3 px-4 py-2.5">
           <dt>
             <span className="block text-body">Quantity</span>
-            <span className="block text-footnote text-label-2">
+            <span className="block text-micro text-ink-2">
               {soldOut ? 'Sold out' : `${vehicle.quantity} available`}
             </span>
           </dt>
@@ -131,8 +131,8 @@ function PurchaseForm({
           </dd>
         </div>
         <div className="flex items-center justify-between px-4 py-3">
-          <dt className="text-headline font-semibold">Total</dt>
-          <dd aria-live="polite" className="text-title3 font-semibold tabular-nums">
+          <dt className="text-body font-semibold">Total</dt>
+          <dd aria-live="polite" className="text-car wide font-semibold tabular-nums">
             {formatINR(total)}
           </dd>
         </div>
@@ -154,9 +154,7 @@ function PurchaseForm({
         >
           {soldOut ? 'Sold out' : `Buy for ${formatINR(total)}`}
         </Button>
-        <p className="text-center text-footnote text-label-2">
-          Demo checkout. No payment is taken.
-        </p>
+        <p className="text-center text-micro text-ink-2">Demo checkout. No payment is taken.</p>
       </div>
     </div>
   );

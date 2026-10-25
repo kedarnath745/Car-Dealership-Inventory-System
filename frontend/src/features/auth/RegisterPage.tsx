@@ -67,7 +67,7 @@ export function RegisterPage() {
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-accent-text hover:underline">
+          <Link to="/login" className="font-semibold text-accent hover:underline">
             Sign in
           </Link>
         </>
@@ -95,7 +95,7 @@ export function RegisterPage() {
           {emailTaken && (
             <Link
               to="/login"
-              className="mt-1 inline-block text-footnote font-semibold text-accent-text hover:underline"
+              className="mt-1 inline-block text-micro font-semibold text-accent hover:underline"
             >
               Sign in instead
             </Link>

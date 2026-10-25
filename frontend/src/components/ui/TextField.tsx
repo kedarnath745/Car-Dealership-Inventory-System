@@ -39,13 +39,13 @@ export function TextField({
     <div className={className}>
       <label
         htmlFor={inputId}
-        className={cn('mb-1.5 block text-subhead font-medium text-label', hideLabel && 'sr-only')}
+        className={cn('mb-1.5 block text-small font-medium text-ink', hideLabel && 'sr-only')}
       >
         {label}
       </label>
       <div className="relative flex items-center">
         {leading && (
-          <span className="pointer-events-none absolute left-3 flex items-center text-label-2">
+          <span className="pointer-events-none absolute left-3 flex items-center text-ink-2">
             {leading}
           </span>
         )}
@@ -54,9 +54,9 @@ export function TextField({
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy}
           className={cn(
-            'h-11 w-full rounded-field border border-border-control bg-surface px-3 text-body text-label',
-            'placeholder:text-label-3 transition-colors duration-200',
-            'aria-invalid:border-danger-text aria-invalid:border-2',
+            'h-11 w-full rounded-md border border-line-strong bg-surface px-3 text-body text-ink',
+            'placeholder:text-ink-3 transition-colors duration-200',
+            'aria-invalid:border-danger aria-invalid:border-2',
             'disabled:cursor-not-allowed disabled:opacity-60',
             leading ? 'pl-9' : undefined,
             trailing ? 'pr-20' : undefined,
@@ -66,13 +66,13 @@ export function TextField({
         {trailing && <div className="absolute right-1 flex items-center">{trailing}</div>}
       </div>
       {error && (
-        <p id={errorId} className="mt-1.5 flex items-start gap-1 text-footnote text-danger-text">
+        <p id={errorId} className="mt-1.5 flex items-start gap-1 text-micro text-danger">
           <CircleAlert aria-hidden="true" className="mt-px size-3.5 shrink-0" strokeWidth={2} />
           {error}
         </p>
       )}
       {showHint && (
-        <p id={hintId} className="mt-1.5 text-footnote text-label-2">
+        <p id={hintId} className="mt-1.5 text-micro text-ink-2">
           {hint}
         </p>
       )}

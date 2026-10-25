@@ -1,129 +1,114 @@
 /*
- * Showroom design tokens: an Apple-HIG-inspired system (docs/research/03-design-system.md).
- * Colours are WCAG-checked; light and dark values follow the OS setting (D31).
- * Raw values live in :root; the Tailwind theme maps utility names onto them.
+ * Showroom visual identity (docs/research/07-visual-identity.md §D).
+ * One brand hue (Petrol) with ink neutrals tinted towards it; ink is the primary
+ * action colour. Every text pair is ≥ 4.5:1 and every control boundary ≥ 3:1 (WCAG 2.2),
+ * in light and dark. Dark mode follows the OS (D31).
  */
 @import 'tailwindcss';
 
 :root {
   color-scheme: light dark;
-  --bg: #f2f2f7;
+  --bg: #f4f5f4;
   --surface: #ffffff;
-  --surface-2: #f2f2f7;
-  --surface-3: #e5e5ea;
-  --label: #1c1c1e;
-  --label-2: #6c6c70;
-  --label-3: #8e8e93;
-  --separator: rgb(60 60 67 / 0.18);
-  --border-control: #8e8e93;
-  --accent: #0066cc;
-  --accent-text: #0066cc;
-  --accent-tint: #e8f1fc;
-  --focus-ring: #0066cc;
-  --danger: #d70015;
-  --danger-text: #d70015;
-  --danger-tint: #fdecee;
-  --success-text: #007a2e;
-  --success-tint: #e8f5ec;
-  --warning-text: #b45309;
-  --warning-tint: #fdf3e7;
-  --scrim: rgb(0 0 0 / 0.4);
-  --material-bar: rgb(255 255 255 / 0.72);
-  --elev-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.06);
-  --elev-card-hover: 0 2px 4px rgb(0 0 0 / 0.06), 0 12px 32px rgb(0 0 0 / 0.1);
-  --elev-overlay: 0 24px 64px rgb(0 0 0 / 0.2);
+  --plate: #eceeed;
+  --line: #dce0de;
+  --line-strong: #7d898c;
+  --ink: #111a1c;
+  --on-ink: #ffffff;
+  --ink-2: #4a575b;
+  --ink-3: #5f6c70;
+  --accent: #0a5c6b;
+  --on-accent: #ffffff;
+  --accent-tint: #e3eff1;
+  --danger: #b42318;
+  --danger-tint: #fcebe9;
+  --success: #1d6b40;
+  --success-tint: #e6f2ea;
+  --warning: #8a5300;
+  --warning-tint: #fbf0dc;
+  --scrim: rgb(17 26 28 / 0.42);
+  --material-bar: rgb(244 245 244 / 0.8);
+  --elev-overlay: 0 16px 48px rgb(0 0 0 / 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --surface: #1c1c1e;
-    --surface-2: #2c2c2e;
-    --surface-3: #3a3a3c;
-    --label: #ffffff;
-    --label-2: #aeaeb2;
-    --label-3: #8e8e93;
-    --separator: rgb(84 84 88 / 0.6);
-    --border-control: #8e8e93;
-    --accent: #0a72e8;
-    --accent-text: #5cb8ff;
-    --accent-tint: #10253d;
-    --focus-ring: #5cb8ff;
-    --danger: #d70015;
-    --danger-text: #ff6165;
-    --danger-tint: #3a1517;
-    --success-text: #4ad968;
-    --success-tint: #0f2a17;
-    --warning-text: #ffa056;
-    --warning-tint: #33210f;
+    --bg: #14191b;
+    --surface: #1b2124;
+    --plate: #232a2d;
+    --line: #2e373a;
+    --line-strong: #768387;
+    --ink: #ecf0f0;
+    --on-ink: #14191b;
+    --ink-2: #a8b3b6;
+    --ink-3: #8e9a9d;
+    --accent: #5fb8c8;
+    --on-accent: #14191b;
+    --accent-tint: #133038;
+    --danger: #ff8a7e;
+    --danger-tint: #3a1c19;
+    --success: #62cf92;
+    --success-tint: #14301f;
+    --warning: #f0b54a;
+    --warning-tint: #33270f;
     --scrim: rgb(0 0 0 / 0.6);
-    --material-bar: rgb(28 28 30 / 0.72);
-    /* Depth in dark mode comes from lighter surfaces, not shadows (HIG). */
-    --elev-card: none;
-    --elev-card-hover: 0 0 0 1px rgb(255 255 255 / 0.08);
-    --elev-overlay: 0 24px 64px rgb(0 0 0 / 0.6);
+    --material-bar: rgb(20 25 27 / 0.8);
+    --elev-overlay: 0 16px 48px rgb(0 0 0 / 0.5);
   }
 }
 
 @theme inline {
-  --font-sans:
-    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-sans: 'Mona Sans Variable', ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-surface-3: var(--surface-3);
-  --color-label: var(--label);
-  --color-label-2: var(--label-2);
-  --color-label-3: var(--label-3);
-  --color-separator: var(--separator);
-  --color-border-control: var(--border-control);
+  --color-plate: var(--plate);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-on-ink: var(--on-ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
   --color-accent: var(--accent);
-  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
   --color-accent-tint: var(--accent-tint);
-  --color-focus: var(--focus-ring);
   --color-danger: var(--danger);
-  --color-danger-text: var(--danger-text);
   --color-danger-tint: var(--danger-tint);
-  --color-success: var(--success-text);
+  --color-success: var(--success);
   --color-success-tint: var(--success-tint);
-  --color-warning: var(--warning-text);
+  --color-warning: var(--warning);
   --color-warning-tint: var(--warning-tint);
-  --shadow-card: var(--elev-card);
-  --shadow-card-hover: var(--elev-card-hover);
   --shadow-overlay: var(--elev-overlay);
 }
 
 @theme {
-  /* Type scale from the HIG iOS "Large" text styles, in rem so browser zoom scales it. */
-  --text-large-title: 2.125rem;
-  --text-large-title--line-height: 2.5625rem;
-  --text-title1: 1.75rem;
-  --text-title1--line-height: 2.125rem;
-  --text-title2: 1.375rem;
-  --text-title2--line-height: 1.75rem;
-  --text-title3: 1.25rem;
-  --text-title3--line-height: 1.5625rem;
-  --text-headline: 1.0625rem;
-  --text-headline--line-height: 1.375rem;
-  --text-body: 1.0625rem;
-  --text-body--line-height: 1.375rem;
-  --text-callout: 1rem;
-  --text-callout--line-height: 1.3125rem;
-  --text-subhead: 0.9375rem;
-  --text-subhead--line-height: 1.25rem;
-  --text-footnote: 0.8125rem;
-  --text-footnote--line-height: 1.125rem;
-  --text-caption: 0.75rem;
-  --text-caption--line-height: 1rem;
-  /* Concentric radii: inner = outer − padding. */
-  --radius-card: 20px;
-  --radius-card-media: 12px;
-  --radius-sheet: 28px;
-  --radius-field: 12px;
-  --radius-segment: 9px;
+  /* Type scale (D.2): web-native sizes, weights 400/500/600 only. */
+  --text-display: 2rem;
+  --text-display--line-height: 2.25rem;
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.875rem;
+  --text-car: 1.1875rem;
+  --text-car--line-height: 1.5rem;
+  --text-price: 1.375rem;
+  --text-price--line-height: 1.75rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.25rem;
+  --text-micro: 0.8125rem;
+  --text-micro--line-height: 1.125rem;
+  /* Four radii varied by role (D.4); full radius only for indicators. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* "Wide" type for car names, prices and titles: the badge-on-a-tailgate look (D.2). */
+@utility wide {
+  font-stretch: 112.5%;
+  letter-spacing: -0.01em;
 }
 
 @layer base {
@@ -131,28 +116,27 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-bg font-sans text-body text-label antialiased;
+    @apply bg-bg font-sans text-body text-ink antialiased;
   }
   :focus-visible {
-    outline: 2px solid var(--focus-ring);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
-  /* Modal sheets lock the page behind them. */
   html:has(dialog[open]) {
     overflow: hidden;
   }
 }
 
 @layer components {
-  /* Translucent material is for the navigation layer only (HIG Materials). */
+  /* Translucent material for the navigation layer only. */
   .material-bar {
-    background: var(--surface);
+    background: var(--bg);
   }
   @supports (backdrop-filter: blur(1px)) {
     .material-bar {
       background: var(--material-bar);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(160%) blur(16px);
+      -webkit-backdrop-filter: saturate(160%) blur(16px);
     }
   }
 
@@ -164,14 +148,14 @@
     max-height: 92dvh;
     padding: 0;
     border: 0;
-    border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     background: var(--surface);
-    color: var(--label);
+    color: var(--ink);
     box-shadow: var(--elev-overlay);
     overflow: hidden;
   }
   .sheet[open] {
-    animation: sheet-up 300ms var(--ease-sheet);
+    animation: sheet-up 280ms var(--ease-sheet);
   }
   .sheet::backdrop {
     background: var(--scrim);
@@ -180,34 +164,33 @@
   .sheet--alert {
     margin: auto;
     width: min(400px, calc(100% - 32px));
-    border-radius: var(--radius-sheet);
+    border-radius: var(--radius-xl);
   }
   .sheet--alert[open] {
-    animation: sheet-pop 250ms var(--ease-sheet);
+    animation: sheet-pop 220ms var(--ease-sheet);
   }
   @media (min-width: 640px) {
     .sheet {
       margin: auto;
       width: min(520px, calc(100% - 48px));
-      border-radius: var(--radius-sheet);
+      border-radius: var(--radius-xl);
     }
     .sheet[open] {
-      animation: sheet-pop 300ms var(--ease-sheet);
+      animation: sheet-pop 260ms var(--ease-sheet);
     }
     .sheet--alert {
       width: min(400px, calc(100% - 48px));
     }
   }
+  @media (prefers-color-scheme: dark) {
+    .sheet {
+      outline: 1px solid var(--line);
+    }
+  }
 
   .skeleton {
-    background: linear-gradient(
-      90deg,
-      var(--surface-2) 25%,
-      var(--surface-3) 50%,
-      var(--surface-2) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.4s ease-in-out infinite;
+    background: var(--plate);
+    animation: pulse-soft 1.6s ease-in-out infinite;
   }
 }
 
@@ -219,7 +202,7 @@
 @keyframes sheet-pop {
   from {
     opacity: 0;
-    transform: scale(0.96);
+    transform: translateY(8px);
   }
 }
 @keyframes fade-in {
@@ -227,23 +210,19 @@
     opacity: 0;
   }
 }
-@keyframes shimmer {
-  from {
-    background-position: 100% 0;
-  }
-  to {
-    background-position: -100% 0;
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
   .material-bar {
-    background: var(--surface);
+    background: var(--bg);
     backdrop-filter: none;
   }
 }
 
-/* Reduced motion: no slides, scales or shimmer (HIG Accessibility, NN/g skeletons). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { cn } from '../../lib/cn';
 
 const STEP_BUTTON =
-  'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-surface text-label shadow-card transition-transform duration-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100';
+  'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-surface text-ink transition-transform duration-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100';
 
 /**
  * − value + control with 44px buttons. Typing is allowed too: the field keeps what
@@ -61,7 +61,7 @@ export function Stepper({
         }}
         onBlur={() => setText(String(value))}
         className={cn(
-          'h-11 w-20 rounded-field border border-border-control bg-surface text-center text-body font-semibold tabular-nums',
+          'h-11 w-20 rounded-md border border-line-strong bg-surface text-center text-body font-semibold tabular-nums',
         )}
       />
       <button

@@ -66,7 +66,7 @@ export function VehicleFormSheet({
       >
         <div className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
-            variant="plain"
+            variant="quiet"
             fullWidth
             data-autofocus
             onClick={() => setConfirmingDiscard(false)}
@@ -207,7 +207,7 @@ function VehicleForm({
         />
         {isEdit ? (
           <div className="flex flex-col justify-end sm:col-span-2">
-            <p className="rounded-field bg-surface-2 px-3 py-2.5 text-callout text-label-2">
+            <p className="rounded-md bg-plate px-3 py-2.5 text-body text-ink-2">
               Stock: {vehicle.quantity} · use Restock to change
             </p>
           </div>
@@ -230,7 +230,7 @@ function VehicleForm({
           {...register('imageUrl')}
         />
       </div>
-      <div className="flex items-center gap-3 rounded-field bg-surface-2 p-2">
+      <div className="flex items-center gap-3 rounded-md bg-plate p-2">
         <VehicleMedia
           key={imageUrl}
           compact
@@ -249,7 +249,7 @@ function VehicleForm({
           }}
           className="aspect-[16/10] w-28 shrink-0 rounded-[8px]"
         />
-        <p className="text-footnote text-label-2">
+        <p className="text-micro text-ink-2">
           Card image preview. Without a photo, the category illustration is shown.
         </p>
       </div>

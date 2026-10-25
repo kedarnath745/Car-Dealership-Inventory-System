@@ -118,11 +118,11 @@ function SheetDialog({
       <div className="flex max-h-[inherit] flex-col">
         {isAlert ? (
           <div className="px-6 pt-6 text-center">
-            <h2 id={titleId} className="text-title3 font-semibold tracking-tight">
+            <h2 id={titleId} className="text-car wide font-semibold tracking-tight">
               {title}
             </h2>
             {description && (
-              <p id={descriptionId} className="mt-2 text-callout text-label-2">
+              <p id={descriptionId} className="mt-2 text-body text-ink-2">
                 {description}
               </p>
             )}
@@ -131,11 +131,11 @@ function SheetDialog({
           <>
             <div
               aria-hidden="true"
-              className="mx-auto mt-2 h-1.5 w-9 rounded-full bg-surface-3 sm:hidden"
+              className="mx-auto mt-2 h-1.5 w-9 rounded-full bg-plate sm:hidden"
             />
             <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 pt-2 pb-1 sm:pt-3">
               <Button
-                variant="plain"
+                variant="quiet"
                 size="sm"
                 onClick={requestClose}
                 disabled={!dismissible}
@@ -143,13 +143,13 @@ function SheetDialog({
               >
                 Cancel
               </Button>
-              <h2 id={titleId} className="text-headline font-semibold">
+              <h2 id={titleId} className="text-body font-semibold">
                 {title}
               </h2>
               <span />
             </header>
             {description && (
-              <p id={descriptionId} className="px-5 pb-2 text-center text-subhead text-label-2">
+              <p id={descriptionId} className="px-5 pb-2 text-center text-small text-ink-2">
                 {description}
               </p>
             )}
@@ -159,7 +159,7 @@ function SheetDialog({
           {children}
         </div>
         {footer && (
-          <footer className="border-t border-separator px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <footer className="border-t border-line px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
             {footer}
           </footer>
         )}

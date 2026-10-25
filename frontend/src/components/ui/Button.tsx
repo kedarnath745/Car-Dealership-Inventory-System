@@ -2,22 +2,27 @@ import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import { cn } from '../../lib/cn';
 import { Spinner } from './Spinner';
 
-export type ButtonVariant = 'filled' | 'tinted' | 'plain' | 'destructive' | 'destructive-plain';
+/**
+ * One shape (10px radius), four weights (visual identity D.7). The ink `primary`
+ * appears at most once per view; repeated actions such as a card's Purchase are
+ * `secondary`, so a grid of cars is not a wall of filled buttons.
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'quiet-danger' | 'destructive';
 export type ButtonSize = 'lg' | 'md' | 'sm';
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  filled: 'bg-accent text-white hover:brightness-110 active:brightness-95',
-  tinted: 'bg-accent-tint text-accent-text hover:brightness-[0.97] dark:hover:brightness-125',
-  plain: 'text-accent-text hover:bg-surface-2',
-  destructive: 'bg-danger text-white hover:brightness-110 active:brightness-95',
-  'destructive-plain': 'text-danger-text hover:bg-danger-tint',
+  primary: 'bg-ink text-on-ink hover:opacity-90',
+  secondary: 'border border-line-strong bg-surface text-ink hover:bg-plate',
+  quiet: 'text-accent hover:bg-plate',
+  'quiet-danger': 'text-danger hover:bg-danger-tint',
+  destructive: 'bg-danger text-white hover:opacity-90 dark:bg-danger-tint dark:text-danger',
 };
 
-/** Small buttons stay 32px tall visually but get a 44px touch target (HIG, WCAG 2.5.8). */
+/** Small buttons stay 36px tall visually but get a 44px touch target (WCAG 2.5.8). */
 const SIZES: Record<ButtonSize, string> = {
-  lg: 'h-[50px] px-5 text-headline',
-  md: 'h-11 px-4 text-headline',
-  sm: 'relative h-8 px-3 text-subhead before:absolute before:-inset-y-1.5 before:inset-x-0',
+  lg: 'h-12 px-5 text-body font-semibold',
+  md: 'h-11 px-4 text-body font-semibold',
+  sm: 'relative h-9 px-2.5 text-small font-medium before:absolute before:-inset-y-1 before:inset-x-0',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -32,7 +37,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button({
-  variant = 'filled',
+  variant = 'primary',
   size = 'md',
   loading = false,
   loadingText,
@@ -50,8 +55,8 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap select-none',
-        'transition-[background-color,filter,transform] duration-100 ease-standard active:scale-[0.98]',
+        'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap select-none',
+        'transition-[background-color,opacity,transform] duration-150 ease-standard active:scale-[0.985]',
         'disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100',
         VARIANTS[variant],
         SIZES[size],

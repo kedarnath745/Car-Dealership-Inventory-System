@@ -21,7 +21,7 @@ export function PasswordField({ id, ...rest }: Omit<TextFieldProps, 'type' | 'tr
           aria-pressed={visible}
           aria-controls={inputId}
           onClick={() => setVisible((v) => !v)}
-          className="h-9 cursor-pointer rounded-full px-3 text-subhead font-semibold text-accent-text hover:bg-surface-2"
+          className="h-9 cursor-pointer rounded-full px-3 text-small font-semibold text-accent hover:bg-plate"
         >
           {visible ? 'Hide' : 'Show'}
         </button>

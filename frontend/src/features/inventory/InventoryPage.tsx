@@ -59,7 +59,7 @@ export function InventoryPage() {
 
   const addButton = (
     <Button
-      variant="tinted"
+      variant="secondary"
       icon={<Plus aria-hidden="true" className="size-4" strokeWidth={2.25} />}
       onClick={() => setEditing('new')}
     >
@@ -70,7 +70,9 @@ export function InventoryPage() {
   return (
     <>
       <header className="mb-5 flex items-end justify-between gap-4">
-        <h1 className="text-title1 font-bold tracking-tight sm:text-large-title">Inventory</h1>
+        <h1 className="text-display wide font-bold tracking-tight sm:text-display wide">
+          Inventory
+        </h1>
         {isAdmin && addButton}
       </header>
 
@@ -97,7 +99,7 @@ export function InventoryPage() {
             description="Check your connection and try again."
             action={
               <Button
-                variant="tinted"
+                variant="secondary"
                 onClick={() => void vehiclesQuery.refetch()}
                 loading={vehiclesQuery.isFetching}
               >
@@ -210,9 +212,9 @@ function AdminActions({
   const name = `${vehicle.make} ${vehicle.model}`;
   const icon = 'size-4';
   return (
-    <div className="mt-2 flex justify-between gap-1 border-t border-separator pt-2">
+    <div className="mt-2 flex justify-between gap-1 border-t border-line pt-2">
       <Button
-        variant="plain"
+        variant="quiet"
         size="sm"
         aria-label={`Edit ${name}`}
         icon={<Pencil aria-hidden="true" className={icon} />}
@@ -222,7 +224,7 @@ function AdminActions({
       </Button>
       {showRestock && (
         <Button
-          variant="plain"
+          variant="quiet"
           size="sm"
           aria-label={`Restock ${name}`}
           icon={<PackagePlus aria-hidden="true" className={icon} />}
@@ -232,7 +234,7 @@ function AdminActions({
         </Button>
       )}
       <Button
-        variant="destructive-plain"
+        variant="quiet-danger"
         size="sm"
         aria-label={`Delete ${name}`}
         icon={<Trash2 aria-hidden="true" className={icon} />}

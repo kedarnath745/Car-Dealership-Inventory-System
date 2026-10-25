@@ -66,7 +66,7 @@ export function FilterBar({
     activeFilterChips(filters).find((chip) => chip.key === 'price')?.label ?? 'Any';
 
   return (
-    <section aria-label="Filters" className="rounded-card bg-surface p-3 shadow-card sm:p-4">
+    <section aria-label="Filters" className="rounded-lg bg-surface p-3 sm:p-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_1fr_160px_160px]">
         <TextField
           label="Make"
@@ -89,10 +89,10 @@ export function FilterBar({
         <button
           type="button"
           onClick={() => setPriceSheetOpen(true)}
-          className="col-span-2 flex h-11 cursor-pointer items-center gap-2 rounded-field border border-border-control bg-surface px-3 text-left text-body md:hidden"
+          className="col-span-2 flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line-strong bg-surface px-3 text-left text-body md:hidden"
         >
-          <SlidersHorizontal aria-hidden="true" className="size-4 text-label-2" />
-          <span className="text-label-2">Price:</span>
+          <SlidersHorizontal aria-hidden="true" className="size-4 text-ink-2" />
+          <span className="text-ink-2">Price:</span>
           <span className="truncate font-medium">{priceSummary}</span>
         </button>
         <TextField
@@ -154,9 +154,9 @@ function CategoryChips({
           <label
             key={option.label}
             className={cn(
-              'relative flex h-9 shrink-0 cursor-pointer items-center rounded-full px-3.5 text-subhead font-medium transition-colors duration-200',
-              'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus',
-              checked ? 'bg-accent text-white' : 'bg-surface-2 text-label hover:bg-surface-3',
+              'relative flex h-9 shrink-0 cursor-pointer items-center rounded-full px-3.5 text-small font-medium transition-colors duration-200',
+              'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent',
+              checked ? 'bg-accent text-white' : 'bg-plate text-ink hover:bg-plate',
             )}
           >
             <input

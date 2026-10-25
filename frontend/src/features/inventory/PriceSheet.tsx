@@ -60,7 +60,7 @@ function PriceForm({
         />
       </div>
       <div className="flex gap-2">
-        <Button variant="plain" onClick={() => onApply({ minPrice: '', maxPrice: '' })}>
+        <Button variant="quiet" onClick={() => onApply({ minPrice: '', maxPrice: '' })}>
           Reset
         </Button>
         <Button

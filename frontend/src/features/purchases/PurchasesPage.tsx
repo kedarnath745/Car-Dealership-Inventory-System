@@ -17,7 +17,9 @@ export function PurchasesPage() {
   return (
     <>
       <header className="mb-5">
-        <h1 className="text-title1 font-bold tracking-tight sm:text-large-title">My Purchases</h1>
+        <h1 className="text-display wide font-bold tracking-tight sm:text-display wide">
+          My Purchases
+        </h1>
         {purchases && purchases.length > 0 && <Summary purchases={purchases} />}
       </header>
 
@@ -28,7 +30,7 @@ export function PurchasesPage() {
           description="Check your connection and try again."
           action={
             <Button
-              variant="tinted"
+              variant="secondary"
               loading={query.isFetching}
               onClick={() => void query.refetch()}
             >
@@ -37,7 +39,7 @@ export function PurchasesPage() {
           }
         />
       ) : !purchases ? (
-        <div className="grid place-items-center py-16 text-label-2" role="status">
+        <div className="grid place-items-center py-16 text-ink-2" role="status">
           <Spinner className="size-6" />
           <span className="sr-only">Loading purchases…</span>
         </div>
@@ -49,7 +51,7 @@ export function PurchasesPage() {
           action={
             <Link
               to="/"
-              className="inline-flex h-11 items-center rounded-full bg-accent px-5 text-headline font-semibold text-white hover:brightness-110"
+              className="inline-flex h-11 items-center rounded-full bg-accent px-5 text-body font-semibold text-white hover:brightness-110"
             >
               Browse Inventory
             </Link>
@@ -58,7 +60,7 @@ export function PurchasesPage() {
       ) : (
         <ul
           aria-label="Purchases"
-          className="divide-y divide-separator overflow-hidden rounded-card bg-surface shadow-card"
+          className="divide-y divide-line overflow-hidden rounded-lg bg-surface"
         >
           {purchases.map((purchase) => (
             <PurchaseRow key={purchase.id} purchase={purchase} />
@@ -73,7 +75,7 @@ function Summary({ purchases }: { purchases: Purchase[] }) {
   const total = purchases.reduce((sum, purchase) => sum + purchase.totalPrice, 0);
   const count = purchases.length;
   return (
-    <p className="mt-1 text-callout text-label-2 tabular-nums">
+    <p className="mt-1 text-body text-ink-2 tabular-nums">
       {count} {count === 1 ? 'purchase' : 'purchases'} · {formatINR(total)} total
     </p>
   );
@@ -83,21 +85,19 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
   return (
     <li className="flex items-center gap-4 px-4 py-3.5 sm:px-5">
       <div className="min-w-0 flex-1">
-        <p className="flex flex-wrap items-center gap-2 text-headline font-semibold">
+        <p className="flex flex-wrap items-center gap-2 text-body font-semibold">
           <span>
             {purchase.make} {purchase.model} × {purchase.quantity}
           </span>
           {purchase.vehicleId === null && <Badge tone="neutral">No longer listed</Badge>}
         </p>
-        <p className="mt-0.5 text-subhead text-label-2">
+        <p className="mt-0.5 text-small text-ink-2">
           <time dateTime={purchase.createdAt}>{formatDateTime(purchase.createdAt)}</time>
         </p>
       </div>
       <div className="text-right">
-        <p className="text-headline font-semibold tabular-nums">{formatINR(purchase.totalPrice)}</p>
-        <p className="text-footnote text-label-2 tabular-nums">
-          {formatINR(purchase.unitPrice)} each
-        </p>
+        <p className="text-body font-semibold tabular-nums">{formatINR(purchase.totalPrice)}</p>
+        <p className="text-micro text-ink-2 tabular-nums">{formatINR(purchase.unitPrice)} each</p>
       </div>
     </li>
   );

@@ -7,8 +7,8 @@ import { AccountMenu } from './AccountMenu';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex h-9 items-center rounded-full px-3.5 text-subhead font-medium transition-colors duration-200',
-    isActive ? 'bg-surface-3 text-label' : 'text-label-2 hover:text-label',
+    'flex h-9 items-center rounded-full px-3.5 text-small font-medium transition-colors duration-200',
+    isActive ? 'bg-plate text-ink' : 'text-ink-2 hover:text-ink',
   );
 
 /** Layout for signed-in pages: translucent sticky bar (navigation layer) over the content. */
@@ -33,7 +33,7 @@ export function AppShell() {
       <header
         className={cn(
           'material-bar sticky top-0 z-40 border-b pt-[env(safe-area-inset-top)] transition-colors duration-200',
-          scrolled ? 'border-separator' : 'border-transparent',
+          scrolled ? 'border-line' : 'border-transparent',
         )}
       >
         <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-4 px-4 sm:px-6 lg:px-8">
@@ -67,8 +67,8 @@ export function AppShell() {
 
 const tabClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex flex-1 flex-col items-center justify-center gap-0.5 text-caption font-medium transition-colors duration-200',
-    isActive ? 'text-accent-text' : 'text-label-2',
+    'flex flex-1 flex-col items-center justify-center gap-0.5 text-micro font-medium transition-colors duration-200',
+    isActive ? 'text-accent' : 'text-ink-2',
   );
 
 /** Bottom tab bar on small screens: HIG pattern for top-level sections (Should tier). */
@@ -76,7 +76,7 @@ function TabBar() {
   return (
     <nav
       aria-label="Tabs"
-      className="material-bar fixed inset-x-0 bottom-0 z-40 flex h-[calc(56px+env(safe-area-inset-bottom))] border-t border-separator pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="material-bar fixed inset-x-0 bottom-0 z-40 flex h-[calc(56px+env(safe-area-inset-bottom))] border-t border-line pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <NavLink to="/" end className={tabClass}>
         <CarFront aria-hidden="true" className="size-6" strokeWidth={1.75} />

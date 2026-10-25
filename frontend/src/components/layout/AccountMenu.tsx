@@ -12,7 +12,7 @@ const initials = (name: string) =>
     .join('');
 
 const ITEM =
-  'flex h-11 w-full cursor-pointer items-center gap-2 rounded-[10px] px-3 text-left text-body hover:bg-surface-2 focus-visible:bg-surface-2';
+  'flex h-11 w-full cursor-pointer items-center gap-2 rounded-[10px] px-3 text-left text-body hover:bg-plate focus-visible:bg-plate';
 
 /**
  * Account button with a small menu (WAI-ARIA menu button pattern): arrow keys move
@@ -75,15 +75,15 @@ export function AccountMenu() {
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((value) => !value)}
-        className="flex h-11 cursor-pointer items-center gap-2 rounded-full py-1 pr-1 pl-1 hover:bg-surface-2 sm:pr-3"
+        className="flex h-11 cursor-pointer items-center gap-2 rounded-full py-1 pr-1 pl-1 hover:bg-plate sm:pr-3"
       >
         <span
           aria-hidden="true"
-          className="grid size-8 place-items-center rounded-full bg-surface-3 text-footnote font-semibold text-label"
+          className="grid size-8 place-items-center rounded-full bg-plate text-micro font-semibold text-ink"
         >
           {initials(user.name)}
         </span>
-        <span className="sr-only text-subhead font-medium sm:not-sr-only">{user.name}</span>
+        <span className="sr-only text-small font-medium sm:not-sr-only">{user.name}</span>
         {isAdmin && (
           <Badge tone="accent" className="sr-only sm:not-sr-only sm:h-6! sm:px-2!">
             Admin
@@ -98,18 +98,18 @@ export function AccountMenu() {
           aria-label="Account"
           tabIndex={-1}
           onKeyDown={onMenuKeyDown}
-          className="absolute right-0 mt-2 w-64 rounded-[16px] bg-surface p-1.5 shadow-overlay ring-1 ring-separator"
+          className="absolute right-0 mt-2 w-64 rounded-[16px] bg-surface p-1.5 shadow-overlay ring-1 ring-line"
         >
           <div className="px-3 py-2">
-            <p className="text-subhead font-semibold">{user.name}</p>
-            <p className="truncate text-footnote text-label-2">{user.email}</p>
+            <p className="text-small font-semibold">{user.name}</p>
+            <p className="truncate text-micro text-ink-2">{user.email}</p>
           </div>
-          <div className="my-1 h-px bg-separator" />
+          <div className="my-1 h-px bg-line" />
           <button
             role="menuitem"
             type="button"
             onClick={logout}
-            className={cn(ITEM, 'text-danger-text')}
+            className={cn(ITEM, 'text-danger')}
           >
             <LogOut aria-hidden="true" className="size-4" />
             Sign Out

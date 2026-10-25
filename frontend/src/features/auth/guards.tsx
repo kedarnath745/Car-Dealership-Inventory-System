@@ -9,7 +9,7 @@ interface FromState {
 
 function FullPageLoader() {
   return (
-    <div className="grid min-h-dvh place-items-center text-label-2" role="status">
+    <div className="grid min-h-dvh place-items-center text-ink-2" role="status">
       <Spinner className="size-6" />
       <span className="sr-only">Loading…</span>
     </div>

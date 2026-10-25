@@ -61,7 +61,7 @@ export function DeleteVehicleDialog({
           )}
           <div className="flex flex-col-reverse gap-2 sm:flex-row">
             <Button
-              variant="plain"
+              variant="quiet"
               fullWidth
               data-autofocus
               onClick={close}

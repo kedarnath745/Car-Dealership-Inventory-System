@@ -17,8 +17,8 @@ export function Alert({
     <div
       role={tone === 'error' ? 'alert' : 'status'}
       className={cn(
-        'flex items-start gap-2 rounded-field px-3 py-2.5 text-callout',
-        tone === 'error' ? 'bg-danger-tint text-danger-text' : 'bg-accent-tint text-accent-text',
+        'flex items-start gap-2 rounded-md px-3 py-2.5 text-body',
+        tone === 'error' ? 'bg-danger-tint text-danger' : 'bg-accent-tint text-accent',
         className,
       )}
     >
