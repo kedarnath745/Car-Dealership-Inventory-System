@@ -110,9 +110,12 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] PROMPTS.md: raw transcripts exported
 - [ ] **Checkpoint 7**: docs approved
 
-## Phase 8 — Deployment (optional brownie points)  `[ ]`
+## Phase 8 — Deployment (optional brownie points)  `[~]`
 
-- [ ] Hosted Postgres, backend host, frontend on Vercel
+- [x] Vercel Services config (`vercel.json`), Vercel entry for Express, build-time migrations + seed
+- [x] Verified locally with `vercel dev -L` (API + SPA through Vercel routing, browser purchase flow)
+- [x] Production refuses placeholder secrets
+- [ ] Owner: add Neon storage + env vars in the Vercel dashboard, redeploy
 - [ ] Live URL in the README
 
 ## Phase 9 — Submission checklist  `[ ]`

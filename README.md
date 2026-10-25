@@ -276,14 +276,48 @@ session transcript by `scripts/export_prompts.py`.
 
 ## Deployment
 
-A live deployment is planned (Neon for PostgreSQL, Render for the API, Vercel for the frontend).
-The link will be added here once it is live.
+**Live demo:** _link added after the first production deployment._
+
+The whole app deploys as **one Vercel project** using
+[Vercel Services](https://vercel.com/docs/services), configured in the root [`vercel.json`](vercel.json):
+
+| Path | Served by |
+|------|-----------|
+| `/api/*` | `backend` service: the Express app (`backend/server.ts` → `src/app.ts`) as a Vercel Function |
+| everything else | `frontend` service: the Vite build; `/login`, `/register` and `/purchases` fall back to `index.html` |
+
+The frontend calls `/api` on its own origin, so there is no CORS setup and no API URL to configure.
+On every deployment the backend's build step (`backend/scripts/vercel-build.sh`) applies the Prisma
+migrations and runs the seed. The seed is safe to repeat: it only creates the admin and sample cars
+if they are missing.
+
+### One-time setup in the Vercel dashboard
+
+1. **Import the repository** with *Root Directory* left at the repository root. Vercel reads
+   `vercel.json` and detects the two services.
+2. **Add a database.** *Storage → Create Database → Neon (Postgres)*, then connect it to the
+   project for all environments. This sets `DATABASE_URL` (pooled, used at runtime) and
+   `DATABASE_URL_UNPOOLED` (direct, used for migrations).
+3. **Add environment variables** (*Settings → Environment Variables*):
+
+   | Name | Value |
+   |------|-------|
+   | `JWT_SECRET` | a long random string, e.g. the output of `openssl rand -hex 32` |
+   | `ADMIN_EMAIL` | the admin's email |
+   | `ADMIN_PASSWORD` | 15+ characters, **not** the default from `.env.example` (production refuses it) |
+   | `TRUST_PROXY` | `1` (so rate limiting sees the real client IP behind Vercel's proxy) |
+
+4. **Redeploy** (*Deployments → … → Redeploy*). The build log shows the migrations and
+   "Admin account ready".
+
+Locally, `vercel dev -L` runs the same two-service setup on one port.
 
 ## Known limitations and next steps
 - No pagination: fine for a showroom-sized inventory, needed for thousands of cars.
 - The JWT lives in `localStorage` (a documented trade-off in DESIGN §5); an httpOnly cookie
   would be safer if the app grew.
-- Rate-limit counters are in memory, so several API instances would need a shared store such as Redis.
+- Rate-limit counters are in memory per instance. On serverless, or with several API instances,
+  a shared store such as Redis would make the limits exact.
 - Purchases are a demo checkout with no payment step. An idempotency key on purchase would be the
   next step for real payments.
 
