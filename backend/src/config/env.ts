@@ -13,6 +13,14 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('1d'),
   /** Comma-separated list of origins allowed to call the API. */
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  /** Failed login/register attempts allowed per client per window (decision D24). */
+  AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
+  AUTH_RATE_LIMIT_WINDOW_MINUTES: z.coerce.number().int().positive().default(15),
+  /**
+   * Number of reverse proxies in front of the app (e.g. 1 on Render). Lets Express read
+   * the real client IP from X-Forwarded-For; 0 means the app is reached directly.
+   */
+  TRUST_PROXY: z.coerce.number().int().min(0).default(0),
 });
 
 export type Env = z.infer<typeof envSchema>;

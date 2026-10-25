@@ -10,3 +10,5 @@ process.env.DATABASE_URL = testDatabaseUrl;
 process.env.JWT_SECRET = 'test-jwt-secret-that-is-long-enough-for-hs256';
 process.env.JWT_EXPIRES_IN = '1h';
 process.env.CORS_ORIGIN = 'http://localhost:5173';
+// High enough that ordinary auth tests never trip it; the rate-limit tests pass their own.
+process.env.AUTH_RATE_LIMIT_MAX = '1000';
