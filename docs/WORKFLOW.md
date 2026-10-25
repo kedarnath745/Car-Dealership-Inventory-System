@@ -18,7 +18,7 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] PROMPTS.md: raw session transcripts converted to markdown word for word, never summarised
 - [x] **Checkpoint 0**: stack and conventions approved
 
-## Phase 1 — Requirements & doubts  `[ ]`
+## Phase 1 — Requirements & doubts  `[~]`
 
 - [ ] Requirement traceability matrix (`docs/REQUIREMENTS.md`): every line of the brief
       gets an ID (R1…Rn) and is mapped to an endpoint or screen, a test and a status

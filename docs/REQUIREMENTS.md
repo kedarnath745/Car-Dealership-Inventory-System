@@ -1,0 +1,72 @@
+# Requirements Traceability & Decision Log
+
+Every line of the brief is listed here with an ID, the place it is implemented, and how
+it is verified. Status is updated as work lands. Anything the brief leaves open is
+recorded in the **Decision Log**, with the reasoning, so it can be defended in review.
+
+Status: `todo` · `wip` · `done`
+
+## 1. Backend
+
+| ID | Requirement (from brief) | Implementation | Verified by | Status |
+|----|--------------------------|----------------|-------------|--------|
+| R1 | Backend in Node.js/TypeScript (Express) | `backend/` | — | todo |
+| R2 | Persistent database (not in-memory) | PostgreSQL via Prisma | Integration tests against a real test DB | todo |
+| R3 | Users can register | `POST /api/auth/register` | `auth.register.test.ts` | todo |
+| R4 | Users can log in | `POST /api/auth/login` | `auth.login.test.ts` | todo |
+| R5 | Token-based auth (JWT) secures endpoints | `requireAuth` middleware | `auth.middleware.test.ts` | todo |
+| R6 | Add a vehicle | `POST /api/vehicles` (admin, see D2) | `vehicles.create.test.ts` | todo |
+| R7 | List vehicles | `GET /api/vehicles` | `vehicles.list.test.ts` | todo |
+| R8 | Search by make, model, category, price range | `GET /api/vehicles/search` | `vehicles.search.test.ts` | todo |
+| R9 | Update a vehicle | `PUT /api/vehicles/:id` (admin, see D2) | `vehicles.update.test.ts` | todo |
+| R10 | Delete a vehicle (admin only) | `DELETE /api/vehicles/:id` | `vehicles.delete.test.ts` | todo |
+| R11 | Purchase decreases quantity | `POST /api/vehicles/:id/purchase` | `inventory.purchase.test.ts` | todo |
+| R12 | Restock increases quantity (admin only) | `POST /api/vehicles/:id/restock` | `inventory.restock.test.ts` | todo |
+| R13 | Vehicle has unique ID, make, model, category, price, quantity | Prisma `Vehicle` model | Schema and validation tests | todo |
+
+## 2. Frontend
+
+| ID | Requirement (from brief) | Implementation | Verified by | Status |
+|----|--------------------------|----------------|-------------|--------|
+| F1 | SPA with React, Tailwind, HTML5, CSS3 | `frontend/` (Vite) | — | todo |
+| F2 | Registration and login forms | `/register`, `/login` | Component tests + end-to-end | todo |
+| F3 | Dashboard listing vehicles | `/` | Component tests + end-to-end | todo |
+| F4 | Search and filter vehicles | Filter bar on the dashboard | Component tests + end-to-end | todo |
+| F5 | Purchase button, disabled at quantity 0 | `VehicleCard` | Component test | todo |
+| F6 | Admin forms to add, update and delete | Admin-only modal and actions | Component tests + end-to-end | todo |
+| F7 | Visually appealing, responsive, good UX | Tailwind, mobile-first | Manual check + screenshots | todo |
+
+## 3. Process & deliverables
+
+| ID | Requirement | How | Status |
+|----|-------------|-----|--------|
+| P1 | TDD with a visible Red → Green → Refactor history | Separate `test:` / `feat:` / `refactor:` commits | todo |
+| P2 | High, meaningful test coverage | Coverage report, ≥ 90% backend | todo |
+| P3 | Clean code, SOLID, documented | Layered architecture, TSDoc on public functions | todo |
+| P4 | Frequent, descriptive commits | Commit rules in `WORKFLOW.md` | wip |
+| P5 | AI co-author trailer on AI-assisted commits | `Co-authored-by: Claude <noreply@anthropic.com>` | wip |
+| P6 | README: overview, setup, screenshots, My AI Usage, test report | `README.md` | todo |
+| P7 | PROMPTS.md with raw chat logs | Word-for-word transcript export | todo |
+| P8 | Public repository | GitHub | todo |
+| P9 | (Optional) Deployed live app | See Phase 8 | todo |
+
+## 4. Decision Log
+
+| ID | Open question in the brief | Decision | Reasoning |
+|----|----------------------------|----------|-----------|
+| D1 | How does someone become an admin? | All sign-ups get role `USER`. One admin is created by the seed script from `ADMIN_EMAIL` / `ADMIN_PASSWORD`. Register ignores any `role` in the request body. | Letting users choose their own role is privilege escalation. A seeded admin is the usual pattern. |
+| D2 | Only DELETE and restock are marked "Admin only", but the brief says the add/update UI is for admins | `POST` and `PUT /api/vehicles` are admin-only too | The server must enforce what the UI implies. Hiding a button is not authorisation. |
+| D3 | Does "all available vehicles" mean only in-stock ones? | `GET /api/vehicles` returns every vehicle, out-of-stock included | The brief wants a Purchase button that is *disabled* at quantity 0, so out-of-stock cars must be visible. |
+| D4 | How much does one purchase buy? | Optional body `{ "quantity": n }`, default 1, positive integer | Flexible, and the default keeps the simple case simple. |
+| D5 | What stops stock going negative when two people buy at the same time? | One atomic conditional update (`quantity = quantity - n WHERE id = ? AND quantity >= n`) in a transaction that also writes the purchase record. If no row updates, return `409 Conflict`. | A read-then-write would let two buyers take the last car. The database must guarantee the stock rule. |
+| D6 | Is a purchase recorded? | Yes: a `Purchase` table (user, vehicle, quantity, unit price at purchase time, total, timestamp). Powers a "My Purchases" page. | Inventory changes should leave an audit trail. Storing the price at purchase time keeps history correct after later price edits. |
+| D7 | What happens to purchases when a vehicle is deleted? | Purchase keeps snapshot fields (make, model, unit price), and its vehicle link is set to `NULL` | Deleting stock must not erase sales history. |
+| D8 | Vehicle fields beyond the required five | Adds `year`, `color`, optional `imageUrl` | Makes the UI look like a real dealership without changing the required contract. |
+| D9 | Is category free text? | Fixed list: Sedan, SUV, Truck, Coupe, Hatchback, Convertible, Van, Electric | Keeps data clean, gives a reliable filter dropdown, and invalid values are rejected. |
+| D10 | Search semantics | Query params `make`, `model`, `category`, `minPrice`, `maxPrice`, all optional and combined with AND. Make and model match case-insensitively on a substring; category matches exactly. `minPrice > maxPrice` → `400`. No params → everything. | Predictable behaviour that is straightforward to test. |
+| D11 | How is money stored? | `Decimal(12,2)` in PostgreSQL, never a float | Floating point cannot represent money exactly. |
+| D12 | ID format | UUID | Non-sequential IDs don't reveal how many vehicles or users exist, and can't be enumerated by counting up. |
+| D13 | Error response shape | Always `{ "error": { "code", "message", "details?" } }` with correct HTTP status (400, 401, 403, 404, 409, 500) | The client can handle every error the same way, and no stack traces leak. |
+| D14 | Auth details | bcrypt-hashed passwords, JWT (HS256, 1-day expiry) sent as `Authorization: Bearer`. Login failure gives the same generic message for wrong email or wrong password. The password hash is never returned. | Standard practice that doesn't reveal which emails are registered. |
+| D15 | Input validation | zod schemas at the request boundary. Emails are normalised to lowercase. Password must be at least 8 characters. | One validation layer, and the error details come from the schema itself. |
+| D16 | Does register log the user in? | Yes, `201` returns `{ token, user }` | One less step for the user in the UI. |
