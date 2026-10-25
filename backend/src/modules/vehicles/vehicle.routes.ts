@@ -11,6 +11,8 @@ export const vehicleRouter = Router();
 vehicleRouter.use(requireAuth);
 
 vehicleRouter.get('/', vehicleController.list);
+// Registered before '/:id' so "search" is not mistaken for a vehicle id.
+vehicleRouter.get('/search', vehicleController.search);
 vehicleRouter.get('/:id', validateParams(vehicleIdParamsSchema), vehicleController.getById);
 
 vehicleRouter.post(

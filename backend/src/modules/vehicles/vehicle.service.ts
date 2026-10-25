@@ -1,7 +1,8 @@
+import type { Prisma } from '@prisma/client';
 import { notFound } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
 import { type VehicleResponse, toVehicleResponse } from './vehicle.dto';
-import type { CreateVehicleInput } from './vehicle.schemas';
+import type { CreateVehicleInput, SearchVehiclesQuery } from './vehicle.schemas';
 
 /** Newest first; id breaks ties so the order is stable between requests. */
 const NEWEST_FIRST = [{ createdAt: 'desc' as const }, { id: 'asc' as const }];
@@ -25,4 +26,37 @@ export async function getVehicle(id: string): Promise<VehicleResponse> {
     throw notFound('Vehicle not found');
   }
   return toVehicleResponse(vehicle);
+}
+
+/**
+ * Prisma's `contains` becomes SQL `LIKE '%text%'` and does not escape the LIKE
+ * wildcards itself, so a search for "%" would match everything. Escaping them
+ * (and the backslash escape character) makes user input match literally.
+ */
+export function escapeLikePattern(text: string): string {
+  return text.replace(/[\\%_]/g, '\\$&');
+}
+
+const containsText = (text: string) =>
+  ({ contains: escapeLikePattern(text), mode: 'insensitive' }) as const;
+
+/** Translates search filters into a Prisma `where` clause. Every given filter must match (AND). */
+export function buildSearchWhere(filters: SearchVehiclesQuery): Prisma.VehicleWhereInput {
+  const { make, model, category, minPrice, maxPrice } = filters;
+  return {
+    ...(make && { make: containsText(make) }),
+    ...(model && { model: containsText(model) }),
+    ...(category && { category }),
+    ...((minPrice !== undefined || maxPrice !== undefined) && {
+      price: { gte: minPrice, lte: maxPrice },
+    }),
+  };
+}
+
+export async function searchVehicles(filters: SearchVehiclesQuery): Promise<VehicleResponse[]> {
+  const vehicles = await prisma.vehicle.findMany({
+    where: buildSearchWhere(filters),
+    orderBy: NEWEST_FIRST,
+  });
+  return vehicles.map(toVehicleResponse);
 }

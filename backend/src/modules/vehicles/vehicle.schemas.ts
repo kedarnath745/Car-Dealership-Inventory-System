@@ -61,3 +61,37 @@ export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;
 export const vehicleIdParamsSchema = z.object({
   id: z.uuid('Invalid vehicle id'),
 });
+
+/** Query strings arrive as text; an empty value (`?make=`) means "no filter". */
+const emptyToUndefined = (value: unknown) =>
+  typeof value === 'string' && value.trim() === '' ? undefined : value;
+
+const optionalSearchText = z.preprocess(
+  emptyToUndefined,
+  z.string().trim().max(50, 'Search text must be at most 50 characters').optional(),
+);
+
+const optionalPriceBound = (label: string) =>
+  z.preprocess(
+    emptyToUndefined,
+    z.coerce.number(`${label} must be a number`).min(0, `${label} cannot be negative`).optional(),
+  );
+
+export const searchVehiclesQuerySchema = z
+  .object({
+    make: optionalSearchText,
+    model: optionalSearchText,
+    category: z.preprocess((value) => {
+      const cleaned = emptyToUndefined(value);
+      return typeof cleaned === 'string' ? cleaned.trim().toUpperCase() : cleaned;
+    }, z.enum(Category, 'Category is not valid').optional()),
+    minPrice: optionalPriceBound('minPrice'),
+    maxPrice: optionalPriceBound('maxPrice'),
+  })
+  .refine(
+    ({ minPrice, maxPrice }) =>
+      minPrice === undefined || maxPrice === undefined || minPrice <= maxPrice,
+    { message: 'minPrice cannot be greater than maxPrice', path: ['minPrice'] },
+  );
+
+export type SearchVehiclesQuery = z.infer<typeof searchVehiclesQuerySchema>;

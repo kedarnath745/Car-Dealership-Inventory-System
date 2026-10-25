@@ -1,4 +1,6 @@
 import type { Request, Response } from 'express';
+import { parseOrThrow } from '../../middleware/validate';
+import { searchVehiclesQuerySchema } from './vehicle.schemas';
 import * as vehicleService from './vehicle.service';
 
 export async function create(req: Request, res: Response): Promise<void> {
@@ -14,4 +16,11 @@ export async function list(_req: Request, res: Response): Promise<void> {
 export async function getById(req: Request<{ id: string }>, res: Response): Promise<void> {
   const vehicle = await vehicleService.getVehicle(req.params.id);
   res.status(200).json({ vehicle });
+}
+
+export async function search(req: Request, res: Response): Promise<void> {
+  // req.query is read-only in Express 5, so the parsed filters are kept locally.
+  const filters = parseOrThrow(searchVehiclesQuerySchema, req.query);
+  const vehicles = await vehicleService.searchVehicles(filters);
+  res.status(200).json({ vehicles });
 }

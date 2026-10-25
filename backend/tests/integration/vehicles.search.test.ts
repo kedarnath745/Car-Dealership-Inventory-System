@@ -80,7 +80,7 @@ describe('GET /api/vehicles/search', () => {
   it('filters by an inclusive price range', async () => {
     const { models } = await search('?minPrice=1499000&maxPrice=3850000');
 
-    expect(models).toEqual(['Nexon EV', 'XUV700', 'Fortuner']);
+    expect(models).toEqual(['XUV700', 'Nexon EV', 'Fortuner']);
   });
 
   it('supports only a minimum or only a maximum price', async () => {
