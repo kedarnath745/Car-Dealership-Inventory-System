@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { HttpResponse, http } from 'msw';
 import { TOKENS, apiError, makeVehicle } from '../../test/fixtures';
 import { mockInventoryApi } from '../../test/inventoryApi';
-import { renderApp } from '../../test/renderApp';
+import { currentUrl, renderApp } from '../../test/renderApp';
 import { server } from '../../test/server';
 
 const creta = makeVehicle({
@@ -191,6 +191,26 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
     renderApp('/?minPrice=1260000&maxPrice=1200000', { token: TOKENS.shopper });
 
     expect(await screen.findByText('2 cars')).toBeInTheDocument();
+  });
+
+  it('rewrites a shared link with an inverted price range to the range it applied', async () => {
+    const mock = mockInventoryApi([creta, nexon, verna]);
+    server.use(...mock.handlers);
+    renderApp('/?minPrice=1260000&maxPrice=1200000', { token: TOKENS.shopper });
+
+    await screen.findByText('2 cars');
+    await waitFor(() => expect(currentUrl()).toBe('/?minPrice=1200000&maxPrice=1260000'));
+  });
+
+  it('drops invalid filter values from a hand-edited link', async () => {
+    const mock = mockInventoryApi([creta, nexon, verna]);
+    server.use(...mock.handlers);
+    renderApp('/?minPrice=abc&maxPrice=-5&category=SPACESHIP&sort=evil&make=Hyundai', {
+      token: TOKENS.shopper,
+    });
+
+    await screen.findByText('2 cars');
+    await waitFor(() => expect(currentUrl()).toBe('/?make=Hyundai'));
   });
 
   it('blocks an inverted price range without calling the API', async () => {
