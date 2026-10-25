@@ -156,7 +156,9 @@ function CategoryChips({
             className={cn(
               'relative flex h-9 shrink-0 cursor-pointer items-center rounded-sm border px-3 text-small font-medium transition-colors duration-150',
               'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent',
-              checked ? 'bg-accent text-white' : 'bg-plate text-ink hover:bg-plate',
+              checked
+                ? 'border-accent bg-accent text-on-accent'
+                : 'border-line bg-surface text-ink hover:border-line-strong',
             )}
           >
             <input

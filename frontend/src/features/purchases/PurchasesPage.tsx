@@ -51,7 +51,7 @@ export function PurchasesPage() {
           action={
             <Link
               to="/"
-              className="inline-flex h-11 items-center rounded-full bg-accent px-5 text-body font-semibold text-white hover:brightness-110"
+              className="inline-flex h-11 items-center rounded-md bg-ink px-5 text-body font-semibold text-on-ink hover:opacity-90"
             >
               Browse inventory
             </Link>

@@ -75,7 +75,7 @@ export function AccountMenu() {
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((value) => !value)}
-        className="flex h-11 cursor-pointer items-center gap-2 rounded-full py-1 pr-1 pl-1 hover:bg-plate sm:pr-3"
+        className="flex h-11 cursor-pointer items-center gap-2 rounded-md py-1 pr-1 pl-1 hover:bg-plate sm:pr-3"
       >
         <span
           aria-hidden="true"
