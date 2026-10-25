@@ -92,7 +92,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 
 - [x] Code review pass (`code-review` skill: 10 findings, all reproduced with failing tests and fixed)
 - [x] Re-check backend dependency versions against the two-week rule (zod, ts-jest, typescript-eslint pinned back)
-- [ ] Upgrade frontend Vitest to a patched release (4.1.12+) and clear D34
+- [x] Upgrade frontend Vitest to a patched release: 4.1.11 clears the critical tinypool advisories; one moderate Windows-only advisory waits for 4.1.12 to meet the two-week rule on 2026-10-29 (D34)
 - [x] Security pass (`security-review` skill: no high/medium findings): input validation, auth on every protected route, no secrets committed,
       password never returned, JWT handling, CORS
 - [x] Concurrency: two purchases on the last car must not drive stock below 0

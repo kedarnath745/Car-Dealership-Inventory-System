@@ -85,7 +85,7 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
 |-------|--------|
 | Backend | Node.js 22, TypeScript 5.9, Express 5, Prisma 6 (PostgreSQL 16), zod 4, bcryptjs, jsonwebtoken, helmet, express-rate-limit |
 | Frontend | React 19, Vite 7, TypeScript 5.9, Tailwind CSS 4, React Router 7, TanStack Query 5, react-hook-form + zod, sonner |
-| Tests | Jest 30 + Supertest (backend), Vitest 3 + React Testing Library + MSW (frontend), Playwright (screenshots) |
+| Tests | Jest 30 + Supertest (backend), Vitest 4 + React Testing Library + MSW (frontend), Playwright (screenshots) |
 | Design | Mona Sans (SIL OFL), original hand-drawn icons and car drawings, WCAG-checked colour tokens |
 | Tooling | ESLint (incl. jsx-a11y), Prettier, GitHub Actions CI, Docker Compose for local Postgres |
 
