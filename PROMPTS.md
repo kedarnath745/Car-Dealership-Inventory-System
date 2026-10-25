@@ -3313,3 +3313,726 @@ The repo shows as **Public**, and raw files load without signing in. Now the doc
 
 - _Tool: Bash_: Fix stale env example and tick the submission checklist
 - _Tool: Bash_: Commit, refresh PROMPTS.md, scan, and push
+- _Tool: mcp__github__create_pull_request_
+- _Tool: mcp__claude-code-remote__subscribe_pr_activity_
+
+## Assistant
+
+I opened [kedarnath745/Car-Dealership-Inventory-System#2](https://github.com/kedarnath745/Car-Dealership-Inventory-System/pull/2), and CI and the Vercel preview are now running on it. I'll merge it with a merge commit as soon as they pass, which takes about 2 minutes. The results will reach me automatically.
+
+**Fresh-clone check: passed.** I cloned the repo from GitHub into an empty folder, emptied both databases, and followed the README exactly:
+- **Setup:** `npm install`, migrate and seed (admin plus 18 cars) all worked. The API and the app both started, and the app's `/api` proxy reached the backend.
+- **The README's walk-through, in a real browser:**
+  - Register a shopper; filter SUV + "mahindra" + max ₹25 lakh, sorted by price; buy 2 XUV700s.
+  - The sold-out Hilux shows a disabled button, and the purchase history shows the order.
+  - Admin: add a Kia Seltos, edit its price, restock 5 (shows "8 in stock"), then delete it.
+  - Phone width in dark mode, with the tab bar.
+  - No console errors anywhere.
+- **Checks:** `npm run verify` passed in both apps (171 + 131 tests), and the frontend build passed.
+- **Not tested:** the Docker option. There's no Docker in this environment, so I used the local PostgreSQL install that the README offers as the alternative.
+- **Fixed:** a stale comment in `frontend/.env.example` that still mentioned a separately hosted API.
+
+I also checked the checklist claims before ticking them. The repo is public. Every commit has the AI co-author trailer except your own initial LICENSE commit, which shouldn't have one. There are 29 test → feature/fix pairs in the history.
+
+`PROMPTS.md` is regenerated up to this point. I scanned it for passwords and connection strings and found none. It won't include the last few messages about merging PR #2. If you want it complete to the very end, ask and I'll export once more after the merge.
+
+**Your remaining item:** rewrite the README's **"My AI Usage"** section in your own voice.
+
+- _Tool: ReadNotifications_
+
+## Assistant
+
+PR #2 has its first activity: the Vercel preview build started at 16:52 UTC, and the GitHub checks are running too. I'll merge with a merge commit once both have passed.
+
+- _Tool: ReadNotifications_
+
+## Assistant
+
+The Vercel preview build for PR #2 succeeded. The GitHub checks (backend and frontend tests, plus the secret scan) are still running. I'll merge once they pass.
+
+## User
+
+<command-message>verify</command-message>
+<command-name>/verify</command-name>
+<command-args>everything from the plan is done and perfectly executed.</command-args>
+
+## User
+
+Base directory for this skill: /tmp/claude-0/bundled-skills/2.1.310/d812e60780a5281aa849fb2c8057d112/verify
+
+**Verification is runtime observation.** You build the app, run it,
+drive it to where the changed code executes, and capture what you
+see. That capture is your evidence. Nothing else is.
+
+**Don't run tests. Don't typecheck.** Running them here proves you
+can run CI — not that the change works. Not as a warm-up,
+not "just to be sure," not as a regression sweep after. The time
+goes to running the app instead.
+
+**Don't import-and-call.** `import { foo } from './src/...'` then
+`console.log(foo(x))` is a unit test you wrote. The function did what
+the function does — you knew that from reading it. The app never ran.
+Whatever calls `foo` in the real codebase ends at a CLI, a socket, or
+a window. Go there.
+
+## Find the change
+
+The scope is what you're verifying — usually a diff, sometimes just
+"does X work." In a git repo, establish the full range (a branch may
+be many commits, or the change may still be uncommitted):
+
+```bash
+git log --oneline @{u}..              # count commits (if upstream set)
+git diff @{u}.. --stat                # full range, not HEAD~1
+git diff origin/HEAD... --stat        # no upstream: committed vs base
+git diff HEAD --stat                  # uncommitted: working tree vs HEAD
+gh pr diff                            # if in a PR context
+```
+
+State the commit count. Large diff truncating? Redirect to a file
+then Read it. Repo but no diff from any of these → say so, stop.
+
+**No repo → the scope is whatever the user named; ask if they
+didn't.**
+
+**The diff is ground truth. Any description is a claim about it.**
+Read both. If they disagree, that's a finding.
+
+## Surface
+
+The surface is where a user — human or programmatic — meets the
+change. That's where you observe.
+
+| Change reaches | Surface | You |
+|---|---|---|
+| CLI / TUI | terminal | type the command, capture the pane — [example](examples/cli.md) |
+| Server / API | socket | send the request, capture the response — [example](examples/server.md) |
+| GUI | pixels | drive it under xvfb/Playwright, screenshot |
+| Library | package boundary | sample code through the public export — `import pkg`, not `import ./src/...` |
+| Prompt / agent config | the agent | run the agent, capture its behavior |
+| CI workflow | Actions | dispatch it, read the run |
+
+**Internal function? Not a surface.** Something in the repo calls it
+and that caller ends at one of the rows above. Follow it there. A
+bash security gate's surface isn't the function's return value — it's
+the CLI prompting or auto-allowing when you type the command.
+
+**No runtime surface at all** — docs-only, type declarations with no
+emit, build config that produces no behavioral diff — report
+
+**SKIP — no runtime surface: (reason).** Don't run tests to fill
+the space.
+
+**Tests in the diff are the author's evidence, not a surface.** CI
+runs them. You'd be re-running CI. Tests-only PR → SKIP, one line.
+Mixed src+tests → verify the src, ignore the test files. Reading a
+test to learn what to check is fine — it's a spec. But then go run
+the app. Checking that assertions match source is code review.
+
+## Get a handle
+
+**Check `.claude/skills/` first — even if you already know how to
+build and run.** A matching `verifier-*` skill is the repo's
+evidence-capture protocol: it wraps the session so a reviewer can
+replay what you saw (recording, screenshots). Drive the surface
+without it and you get a verdict with no replay.
+
+Skills live at the repo root **and** in the package/app dirs the
+diff touches — in a monorepo the unlock for `apps/desktop/` is
+usually `apps/desktop/.claude/skills/`, not the root. Probe both:
+
+```bash
+ls .claude/skills/                    # repo root
+ls <touched-dir>/.claude/skills/      # each dir level the diff names
+```
+
+- **`verifier-*` matching your surface** (CLI verifier for a CLI
+  change, etc.) → invoke it with the Skill tool and follow its
+  setup. Mismatched surface → skip that one, try the next. Stale
+  verifier (fails on mechanics unrelated to the change) → ask the
+  user whether to patch it; don't FAIL the change for verifier rot.
+- **`run-*` but no matching verifier** → use its build/launch
+  primitives as your handle.
+- **Neither** → cold start from README/package.json/Makefile. Timebox
+  ~15min. Stuck → BLOCKED with exactly where, plus a filled-in
+  `/run-skill-generator` prompt. Got through → **persist what you
+  learned**: create `.claude/skills/verify/SKILL.md` at the level you
+  probed above — repo root for a single-package repo; the touched
+  package/app dir (`apps/desktop/.claude/skills/verify/SKILL.md`) in
+  a monorepo where verification is per-package — capturing the
+  build/launch/drive recipe that worked, so the next session skips
+  this cold start. Keep it short: the commands that worked, the
+  flows worth driving, any gotchas. A project verify skill already
+  exists → edit it only when it steered you wrong: a documented
+  command failed or turned out wrong, or a needed step it doesn't
+  cover. Routine learnings don't warrant an edit, and never rewrite
+  or reorganize existing content for style.
+
+## Drive it
+
+Smallest path that makes the changed code execute:
+
+- Changed a flag? Run with it.
+- Changed a handler? Hit that route.
+- Changed error handling? Trigger the error.
+- Changed an internal function? Find the CLI command / request / render
+  that reaches it. Run that.
+
+**Read your plan back before running.** If every step is build /
+typecheck / run test file — you've planned a CI rerun, not a
+verification. Find a step that reaches the surface or report BLOCKED.
+
+**The verdict is table stakes. Your observations are the signal.**
+A PASS with three sharp "hey, I noticed…" lines is worth more than a
+bare PASS. You're the only reviewer who actually *ran* the thing —
+anything that made you pause, work around, or go "huh" is information
+the author doesn't have. Don't filter for "is this a bug." Filter for
+"would I mention this if they were sitting next to me."
+
+**End-to-end, through the real interface.** Pieces passing in
+isolation doesn't mean the flow works — seams are where bugs hide.
+If users click buttons, test by clicking buttons, not by curling the
+API underneath.
+
+**Destructive path?** If the change touches code that deletes,
+publishes, sends, or writes outside the workspace and there's no
+dry-run or safe target, don't drive it live. Verify what you can
+around it and say which path you didn't exercise and why.
+
+## Push on it
+
+The claim checked out — that's the first half. Confirming is step
+one, not the job. The description is what the author intended;
+your value is what they didn't.
+
+You know exactly what changed. Probe *around* it, at the same
+surface you just drove:
+
+- **New flag / option** → empty value, passed twice, combined with a
+  conflicting flag, typo'd (does the error name it?)
+- **New handler / route** → wrong method, malformed body, missing
+  required field, oversized payload
+- **Changed error path** → the adjacent errors it didn't touch —
+  did the refactor catch them too, or only the one in the diff?
+- **Interactive / TUI** → Ctrl-C mid-op, resize the pane, paste
+  garbage, rapid-fire the key, Esc at the wrong moment
+- **State / persistence** → do it twice, do it with stale state
+  underneath, do it in two sessions at once
+- **Wander** → what's adjacent? What looked off while you were
+  confirming? Go back to it.
+
+These aren't a checklist — pick the ones the change points at. Stop
+when you've covered the obvious adjacents or hit something worth a
+⚠️. A probe that finds nothing is still a step: "🔍 passed `--from ''`
+→ clean `error: --from requires a value`, exit 2." That the author
+didn't test it is exactly why it's worth knowing it holds.
+
+Still not a test run. You're at the surface, typing what a user
+would type wrong.
+
+## Capture
+
+Stdout, response bodies, screenshots, pane dumps. Captured output is
+evidence; your memory isn't. Something unexpected? Don't route around
+it — capture, note, decide if it's the change or the environment.
+Unrelated breakage is a finding, not noise.
+
+Shared process state (tmux, ports, lockfiles) — isolate. `tmux -L
+name`, bind `:0`, `mktemp -d`. You share a namespace with your host.
+
+## Report
+
+Inline, final message:
+
+```
+
+## Verification: <one-line what changed>
+
+**Verdict:** PASS | FAIL | BLOCKED | SKIP
+
+**Claim:** <what it's supposed to do — your read of the diff and/or
+the stated claim; note any mismatch>
+
+**Method:** <how you got a handle — which verifier/run-skill, or
+cold start; what you launched>
+
+### Steps
+
+Each step is one thing you did to the **running app** and what it
+showed. Build/install/checkout are setup, not steps. Test runs and
+typecheck don't belong here — they're CI's output.
+
+1. ✅/❌/⚠️/🔍 <what you did to the running app> → <what you observed>
+   <evidence: the app's own output — pane capture, response body,
+   screenshot>
+
+🔍 marks a probe — a step off the claim's happy path, trying to
+break it. At least one. A Steps list that's all ✅ and no 🔍 is a
+happy-path replay: still PASS, but you stopped at the first half.
+
+**Screenshot / sample:** <the one frame a reviewer looks at to see
+the feature — an image for GUI/TUI, code block for library/API;
+omit for build/types-only>
+
+### Findings
+<Things you noticed. Not just bugs — friction, surprises, anything
+a first-time user would trip on. "Took three tries to find the right
+flag." "Error message on typo was unhelpful." "Default seems odd for
+the common case." "Works, but slower than I expected." Lower the bar:
+if it made you pause, it goes here. But the pause has to be yours,
+from running the app — not from reading the PR page. A red CI check,
+a review comment, someone else's bot: visible to anyone already, and
+you relaying it isn't an observation. Claim/diff mismatch, pre-existing
+breakage, and env notes also belong.
+
+Each probe gets a line here even when it held — "🔍 empty `--from`
+→ clean error" tells the author what *was* covered, which they
+can't see from a bare PASS.
+
+Lead with ⚠️ for lines worth interrupting the reviewer for; plain
+bullets are context. Empty is fine if nothing stuck out — but nothing
+sticking out is itself rare.>
+```
+
+**Evidence has to reach the reader.** A file path is only evidence
+if the person reading the report can open it. If the `SendUserFile`
+tool is in your toolset, you're on a remote surface where they
+can't — send the screenshots and recordings with it and let the
+report name what you sent. Without it, reference the path and keep
+the evidence that matters inline — pane captures and response
+bodies travel in the report; a bare path only works when the reader
+shares your filesystem.
+
+**Verdicts:**
+- **PASS** — you ran the app, the change did what it should at its
+  surface. Not: tests pass, builds clean, code looks right.
+- **FAIL** — you ran it and it doesn't. Or it breaks something else.
+  Or claim and diff disagree materially.
+- **BLOCKED** — couldn't reach a state where the change is observable.
+  Build broke, env missing a dep, handle wouldn't come up. Not a
+  verdict on the change. Never report an approach blocked or
+  impossible until you've enumerated the skills along the touched
+  subtree — environment-specific unlocks (headless runners, login
+  helpers, VM harnesses) usually live there. Say exactly where it
+  stopped + `/run-skill-generator` prompt.
+- **SKIP** — no runtime surface exists. Docs-only, types-only,
+  tests-only. Nothing went wrong; there's just nothing here to run.
+  One line why.
+
+No partial pass. "3 of 4 passed" is FAIL until 4 passes or is
+explained away.
+
+**When in doubt, FAIL.** False PASS ships broken code; false FAIL
+costs one more human look. Ambiguous output is FAIL with the raw
+capture attached — don't interpret.
+
+## User Request
+
+everything from the plan is done and perfectly executed.
+
+- _Tool: Bash_: Probe for verifier skills, diff scope, and plan requirements
+
+## Assistant
+
+An early finding: the traceability matrix in `docs/REQUIREMENTS.md` still lists F1–F7 as "todo". I'll look at the whole matrix and the workflow's status markers.
+
+- _Tool: Bash_: Read the requirements matrix and open workflow items
+- _Tool: Bash_: Probe production API with malformed and hostile inputs
+- _Tool: Bash_: Probe insufficient stock, oversized body, and alg:none locally
+
+## Assistant
+
+Next, the oversell guard (D5) at the real HTTP surface: five simultaneous purchases of the last unit of a car. I'll run it on the local instance so production stock isn't touched.
+
+- _Tool: Bash_: Fire five concurrent purchases at the last unit locally
+
+## Assistant
+
+The guard held: stock started at 1, and the five parallel purchases got one 201 and four 409s. My final read then failed, so let me see what `GET /api/vehicles/:id` actually returns.
+
+- _Tool: Bash_: Check single-vehicle route and stock after race
+
+## Assistant
+
+Registration failed this time. That's probably the register rate limiter, which counts every attempt. Let me confirm rather than assume.
+
+- _Tool: Bash_: Inspect the register response and rate-limit headers
+- _Tool: Bash_: Read stock after the race and probe single-vehicle GET
+
+## Assistant
+
+Stock ended at **0**, never negative. Next, browser probes on production: the kinds of things a real user would get wrong.
+
+- _Tool: Bash_: Probe the production UI with wrong inputs
+- _Tool: Bash_: Identify the extra production car and SPA catch-all route
+- _Tool: Bash_: Check trailer consistency and whether planned e2e tests exist
+- _Tool: Bash_: Stop local API and save the verify recipe skill
+- _Tool: SendUserFile_
+- _Tool: Bash_: Check whether the skill file was written and API stopped
+
+## Assistant
+
+The local API is stopped. The skill file wasn't written, because the `pkill` matched its own command line again. I'll write the file on its own:
+
+- _Tool: Write_: /home/user/Car-Dealership-Inventory-System/.claude/skills/verify/SKILL.md
+
+## Assistant
+
+## Verification: is everything in the plan done and perfectly executed?
+
+**Verdict:** FAIL. The app itself passed every check at every surface I tested: the live site, the local API and the browser. But the plan isn't fully done, and its own documents still say so.
+
+**Claim:** every item in the plan (`docs/WORKFLOW.md`, `docs/REQUIREMENTS.md`) is complete and executed without flaws. The branch ahead of `main` is 4 docs commits (open PR #2).
+
+**Method:** there's no `verifier-*` skill in the repo, so I started from the README. I tested three places:
+- the public production site, through its API and in a headless browser;
+- a local API, for the probes that would damage production data;
+- the plan files compared with the repo's actual contents.
+
+### Steps
+1. ✅ **Production health and auth.** `/api/health` returns `{"status":"ok"}`. Without a token the API returns 401 `MISSING_TOKEN`. Unknown API routes return a JSON 404.
+2. ✅ **Shopper journey.** Register, sign in, see the cars, search for SUVs up to ₹15 lakh (Creta and XUV700), and buy one car: stock went from 10 to 9. In the browser this also covers the redirect to sign-in and back, filters set from the URL, the disabled Sold out button, and no admin buttons for shoppers.
+3. ✅ **Admin flow on a fresh install.** Add a Kia Seltos, change its price to ₹11,99,000, restock 5 ("Restocked Kia Seltos: 8 in stock"), then delete it. No console errors.
+4. 🔍 **Registering with `"role":"ADMIN"`** still issues a token with `role: USER`.
+5. 🔍 **Duplicate email with different capitals** → 409 `EMAIL_TAKEN`. **14-character password** → 400 "must be at least 15 characters".
+6. 🔍 **Bad request bodies.** Malformed JSON → 400 `INVALID_JSON`. A 200 KB body → 413 `PAYLOAD_TOO_LARGE`.
+7. 🔍 **Bad purchase quantities.** 0 → "at least 1". 2.5 → "whole number". 999 → "at most 100". 3 of a car with 2 left → 409 "Only 2 left in stock", and stock stayed at 2.
+8. 🔍 **Search edge cases.** `make=%` returns `[]`, so the wildcard is escaped. An inverted price range → 400. An unknown category → 400.
+9. 🔍 **Shopper tries admin actions.** PUT, restock and delete all return 403 `FORBIDDEN`.
+10. 🔍 **Forged `alg:none` admin token, tested locally** → 401 `INVALID_TOKEN`.
+11. 🔍 **Five parallel purchases of the last BMW Z4, tested locally** → one 201 and four 409s. Stock ended at 0, not negative.
+12. 🔍 **Browser misuse:**
+    - Wrong password shows "That email and password don't match."
+    - A URL with nonsense filter values still loads the cars.
+    - Typing 99 into Quantity snaps it to 2, the stock (screenshot sent).
+    - Escape closes the purchase sheet.
+    - A tampered session sends you to /login with "Your session has ended."
+13. ❌ **Plan versus repo:** several planned items aren't done, or are still marked open. Details in the findings below.
+
+### Findings
+- ⚠️ **The planned end-to-end tests don't exist.**
+  - Phase 5 planned Playwright end-to-end tests (register → search → purchase, plus admin create/edit/delete).
+  - `REQUIREMENTS.md` lists those tests as the evidence for F2, F3, F4 and F6.
+  - There is no `e2e/` folder and no Playwright config; Playwright is only used for screenshots.
+  - The runs I did in this verification are one-off scripts in my scratch folder, not tests in the repo.
+- ⚠️ **The traceability matrix contradicts the finished state.**
+  - `REQUIREMENTS.md` still marks F1–F7 and P1–P3 and P6–P9 as **todo**, and P4–P5 as **wip**.
+  - Meanwhile PR #2 marks Phase 9 done.
+  - An interviewer reading the matrix would conclude the frontend was never finished.
+- ⚠️ **Open plan items:**
+  - **Phase 4:** still `[ ]` in `WORKFLOW.md`, with every box unticked, although the work exists.
+  - **Phase 5:** not done.
+  - **Phase 7:** "UI polish, accessibility" is unticked.
+  - **Checkpoints 3b, 4, 5 and 7:** your hands-on review rounds were never recorded.
+  - **Phase 6:** the Vitest upgrade (decision D34) is still pending, so the dev-only security advisories are still accepted.
+- ⚠️ **Commit trailers aren't consistent.**
+  - 91 commits use `Co-authored-by: Claude <noreply@anthropic.com>`, the format the plan documents (P5).
+  - The last 6 use `Co-Authored-By: Claude Opus 5.5 <…>`. That's still valid attribution, but it differs from the documented format.
+- **Unknown pages behave differently on production.** The app sends any unknown path to `/`, but Vercel only routes `/login`, `/register` and `/purchases` to the app. So on production `/anything-else` shows Vercel's generic "404: NOT_FOUND" page.
+- **A hostile or inverted filter URL is handled but not cleaned.** The page works, but the bad values stay in the address bar. `INTERVIEW_NOTES.md` says a bad link is "cleaned up", which overstates it slightly.
+- **Production has 19 cars, not 18.** A Ferrari Luce was added at 16:47 UTC; presumably that was you as admin. It also explains why the earlier count was 18.
+- **Vercel blocks some forged tokens itself.** It answered the `alg:none` token with a plain-text 403 before the app saw it, which is defence in depth. The app's own rejection was confirmed locally.
+- **My own leftovers on production:** the "Smoke Test" shopper and one Creta purchase.
+- **Environment:** the Docker setup path wasn't tested; there's no Docker here, so I used the local PostgreSQL install. I saved the run recipe as `.claude/skills/verify/SKILL.md` for future sessions. It isn't committed yet.
+
+**To make the claim true, I'd:**
+1. Add a small Playwright end-to-end suite and run it in CI. My verification scripts are most of the way there.
+2. Bring `REQUIREMENTS.md` and Phases 4, 5 and 7 in line with reality.
+3. Upgrade Vitest to clear decision D34.
+4. Optionally add a Vercel rewrite so unknown paths reach the app.
+
+Want me to do those? I can add them to PR #2 before it merges. PR #2 is still waiting for its CI result; nothing has failed so far.
+
+## User
+
+Stop hook feedback:
+[~/.claude/stop-hook-git-check.sh]: There are untracked files in the repository. Please commit and push these changes to the remote branch.
+
+- _Tool: Bash_: Commit the verify skill and push the branch
+
+## Assistant
+
+I committed `.claude/skills/verify/SKILL.md` and pushed it to the branch, so it's now part of PR #2. Nothing uncommitted is left.
+
+This commit uses the plan's original trailer, `Co-authored-by: Claude <noreply@anthropic.com>`, so it doesn't add to the trailer mix-up from the verification.
+
+The push starts a new CI run on PR #2, and I'll merge with a merge commit once it's green.
+
+Do you want me to fix the gaps from the verification on this PR before merging? Those are:
+- adding Playwright end-to-end tests;
+- bringing `REQUIREMENTS.md` and `WORKFLOW.md` in line with what's actually done;
+- upgrading Vitest;
+- making unknown paths on Vercel open the app instead of Vercel's 404 page.
+
+If you'd rather keep them for a separate PR, I'll merge this one as soon as CI passes.
+
+- _Tool: ReadNotifications_
+
+## Assistant
+
+GitHub's checks passed on PR #2's previous commit, `4b40d43`. CI and the Vercel preview are now rerunning for the new head, which adds the verify skill.
+
+I haven't merged yet because I asked whether you want the verification gaps fixed in this PR first. If you'd rather merge as is, say so and I'll merge it once the new run passes.
+
+## User
+
+yes, fix all the gaps in this PR then merge
+
+- _Tool: TaskCreate_: Add e2e tests (shopper journey, admin CRUD) under e2e/, run in CI against real API+SPA
+- _Tool: TaskCreate_: Patched Vitest release respecting the 2-week version rule; update D34
+- _Tool: TaskCreate_: Rewrite non-asset paths to index.html without breaking vercel dev module requests
+- _Tool: TaskCreate_: TDD: hostile/inverted filter URLs are rewritten to the sanitised filters
+- _Tool: TaskCreate_: Statuses, phases 4/5/7, checkpoints recorded honestly, trailer note, test report refresh, PROMPTS.md, then merge PR #2
+
+## Assistant
+
+Starting with the Vitest upgrade, since it changes the frontend test toolchain everything else runs on. First, what decision D34 records, and which versions are allowed under the two-week rule:
+
+- _Tool: Bash_: Read D34, the version picker and the current audit
+- _Tool: Bash_: List Vitest and tinypool release dates
+- _Tool: Bash_: Check Vitest 4.1.11 deps and the current test config
+
+## Assistant
+
+No tinypool, and our config uses no options that Vitest 4 removed. Installing it, with a backup of the lockfile, since npm crashed on the last attempt:
+
+- _Tool: Bash_: Install Vitest 4.1.11 and re-audit
+- _Tool: Bash_: Pin Vitest 4.1.11 in package.json and reinstall cleanly
+- _Tool: Bash_: Find where npm crashes in the debug log
+- _Tool: Bash_: Show the npm crash stack trace
+- _Tool: Bash_: Show stack trace from the failing install log
+- _Tool: Bash_: Find npm 11 releases older than two weeks
+- _Tool: Bash_: Install Vitest 4.1.11 using npm 11.21.0
+- _Tool: Bash_: Show remaining advisories and lockfile package changes
+- _Tool: Bash_: Diff package versions between old and new lockfiles
+
+## Assistant
+
+Only Vitest's own dependency tree changed, and it's mostly removals: tinypool, vite-node and glob are gone. Checking the dates of the transitive versions that were added or bumped:
+
+- _Tool: Bash_: Check release dates of new transitive dependencies
+
+## Assistant
+
+All of them are more than two weeks old. Next, the real check: the whole frontend suite on Vitest 4, plus CI's `npm ci` on the stock npm 10.
+
+- _Tool: Bash_: Run frontend typecheck, lint and tests on Vitest 4
+- _Tool: Bash_: Confirm npm ci, coverage and build with the default npm
+- _Tool: Bash_: Find docs mentioning Vitest 3 or D34
+- _Tool: Bash_: Record D34 resolution and commit the Vitest upgrade
+- _Tool: TaskUpdate_
+
+## Assistant
+
+Next: cleaning invalid filter values out of the URL, done test-first. First I'll check how the page reads its filters:
+
+- _Tool: TaskUpdate_
+- _Tool: Bash_: Find URL filter parsing and serialisation
+
+## Assistant
+
+The page parses its filters on every render but never writes the cleaned values back to the URL. I'll look at how the existing tests render the app at a URL and read the location:
+
+- _Tool: Bash_: Inspect test helpers for URL-based rendering
+- _Tool: Bash_: Read the shared-link tests and filter parsing
+
+## Assistant
+
+A test needs to see the router's URL. I'll give `renderApp` a probe that records the current location without adding anything to the DOM, then write the failing tests:
+
+- _Tool: Bash_: Add a location probe and two failing URL-cleanup tests
+- _Tool: Bash_: Run the inventory tests to see the new ones fail
+
+## Assistant
+
+Red, for the right reason: the page still shows the raw link. Committing the failing tests on their own, as the red step:
+
+- _Tool: Bash_: Commit the red step for URL cleanup
+- _Tool: Read_: /home/user/Car-Dealership-Inventory-System/frontend/src/features/inventory/InventoryPage.tsx
+- _Tool: Edit_: /home/user/Car-Dealership-Inventory-System/frontend/src/features/inventory/InventoryPage.tsx
+- _Tool: Edit_: /home/user/Car-Dealership-Inventory-System/frontend/src/features/inventory/InventoryPage.tsx
+- _Tool: Bash_: Run frontend verify for the green step
+- _Tool: Bash_: Show the lint warning and whether it predates the change
+- _Tool: Bash_: Split the location probe and rerun verify
+
+## Assistant
+
+Lint is clean and all 133 tests pass. Committing the green step:
+
+- _Tool: Bash_: Commit the green step for URL cleanup
+- _Tool: TaskUpdate_
+- _Tool: TaskUpdate_
+- _Tool: Bash_: Widen the SPA rewrite and review the dev script
+- _Tool: Bash_: Run vercel dev and probe API, SPA and unknown paths
+- _Tool: Bash_: Boot the app under vercel dev at unknown paths
+- _Tool: Bash_: Stop the vercel dev server
+- _Tool: Bash_: Run vercel build and inspect the SPA route in the output
+- _Tool: Bash_: Locate route config in the build output
+- _Tool: Bash_: Print SPA and filesystem routes from build config
+- _Tool: Bash_: Find docs describing the old SPA rewrite
+- _Tool: Bash_: Update docs and commit the SPA fallback fix
+- _Tool: TaskUpdate_
+
+## Assistant
+
+Last gap, and the biggest: an end-to-end test suite in the repo, run in CI. First I'll check what the environment gives me (the preinstalled Playwright version) and how the dev proxy is configured:
+
+- _Tool: TaskUpdate_
+- _Tool: Bash_: Check Playwright version, vite proxy, CI workflow and env config
+- _Tool: Bash_: Check @playwright/test release dates
+
+## Assistant
+
+`@playwright/test` 1.63.0 (Sep 4) qualifies and matches the preinstalled Chromium build. Making the Vite proxy target configurable first:
+
+- _Tool: Edit_: /home/user/Car-Dealership-Inventory-System/frontend/vite.config.ts
+- _Tool: Bash_: Typecheck the Vite config with process.env
+
+## Assistant
+
+Now the e2e package. First, what the API needs in its environment:
+
+- _Tool: Bash_: Read backend env schema and seed config
+
+## Assistant
+
+I'll check the seeded inventory so the tests can rely on known stock levels:
+
+- _Tool: Bash_: List seeded cars with price and stock
+- _Tool: Bash_: Read the vehicle seed file
+- _Tool: Bash_: Print seeded cars sorted by stock
+- _Tool: Bash_: Read stock labels, token key and success toasts
+
+## Assistant
+
+Writing the e2e package:
+
+- _Tool: Bash_: Create e2e package manifest and tsconfig, check versions
+- _Tool: Bash_: Write Playwright config and test helpers
+- _Tool: Bash_: Write the e2e specs, install and typecheck
+
+## Assistant
+
+The suite typechecks. Running it for real. The `dealership_e2e` database doesn't exist yet, so this also tests whether Prisma's reset creates it:
+
+- _Tool: Bash_: Run the end-to-end suite
+- _Tool: Bash_: Read the backend test database guard and reset helper
+
+## Assistant
+
+I'll write a small prepare script in the backend with that guard, then point the e2e web server at it:
+
+- _Tool: Bash_: Add the guarded e2e prepare script and test its guard
+
+## Assistant
+
+The guard refused the development database, as it should. I'll add `scripts/` to the backend typecheck, then run the suite:
+
+- _Tool: Bash_: Show backend tsconfig include list
+- _Tool: Bash_: Typecheck/lint the script and run the e2e suite
+- _Tool: Bash_: Inspect why the SUV radio click fails
+- _Tool: Bash_: Click the visible chip and rerun the e2e suite
+- _Tool: Bash_: Break the URL cleanup, run e2e (second run), then restore
+- _Tool: Bash_: Add the CI e2e job, validate YAML, format and typecheck
+
+## Assistant
+
+The workflow parses, with three jobs, and the formatting and typecheck are clean. Next I'll check the e2e lockfile against the two-week rule, and the backend lint and typecheck with the new script:
+
+- _Tool: Bash_: Check e2e lockfile dates and backend lint/typecheck
+
+## Assistant
+
+Every e2e dependency is older than two weeks, and backend lint and typecheck are clean. I'll document how to run the suite and commit:
+
+- _Tool: Bash_: Document the e2e suite and fix a stale comment
+- _Tool: Bash_: Create the e2e database in Docker, the hook and the README
+- _Tool: Bash_: Check README wording, hook syntax and pending changes
+
+## Assistant
+
+`frontend/package-lock.json` shows as modified, which I didn't expect from these steps. I'll check what changed before committing anything:
+
+- _Tool: Bash_: Inspect the unexpected lockfile change
+- _Tool: Bash_: Commit the e2e suite, harness and CI job
+- _Tool: TaskUpdate_
+
+## Assistant
+
+Last task: bringing the plan documents in line with what was actually done. I'll read each phase's open items in full:
+
+- _Tool: TaskUpdate_
+- _Tool: Bash_: Read the workflow legend and phases 3 to 7
+- _Tool: Bash_: Find axe-core releases older than two weeks
+- _Tool: Bash_: Check which axe-core the Playwright adapter pulls in
+
+## Assistant
+
+I'll use `@axe-core/playwright` 4.13.0 (Aug 11), which pulls in `axe-core` 4.13.0 (Aug 5). The only other 4.13 builds are canaries. Installing:
+
+- _Tool: Bash_: Install the axe-core Playwright adapter
+- _Tool: Write_: /home/user/Car-Dealership-Inventory-System/e2e/tests/accessibility.spec.ts
+- _Tool: Bash_: Run the accessibility scans in light and dark mode
+- _Tool: Bash_: Inject violations to prove the axe check fails, then restore
+
+## Assistant
+
+The check works: it flagged `button-name (critical)` and `color-contrast (serious)` on exactly the injected elements. The file is restored. Committing:
+
+- _Tool: Bash_: Commit the accessibility suite
+
+## Assistant
+
+Now the documents, starting with the test report: the frontend now has 133 tests on Vitest 4, and there are 17 end-to-end tests to add. I'll look at the existing frontend section's format:
+
+- _Tool: Bash_: Inspect frontend report sections and backend audit
+
+## Assistant
+
+I'll regenerate the frontend coverage and test list, and add an end-to-end section, all from fresh runs. The old header claimed "53 files" when there are 16, so the generator gets fixed as well.
+
+- _Tool: Bash_: Rerun frontend coverage and e2e with JSON output
+- _Tool: Bash_: Regenerate frontend sections and add the e2e listing
+- _Tool: Bash_: Review the e2e listing and report summary
+- _Tool: Bash_: Count commits by type for the report
+- _Tool: Bash_: Update the test report summary and TDD notes
+
+## Assistant
+
+I'll find every other place that still quotes the old frontend numbers:
+
+- _Tool: Bash_: Find stale frontend test numbers in docs
+- _Tool: Bash_: Read README highlights and next-steps mentions of e2e
+- _Tool: Bash_: Update README and interview notes numbers and claims
+- _Tool: Bash_: Update workflow phases and checkpoints honestly
+
+## Assistant
+
+Phase 7 can't be `[x]` while its checkpoint is open, so it goes back to `[~]`. I'll also refresh the red/green count quoted in Phase 9 from the actual history:
+
+- _Tool: Bash_: Set Phase 7 in progress and refresh the pair count
+
+## Assistant
+
+Now the traceability matrix in `REQUIREMENTS.md`. Each row records what actually verifies it:
+
+- _Tool: Bash_: Update the traceability matrix statuses and evidence
+
+## Assistant
+
+No row is left at "todo" or "wip", and every test file the matrix cites exists. One claim I'll check rather than assume, that the disabled Sold out button is covered by `InventoryPage.test.tsx`:
+
+- _Tool: Bash_: Confirm the sold-out test exists
+- _Tool: Bash_: Commit the plan and report updates
+
+## Assistant
+
+Before pushing, a full local run of each suite on the final tree:
+
+- _Tool: Bash_: Run backend and frontend verify and build before pushing
+
+## Assistant
+
+Everything is green: the backend's 171 tests, the frontend's 133, the build, and the 17 end-to-end tests run earlier on this tree. Refreshing `PROMPTS.md`, scanning it for secrets, and pushing:
+
+- _Tool: Bash_: Refresh PROMPTS.md, scan, commit and push
