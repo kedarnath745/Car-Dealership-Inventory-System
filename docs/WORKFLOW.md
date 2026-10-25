@@ -91,7 +91,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 ## Phase 6 — Bug & quality audit  `[ ]`
 
 - [ ] Code review pass (correctness, SOLID, naming, comments)
-- [ ] Re-check backend dependency versions against the two-week rule
+- [x] Re-check backend dependency versions against the two-week rule (zod, ts-jest, typescript-eslint pinned back)
 - [ ] Upgrade frontend Vitest to a patched release (4.1.12+) and clear D34
 - [ ] Security pass: input validation, auth on every protected route, no secrets committed,
       password never returned, JWT handling, CORS
