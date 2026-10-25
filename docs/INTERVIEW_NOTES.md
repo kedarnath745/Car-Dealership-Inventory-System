@@ -51,9 +51,11 @@ everything into `{ error: { code, message, details? } }`. (`docs/DESIGN.md`)
   3. The controller calls `purchaseVehicle(userId, id, qty)`.
   4. The transaction runs the conditional update and the purchase insert.
   5. The response is `201 { purchase, vehicle }`.
-- **"How did you test the frontend?"** The whole app is rendered (router + providers) against a
-  mocked API (MSW), and the tests assert what users see: roles, labels and accessible names. No
-  implementation details. (`frontend/src/**/*.test.tsx`)
+- **"How did you test the frontend?"** Two layers. Component tests render the whole app (router +
+  providers) against a mocked API (MSW) and assert what users see: roles, labels and accessible
+  names, no implementation details (`frontend/src/**/*.test.tsx`). Then Playwright runs the real
+  API, database and SPA in Chromium for the main journeys, plus axe-core accessibility scans
+  (`e2e/tests/`).
 - **"What does red → green look like in your history?"** Show a `test:` commit followed by its
   `feat:`/`fix:` commit with `git log --oneline`. Be clear that tooling, style, docs and visual
   screenshot fixes had no red step.
@@ -62,7 +64,7 @@ everything into `{ error: { code, message, details? } }`. (`docs/DESIGN.md`)
   - A shared rate-limit store (Redis).
   - An idempotency key on purchase before real payments.
   - An httpOnly-cookie session.
-  - Playwright end-to-end tests in CI.
+  - Visual-regression screenshots in CI (the end-to-end and accessibility suites already run there).
 
 ## 5. AI usage: what to say (be specific and honest)
 
@@ -93,7 +95,8 @@ everything into `{ error: { code, message, details? } }`. (`docs/DESIGN.md`)
 
 ## 6. Numbers to remember
 
-- 171 backend tests (~99% statements), 131 frontend tests (~98%).
+- 171 backend tests (~99% statements), 133 frontend tests (~94%), 17 end-to-end tests (9 journeys,
+  8 accessibility scans in light and dark mode).
 - 37 recorded decisions.
 - 18 seeded cars across 8 categories.
 - 10 code-review findings fixed test-first, 0 high/medium security findings.

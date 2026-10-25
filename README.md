@@ -71,7 +71,8 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
   - Errors return a generic 500 with no stack traces.
 - **Test-first, with history to show it.** Every feature and every bug found in review went red →
   green in separate commits. 171 backend tests (99% statements) run against a real PostgreSQL
-  database; 131 frontend tests (98% statements) drive the whole app through a mocked API.
+  database; 133 frontend tests (94% statements) drive the whole app through a mocked API; 17
+  end-to-end tests run the real stack in a browser, including automated accessibility scans.
 - **Decisions are written down.** 37 decisions (D1–D37), each with its reasoning, from "how does
   someone become admin?" to "why a hand-drawn icon set?".
 - **Research before screens.** User and market research, UX and accessibility guidance, and a visual
@@ -164,7 +165,8 @@ The full results, coverage tables and every test name are in **[docs/TEST_REPORT
 | Suite | Tests | Statements | Branches |
 |-------|-------|-----------|----------|
 | Backend | 171 passed | 99.2% | 95.2% |
-| Frontend | 131 passed | 98.1% | 92.5% |
+| Frontend | 133 passed | 93.8% | 88.6% |
+| End-to-end | 17 passed | — | — |
 
 ## API
 

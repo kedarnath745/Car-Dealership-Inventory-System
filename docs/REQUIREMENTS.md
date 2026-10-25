@@ -28,27 +28,27 @@ Status: `todo` · `wip` · `done`
 
 | ID | Requirement (from brief) | Implementation | Verified by | Status |
 |----|--------------------------|----------------|-------------|--------|
-| F1 | SPA with React, Tailwind, HTML5, CSS3 | `frontend/` (Vite) | — | todo |
-| F2 | Registration and login forms | `/register`, `/login` | Component tests + end-to-end | todo |
-| F3 | Dashboard listing vehicles | `/` | Component tests + end-to-end | todo |
-| F4 | Search and filter vehicles | Filter bar on the dashboard | Component tests + end-to-end | todo |
-| F5 | Purchase button, disabled at quantity 0 | `VehicleCard` | Component test | todo |
-| F6 | Admin forms to add, update and delete | Admin-only modal and actions | Component tests + end-to-end | todo |
-| F7 | Visually appealing, responsive, good UX | Tailwind, mobile-first | Manual check + screenshots | todo |
+| F1 | SPA with React, Tailwind, HTML5, CSS3 | `frontend/` (Vite, React 19, Tailwind 4, React Router) | Build in CI; `App.test.tsx` | done |
+| F2 | Registration and login forms | `/register`, `/login` | `LoginPage.test.tsx`, `RegisterPage.test.tsx`, `session.test.tsx`; e2e `auth.spec.ts`, `shopper.spec.ts` | done |
+| F3 | Dashboard listing vehicles | `/` (`InventoryPage`) | `InventoryPage.test.tsx`; e2e `shopper.spec.ts` | done |
+| F4 | Search and filter vehicles | Filter bar on the dashboard, synced to the URL | `InventoryPage.test.tsx`, `MobileFilters.test.tsx`, `filters.test.ts`; e2e `shopper.spec.ts` | done |
+| F5 | Purchase button, disabled at quantity 0 | `VehicleCard`, `PurchaseSheet` | `InventoryPage.test.tsx`; e2e `shopper.spec.ts` (sold-out car, buying two) | done |
+| F6 | Admin forms to add, update and delete | Admin-only sheets and actions, plus restock | `AdminTools.test.tsx`; e2e `admin.spec.ts` | done |
+| F7 | Visually appealing, responsive, good UX | Own visual identity (D35–D37), mobile tab bar and sheets | Screenshots (`docs/screenshots/`), research pack, e2e `accessibility.spec.ts` (axe, light and dark, phone width) | done |
 
 ## 3. Process & deliverables
 
 | ID | Requirement | How | Status |
 |----|-------------|-----|--------|
-| P1 | TDD with a visible Red → Green → Refactor history | Separate `test:` / `feat:` / `refactor:` commits | todo |
-| P2 | High, meaningful test coverage | Coverage report, ≥ 90% backend | todo |
-| P3 | Clean code, SOLID, documented | Layered architecture, TSDoc on public functions | todo |
-| P4 | Frequent, descriptive commits | Commit rules in `WORKFLOW.md` | wip |
-| P5 | AI co-author trailer on AI-assisted commits | `Co-authored-by: Claude <noreply@anthropic.com>` | wip |
-| P6 | README: overview, setup, screenshots, My AI Usage, test report | `README.md` | todo |
-| P7 | PROMPTS.md with raw chat logs | Word-for-word transcript export | todo |
-| P8 | Public repository | GitHub | todo |
-| P9 | (Optional) Deployed live app | See Phase 8 | todo |
+| P1 | TDD with a visible Red → Green → Refactor history | Separate `test:` / `feat:` / `fix:` commits; 30 red → green pairs in `git log` | done |
+| P2 | High, meaningful test coverage | Backend 99% statements, frontend 94%, plus 17 e2e tests (`docs/TEST_REPORT.md`) | done |
+| P3 | Clean code, SOLID, documented | Layered architecture (routes → controllers → services → Prisma), TSDoc on public functions, lint in CI | done |
+| P4 | Frequent, descriptive commits | Commit rules in `WORKFLOW.md`; 100+ commits, each saying what changed and why | done |
+| P5 | AI co-author trailer on AI-assisted commits | `Co-authored-by: Claude <noreply@anthropic.com>` on every AI-assisted commit. Six commits from the deployment session carry the equivalent `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` (same address, so GitHub credits the same co-author); they are on `main` and are not rewritten | done |
+| P6 | README: overview, setup, screenshots, My AI Usage, test report | `README.md` ("My AI Usage" still to be personalised by the author) | done |
+| P7 | PROMPTS.md with raw chat logs | Word-for-word transcript export (`scripts/export_prompts.py`) | done |
+| P8 | Public repository | GitHub (public) | done |
+| P9 | (Optional) Deployed live app | https://car-dealership-inventory-system-gold.vercel.app (Vercel + Neon) | done |
 
 ## 4. Decision Log
 

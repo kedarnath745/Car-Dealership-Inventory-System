@@ -4,7 +4,7 @@ This is the working plan we follow from the first commit to submission. Every ph
 ends with a **checkpoint**: open questions get answered and the phase gets approved
 before the next one starts.
 
-Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
+Status legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[–]` not held as planned (the reason is given)
 
 ---
 
@@ -61,7 +61,9 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] CI: GitHub Actions runs typecheck, lint and tests against Postgres
 - [x] Coverage target: ≥ 90% backend
 - [x] `npm audit`: 0 vulnerabilities
-- [ ] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback
+- [–] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback. Not held: you
+      reviewed through the running app and screenshots instead. The API is exercised end to end by the
+      e2e suite and was checked by hand on production (Phase 8)
 
 ## Phase 3.5 — User-centric research  `[x]`
 
@@ -70,23 +72,26 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] **Checkpoint R**: approved (15-character passwords + rate limiting, name "Showroom", Must then Should)
 - [x] Backend follow-ups: password minimum 15 (D23), auth rate limiting (D24), sample-vehicle seed
 
-## Phase 4 — Frontend (React + Tailwind)  `[ ]`
+## Phase 4 — Frontend (React + Tailwind)  `[x]`
 
-- [ ] Scaffold (Vite + React + TypeScript + Tailwind), typed API client, auth context
-- [ ] Register and login pages (validation, error states)
-- [ ] Dashboard: vehicle grid, loading, empty and error states
-- [ ] Search and filter bar (make, model, category, price range)
-- [ ] Purchase button (disabled at quantity 0) with feedback
-- [ ] Admin: add, edit, delete and restock UI, admin-only routes
-- [ ] Component tests (Vitest + React Testing Library), written test-first for logic
-- [ ] Responsive pass (mobile, tablet, desktop)
-- [ ] **Checkpoint 4**: you click through the app and give UX feedback
+- [x] Scaffold (Vite + React + TypeScript + Tailwind), typed API client, auth context
+- [x] Register and login pages (validation, error states)
+- [x] Dashboard: vehicle grid, loading, empty and error states
+- [x] Search and filter bar (make, model, category, price range), synced to the URL
+- [x] Purchase button (disabled at quantity 0) with a confirmation sheet and feedback
+- [x] Admin: add, edit, delete and restock UI (admin-only controls; the API enforces roles)
+- [x] Component tests (Vitest + React Testing Library), written test-first for logic
+- [x] Responsive pass (mobile, tablet, desktop): tab bar and price sheet on phones
+- [x] **Checkpoint 4**: your UX feedback ("looks AI-made", hand-drawn icons, monochrome car art)
+      led to the visual identity work (D35–D37)
 
-## Phase 5 — Integration & end-to-end  `[ ]`
+## Phase 5 — Integration & end-to-end  `[x]`
 
-- [ ] Run backend and frontend together against the real DB
-- [ ] Playwright end-to-end happy paths (register → login → search → purchase; admin CRUD)
-- [ ] **Checkpoint 5**: feedback round, change requests logged
+- [x] Run backend and frontend together against the real DB (locally, under `vercel dev`, and in the fresh-clone check)
+- [x] Playwright end-to-end happy paths (register → login → search → purchase; admin CRUD), in `e2e/`
+      and run in CI. Added after the frontend was built, as acceptance tests (9 journeys)
+- [–] **Checkpoint 5**: feedback round, change requests logged. Not held as a separate round; your
+      later requests (deployment, verification gaps) are logged in Phases 8–9 and the commit history
 
 ## Phase 6 — Bug & quality audit  `[x]`
 
@@ -102,13 +107,16 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 
 ## Phase 7 — Polish & docs  `[~]`
 
-- [ ] UI polish, accessibility (labels, focus, contrast)
+- [x] UI polish, accessibility (labels, focus, contrast): axe-core scans (WCAG 2.2 A/AA) of every main
+      screen in light and dark mode run in the e2e suite; focus return after dialogs and accessible
+      names are covered by component tests
 - [x] README: overview, tech stack, setup (backend and frontend), env vars, API table,
       screenshots, **My AI Usage**, test report
 - [x] `docs/TEST_REPORT.md`: test and coverage output
 - [x] Screenshots captured (Playwright)
 - [x] PROMPTS.md: raw transcripts exported
-- [ ] **Checkpoint 7**: docs approved
+- [ ] **Checkpoint 7**: docs approved. Waiting on you: read the README, and rewrite "My AI Usage" in
+      your own words
 
 ## Phase 8 — Deployment (optional brownie points)  `[x]`
 
@@ -121,10 +129,10 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 ## Phase 9 — Submission checklist  `[x]`
 
 - [x] Repo is public, final code on `main` (PR #1 and PR #2, merged with merge commits)
-- [x] Commit history shows Red → Green → Refactor (29 `test:` commits each followed by their `feat:`/`fix:`), every AI-assisted commit has the co-author trailer (checked with `git log`; only the owner's initial LICENSE commit has none)
+- [x] Commit history shows Red → Green → Refactor (30 `test:` commits directly followed by the `feat:`/`fix:` that makes them pass), every AI-assisted commit has the co-author trailer (checked with `git log`; only the owner's initial LICENSE commit has none)
 - [x] README has every mandatory section
 - [x] PROMPTS.md at the repo root
-- [x] Fresh-clone test: cloned from GitHub into an empty folder with empty databases and followed the README as written. Install, migrate, seed (18 cars), both dev servers, the full "Try the brief's requirements" walk-through in a browser (register, filter + sort, buy 2, sold-out state, purchase history, admin add/edit/restock/delete, phone width in dark mode) with no console errors, and `npm run verify` + build in both apps (171 + 131 tests). PostgreSQL came from a local install; the Docker option was not exercised in this environment. Fixed on the way: a stale `frontend/.env.example` comment
+- [x] Fresh-clone test: cloned from GitHub into an empty folder with empty databases and followed the README as written. Install, migrate, seed (18 cars), both dev servers, the full "Try the brief's requirements" walk-through in a browser (register, filter + sort, buy 2, sold-out state, purchase history, admin add/edit/restock/delete, phone width in dark mode) with no console errors, and `npm run verify` + build in both apps (171 + 131 tests at the time). PostgreSQL came from a local install; the Docker option was not exercised in this environment. Fixed on the way: a stale `frontend/.env.example` comment
 - [x] Interview prep notes (`docs/INTERVIEW_NOTES.md`): design decisions and how AI was used
 
 ---
