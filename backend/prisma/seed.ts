@@ -21,7 +21,12 @@ const seedEnv = z
   .parse(process.env);
 
 async function main(): Promise<void> {
-  assertSafeAdminCredentials(seedEnv.ADMIN_PASSWORD, process.env.NODE_ENV);
+  // Builds on Vercel count as production even though NODE_ENV is not set during the
+  // build (setting it would make npm skip the dev dependencies the build needs).
+  assertSafeAdminCredentials(
+    seedEnv.ADMIN_PASSWORD,
+    process.env.VERCEL ? 'production' : process.env.NODE_ENV,
+  );
   await seedAdmin({ email: seedEnv.ADMIN_EMAIL, password: seedEnv.ADMIN_PASSWORD });
   console.log(`Admin account ready: ${seedEnv.ADMIN_EMAIL}`);
 
