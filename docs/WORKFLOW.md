@@ -92,6 +92,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 
 - [ ] Code review pass (correctness, SOLID, naming, comments)
 - [ ] Re-check backend dependency versions against the two-week rule
+- [ ] Upgrade frontend Vitest to a patched release (4.1.12+) and clear D34
 - [ ] Security pass: input validation, auth on every protected route, no secrets committed,
       password never returned, JWT handling, CORS
 - [ ] Concurrency: two purchases on the last car must not drive stock below 0
