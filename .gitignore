@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Test coverage
+coverage/
+
+# Environment files (commit only the .example versions)
+.env
+.env.*
+!.env.example
+
+# Logs & OS / editor files
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Playwright
+test-results/
+playwright-report/
