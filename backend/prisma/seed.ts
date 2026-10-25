@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { MIN_PASSWORD_LENGTH } from '../src/modules/auth/auth.schemas';
 import { prisma } from '../src/lib/prisma';
 import { seedAdmin } from '../src/seed/seedAdmin';
+import { seedVehicles } from '../src/seed/seedVehicles';
 
 const seedEnv = z
   .object({
@@ -22,6 +23,13 @@ const seedEnv = z
 async function main(): Promise<void> {
   await seedAdmin({ email: seedEnv.ADMIN_EMAIL, password: seedEnv.ADMIN_PASSWORD });
   console.log(`Admin account ready: ${seedEnv.ADMIN_EMAIL}`);
+
+  const inserted = await seedVehicles();
+  console.log(
+    inserted > 0
+      ? `Inserted ${inserted} sample vehicles`
+      : 'Vehicles already exist; sample inventory skipped',
+  );
 }
 
 main()
