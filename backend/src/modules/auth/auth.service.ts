@@ -1,9 +1,9 @@
 import { Prisma, type User } from '@prisma/client';
-import { conflict } from '../../errors/AppError';
+import { conflict, unauthorized } from '../../errors/AppError';
 import { signAccessToken } from '../../lib/jwt';
-import { hashPassword } from '../../lib/password';
+import { hashPassword, verifyPassword } from '../../lib/password';
 import { prisma } from '../../lib/prisma';
-import type { RegisterInput } from './auth.schemas';
+import type { LoginInput, RegisterInput } from './auth.schemas';
 
 /** The user fields that are safe to send to clients (never the password hash). */
 export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'role'>;
@@ -12,6 +12,13 @@ export interface AuthResult {
   token: string;
   user: PublicUser;
 }
+
+/**
+ * A valid bcrypt hash that matches no real password. Comparing against it when the
+ * email is unknown makes both failure paths take the same time, so response timing
+ * does not reveal which emails are registered.
+ */
+const DUMMY_PASSWORD_HASH = '$2b$10$CwTycUXWue0Thq9StjUM0uJ8.Pd9V1rM2s5nYdNlCZuo2dU0dB9dO';
 
 export function toPublicUser(user: User): PublicUser {
   return { id: user.id, name: user.name, email: user.email, role: user.role };
@@ -39,4 +46,18 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     }
     throw error;
   }
+}
+
+/** Verifies credentials. Every failure gives the same 401 so callers cannot probe for accounts. */
+export async function login(input: LoginInput): Promise<AuthResult> {
+  const user = await prisma.user.findUnique({ where: { email: input.email } });
+  const passwordMatches = await verifyPassword(
+    input.password,
+    user?.passwordHash ?? DUMMY_PASSWORD_HASH,
+  );
+
+  if (!user || !passwordMatches) {
+    throw unauthorized('INVALID_CREDENTIALS', 'Invalid email or password');
+  }
+  return issueAuthResult(user);
 }

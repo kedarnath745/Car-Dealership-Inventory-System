@@ -6,7 +6,11 @@ const password = z
   .min(8, 'Password must be at least 8 characters')
   .max(72, 'Password must be at most 72 characters');
 
-const email = z.string().trim().toLowerCase().pipe(z.email('Invalid email address'));
+const email = z
+  .string('Email is required')
+  .trim()
+  .toLowerCase()
+  .pipe(z.email('Invalid email address'));
 
 export const registerSchema = z.object({
   name: z
@@ -19,3 +23,11 @@ export const registerSchema = z.object({
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
+
+/** Login only checks presence: length rules belong to registration, not to existing passwords. */
+export const loginSchema = z.object({
+  email,
+  password: z.string('Password is required').min(1, 'Password is required'),
+});
+
+export type LoginInput = z.infer<typeof loginSchema>;

@@ -10,6 +10,8 @@ export const testDatabaseUrl =
 export function assertIsTestDatabase(url: string): void {
   const dbName = new URL(url).pathname.slice(1);
   if (!dbName.includes('_test')) {
-    throw new Error(`Refusing to run tests against "${dbName}": database name must contain "_test"`);
+    throw new Error(
+      `Refusing to run tests against "${dbName}": database name must contain "_test"`,
+    );
   }
 }
