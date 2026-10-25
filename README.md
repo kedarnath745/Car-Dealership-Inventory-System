@@ -7,6 +7,8 @@ filter and buy cars priced in rupees; admins add, edit, restock and remove them.
 Express + TypeScript REST API on PostgreSQL; the frontend is a React + Tailwind single-page app with
 its own visual identity, hand-drawn icons and line-art cars.
 
+**Live demo:** [car-dealership-inventory-system-gold.vercel.app](https://car-dealership-inventory-system-gold.vercel.app)
+
 ![Inventory screen](docs/screenshots/inventory.png)
 
 **Contents:** [Features](#features) · [Screenshots](#screenshots) · [Engineering highlights](#engineering-highlights) ·
@@ -277,7 +279,8 @@ session transcript by `scripts/export_prompts.py`.
 
 ## Deployment
 
-**Live demo:** _link added after the first production deployment._
+**Live demo:** **[car-dealership-inventory-system-gold.vercel.app](https://car-dealership-inventory-system-gold.vercel.app)**. Register any account to shop (passwords need 15+ characters). Admin access is available on request, so the public demo
+inventory can't be wiped by visitors.
 
 The whole app deploys as **one Vercel project** using
 [Vercel Services](https://vercel.com/docs/services), configured in the root [`vercel.json`](vercel.json):
@@ -299,7 +302,9 @@ if they are missing.
 2. **Add a database.** *Storage → Create Database → Neon (Postgres)*, then connect it to the
    project for all environments. This sets `DATABASE_URL` (pooled, used at runtime) and
    `DATABASE_URL_UNPOOLED` (direct, used for migrations).
-3. **Add environment variables** (*Settings → Environment Variables*):
+3. **Add environment variables** (*Settings → Environment Variables*). Tick **Production and
+   Preview** for each one: pull-request builds are Preview builds, and the seed fails without
+   the admin variables.
 
    | Name | Value |
    |------|-------|
