@@ -1,5 +1,6 @@
 import { AppError, notFound } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
+import { PrismaErrorCode, isPrismaError } from '../../lib/prismaErrors';
 import { type VehicleResponse, toVehicleResponse } from '../vehicles/vehicle.dto';
 import { type PurchaseResponse, toPurchaseResponse } from './purchase.dto';
 
@@ -53,4 +54,26 @@ export async function purchaseVehicle(
 
     return { purchase: toPurchaseResponse(purchase), vehicle: toVehicleResponse(vehicle) };
   });
+}
+
+/**
+ * Adds stock to a vehicle. The increment is done in SQL (`quantity = quantity + n`),
+ * not as read-then-write, so concurrent restocks never overwrite each other.
+ */
+export async function restockVehicle(
+  vehicleId: string,
+  quantity: number,
+): Promise<VehicleResponse> {
+  try {
+    const vehicle = await prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: { quantity: { increment: quantity } },
+    });
+    return toVehicleResponse(vehicle);
+  } catch (error) {
+    if (isPrismaError(error, PrismaErrorCode.RecordNotFound)) {
+      throw notFound('Vehicle not found');
+    }
+    throw error;
+  }
 }

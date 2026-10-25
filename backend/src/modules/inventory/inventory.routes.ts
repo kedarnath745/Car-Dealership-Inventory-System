@@ -1,7 +1,8 @@
 import { Router } from 'express';
+import { requireRole } from '../../middleware/requireRole';
 import { validateBody } from '../../middleware/validate';
 import * as inventoryController from './inventory.controller';
-import { purchaseSchema } from './inventory.schemas';
+import { purchaseSchema, restockSchema } from './inventory.schemas';
 
 /**
  * Stock-changing actions on one vehicle. Mounted by the vehicle router under
@@ -10,3 +11,9 @@ import { purchaseSchema } from './inventory.schemas';
 export const inventoryRouter = Router({ mergeParams: true });
 
 inventoryRouter.post('/purchase', validateBody(purchaseSchema), inventoryController.purchase);
+inventoryRouter.post(
+  '/restock',
+  requireRole('ADMIN'),
+  validateBody(restockSchema),
+  inventoryController.restock,
+);

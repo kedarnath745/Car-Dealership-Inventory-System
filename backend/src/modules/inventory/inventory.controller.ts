@@ -10,3 +10,8 @@ export async function purchase(req: Request<{ id: string }>, res: Response): Pro
   );
   res.status(201).json(result);
 }
+
+export async function restock(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const vehicle = await inventoryService.restockVehicle(req.params.id, req.body.quantity);
+  res.status(200).json({ vehicle });
+}
