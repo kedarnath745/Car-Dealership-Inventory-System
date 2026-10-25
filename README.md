@@ -288,7 +288,7 @@ The whole app deploys as **one Vercel project** using
 | Path | Served by |
 |------|-----------|
 | `/api/*` | `backend` service: the Express app (`backend/server.ts` → `src/app.ts`) as a Vercel Function |
-| everything else | `frontend` service: the Vite build; `/login`, `/register` and `/purchases` fall back to `index.html` |
+| everything else | `frontend` service: the Vite build. Real files are served first; any other path without a file extension falls back to `index.html`, so the app's router handles it (unknown pages redirect home) |
 
 The frontend calls `/api` on its own origin, so there is no CORS setup and no API URL to configure.
 On every deployment the backend's build step (`backend/scripts/vercel-build.sh`) applies the Prisma

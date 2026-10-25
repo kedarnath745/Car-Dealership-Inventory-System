@@ -35,7 +35,8 @@ preview URLs need a Vercel login, so they can't be driven from a cloud session.
 - Run concurrency/oversell probes locally, never against production stock.
 - Vercel's firewall answers some forged tokens (alg:none) with a plain 403 before the app sees
   them; test token handling locally.
-- Only `/login`, `/register` and `/purchases` are rewritten to the SPA on Vercel; other unknown
-  paths get Vercel's 404 page.
+- On Vercel, real files are served first and every other extension-less path (except `/api/`,
+  `/assets/`, `/src/`, `/node_modules/`, `/@…`) falls back to `index.html`. Check both `vercel dev -L`
+  (Vite module requests must not get HTML) and `vercel build` (`services/frontend/config.json` routes).
 - To stop dev servers, use a bracket pattern (`pkill -f '[t]sx watch'`) in a command that doesn't
   otherwise contain the process name, or pkill kills its own shell.
