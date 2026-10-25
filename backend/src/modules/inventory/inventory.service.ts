@@ -77,3 +77,12 @@ export async function restockVehicle(
     throw error;
   }
 }
+
+/** A user's purchase history, newest first. Prices are the ones paid, not current prices. */
+export async function listPurchasesForUser(userId: string): Promise<PurchaseResponse[]> {
+  const purchases = await prisma.purchase.findMany({
+    where: { userId },
+    orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+  });
+  return purchases.map(toPurchaseResponse);
+}

@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authRouter } from './modules/auth/auth.routes';
+import { purchaseRouter } from './modules/inventory/purchase.routes';
 import { vehicleRouter } from './modules/vehicles/vehicle.routes';
 
 /**
@@ -23,6 +24,7 @@ export function createApp(): Express {
 
   app.use('/api/auth', authRouter);
   app.use('/api/vehicles', vehicleRouter);
+  app.use('/api/purchases', purchaseRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
