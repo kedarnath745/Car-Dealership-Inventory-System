@@ -29,7 +29,7 @@ export function AuthLayout({
           Cars in stock today, priced in rupees.
         </p>
         <div className="relative -mx-10 -mb-10 h-[46%]">
-          <CategoryArt category="SUV" color="Petrol" />
+          <CategoryArt category="SUV" />
         </div>
       </aside>
       <main className="flex flex-col px-5 py-8 sm:px-10 lg:justify-center">
