@@ -22,3 +22,6 @@ coverage/
 # Playwright
 test-results/
 playwright-report/
+
+# Vercel CLI local state
+.vercel/
