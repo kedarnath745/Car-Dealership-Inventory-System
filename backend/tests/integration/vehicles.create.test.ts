@@ -43,7 +43,7 @@ describe('POST /api/vehicles', () => {
   });
 
   it('trims text fields and treats a missing imageUrl as null', async () => {
-    const { imageUrl: _omit, ...withoutImage } = validVehicleInput;
+    const { imageUrl, ...withoutImage } = validVehicleInput;
 
     const res = await post(adminAuth, { ...withoutImage, make: '  Tata ', model: ' Nexon EV  ' });
 

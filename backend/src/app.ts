@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import { env } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { authRouter } from './modules/auth/auth.routes';
+import { vehicleRouter } from './modules/vehicles/vehicle.routes';
 
 /**
  * Builds the Express application without starting a server,
@@ -21,6 +22,7 @@ export function createApp(): Express {
   });
 
   app.use('/api/auth', authRouter);
+  app.use('/api/vehicles', vehicleRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
