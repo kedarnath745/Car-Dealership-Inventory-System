@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { notFound } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
-import { PrismaErrorCode, isPrismaError } from '../../lib/prismaErrors';
+import { orNotFound } from '../../lib/prismaErrors';
 import { type VehicleResponse, toVehicleResponse } from './vehicle.dto';
 import type {
   CreateVehicleInput,
@@ -25,17 +25,7 @@ export async function listVehicles(): Promise<VehicleResponse[]> {
   return vehicles.map(toVehicleResponse);
 }
 
-/** Runs a write against one vehicle, turning "record not found" into a 404. */
-async function withVehicleNotFound<T>(write: () => Promise<T>): Promise<T> {
-  try {
-    return await write();
-  } catch (error) {
-    if (isPrismaError(error, PrismaErrorCode.RecordNotFound)) {
-      throw notFound('Vehicle not found');
-    }
-    throw error;
-  }
-}
+const withVehicleNotFound = <T>(write: () => Promise<T>) => orNotFound(write, 'Vehicle not found');
 
 export async function updateVehicle(
   id: string,

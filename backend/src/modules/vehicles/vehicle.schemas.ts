@@ -14,9 +14,12 @@ const requiredText = (label: string) =>
     .min(1, `${label} is required`)
     .max(50, `${label} must be at most 50 characters`);
 
-/** True when the number has no more than two decimal places (paise). */
-const hasAtMostTwoDecimals = (value: number) =>
-  Math.abs(value * 100 - Math.round(value * 100)) < 1e-6;
+/**
+ * True when the number has no more than two decimal places (paise). Rounding to paise
+ * and comparing exactly avoids the false rejections a fixed tolerance gives for large
+ * prices, where value * 100 carries floating-point error.
+ */
+const hasAtMostTwoDecimals = (value: number) => Math.round(value * 100) / 100 === value;
 
 const price = z
   .number('Price must be a number')

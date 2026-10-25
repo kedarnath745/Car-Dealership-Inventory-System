@@ -10,15 +10,21 @@ export interface RateLimitOptions {
 
 /**
  * Brute-force protection for credential endpoints (decision D24, NIST SP 800-63B-4).
- * Only failed requests count, so a user who signs in correctly is never locked out.
+ * For sign-in only failed requests count, so a user who signs in correctly is never
+ * locked out; registration counts every request (see createAuthRouter).
  * Counters live in memory, which suits a single API instance; several instances
  * would need a shared store such as Redis.
  */
-export function createAuthRateLimiter({ limit, windowMs }: RateLimitOptions): RequestHandler {
+export function createAuthRateLimiter(
+  { limit, windowMs }: RateLimitOptions,
+  { countSuccessful = false }: { countSuccessful?: boolean } = {},
+): RequestHandler {
   return rateLimit({
     windowMs,
     limit,
-    skipSuccessfulRequests: true,
+    // Login counts failures only; registration counts every attempt, since a
+    // successful sign-up is exactly what an account-creation flood looks like.
+    skipSuccessfulRequests: !countSuccessful,
     standardHeaders: 'draft-8',
     legacyHeaders: false,
     handler: (_req, _res, next) => {

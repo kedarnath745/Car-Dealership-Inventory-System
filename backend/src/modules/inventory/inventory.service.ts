@@ -1,6 +1,6 @@
 import { AppError, notFound } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
-import { PrismaErrorCode, isPrismaError } from '../../lib/prismaErrors';
+import { orNotFound } from '../../lib/prismaErrors';
 import { type VehicleResponse, toVehicleResponse } from '../vehicles/vehicle.dto';
 import { type PurchaseResponse, toPurchaseResponse } from './purchase.dto';
 
@@ -64,18 +64,15 @@ export async function restockVehicle(
   vehicleId: string,
   quantity: number,
 ): Promise<VehicleResponse> {
-  try {
-    const vehicle = await prisma.vehicle.update({
-      where: { id: vehicleId },
-      data: { quantity: { increment: quantity } },
-    });
-    return toVehicleResponse(vehicle);
-  } catch (error) {
-    if (isPrismaError(error, PrismaErrorCode.RecordNotFound)) {
-      throw notFound('Vehicle not found');
-    }
-    throw error;
-  }
+  const vehicle = await orNotFound(
+    () =>
+      prisma.vehicle.update({
+        where: { id: vehicleId },
+        data: { quantity: { increment: quantity } },
+      }),
+    'Vehicle not found',
+  );
+  return toVehicleResponse(vehicle);
 }
 
 /** A user's purchase history, newest first. Prices are the ones paid, not current prices. */

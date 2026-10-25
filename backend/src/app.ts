@@ -34,14 +34,18 @@ export function createApp(options: AppOptions = {}): Express {
     res.json({ status: 'ok' });
   });
 
-  const authRateLimiter = createAuthRateLimiter(
-    options.authRateLimit ?? {
-      limit: env.AUTH_RATE_LIMIT_MAX,
-      windowMs: env.AUTH_RATE_LIMIT_WINDOW_MINUTES * 60_000,
-    },
-  );
+  const rateLimit = options.authRateLimit ?? {
+    limit: env.AUTH_RATE_LIMIT_MAX,
+    windowMs: env.AUTH_RATE_LIMIT_WINDOW_MINUTES * 60_000,
+  };
 
-  app.use('/api/auth', createAuthRouter(authRateLimiter));
+  app.use(
+    '/api/auth',
+    createAuthRouter({
+      login: createAuthRateLimiter(rateLimit),
+      register: createAuthRateLimiter(rateLimit, { countSuccessful: true }),
+    }),
+  );
   app.use('/api/vehicles', vehicleRouter);
   app.use('/api/purchases', purchaseRouter);
 

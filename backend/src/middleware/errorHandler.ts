@@ -19,6 +19,11 @@ function fromBodyParserError(err: { type: string; status: number }): AppError | 
   if (err.type === 'entity.too.large') {
     return new AppError(413, 'PAYLOAD_TOO_LARGE', 'Request body is too large');
   }
+  // Other client-side read failures (unsupported charset or encoding, aborted request)
+  // keep their own 4xx status instead of being reported as server errors.
+  if (err.status >= 400 && err.status < 500) {
+    return new AppError(err.status, 'BAD_REQUEST', 'The request body could not be read');
+  }
   return undefined;
 }
 
