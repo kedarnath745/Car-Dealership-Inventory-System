@@ -31,4 +31,24 @@ describe('parseEnv', () => {
   it('rejects a JWT_EXPIRES_IN without a unit, which jsonwebtoken would read as milliseconds', () => {
     expect(() => parseEnv({ ...valid, JWT_EXPIRES_IN: '3600' })).toThrow(/JWT_EXPIRES_IN/);
   });
+
+  it('refuses the placeholder JWT secret from .env.example in production', () => {
+    expect(() =>
+      parseEnv({
+        ...valid,
+        NODE_ENV: 'production',
+        JWT_SECRET: 'change-me-to-a-long-random-string',
+      }),
+    ).toThrow(/JWT_SECRET is still the placeholder/);
+  });
+
+  it('allows the placeholder secret in development, where it is convenient', () => {
+    expect(
+      parseEnv({
+        ...valid,
+        NODE_ENV: 'development',
+        JWT_SECRET: 'change-me-to-a-long-random-string',
+      }).JWT_SECRET,
+    ).toBe('change-me-to-a-long-random-string');
+  });
 });
