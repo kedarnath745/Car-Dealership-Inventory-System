@@ -4,9 +4,7 @@ import { signAccessToken } from '../../lib/jwt';
 import { hashPassword, verifyPassword } from '../../lib/password';
 import { prisma } from '../../lib/prisma';
 import type { LoginInput, RegisterInput } from './auth.schemas';
-
-/** The user fields that are safe to send to clients (never the password hash). */
-export type PublicUser = Pick<User, 'id' | 'name' | 'email' | 'role'>;
+import { type PublicUser, toPublicUser } from './publicUser';
 
 export interface AuthResult {
   token: string;
@@ -19,10 +17,6 @@ export interface AuthResult {
  * does not reveal which emails are registered.
  */
 const DUMMY_PASSWORD_HASH = '$2b$10$CwTycUXWue0Thq9StjUM0uJ8.Pd9V1rM2s5nYdNlCZuo2dU0dB9dO';
-
-export function toPublicUser(user: User): PublicUser {
-  return { id: user.id, name: user.name, email: user.email, role: user.role };
-}
 
 function issueAuthResult(user: User): AuthResult {
   return { token: signAccessToken({ sub: user.id, role: user.role }), user: toPublicUser(user) };
