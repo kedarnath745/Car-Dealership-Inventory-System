@@ -16,8 +16,11 @@ describe('parseEnv', () => {
   });
 
   it('fails fast with a readable list of every problem', () => {
-    expect(() => parseEnv({ JWT_SECRET: 'too-short', PORT: 'abc' })).toThrow(
-      /Invalid environment configuration:[\s\S]*DATABASE_URL[\s\S]*JWT_SECRET must be at least 32 characters[\s\S]*PORT/,
-    );
+    const parse = () => parseEnv({ JWT_SECRET: 'too-short', PORT: 'abc' });
+
+    expect(parse).toThrow(/^Invalid environment configuration:/);
+    expect(parse).toThrow(/- DATABASE_URL: /);
+    expect(parse).toThrow(/- JWT_SECRET: JWT_SECRET must be at least 32 characters/);
+    expect(parse).toThrow(/- PORT: /);
   });
 });
