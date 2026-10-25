@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Alert } from '../../../components/ui/Alert';
@@ -40,14 +41,56 @@ export function VehicleFormSheet({
   vehicle: Vehicle | null;
   onClose: () => void;
 }) {
+  const [dirty, setDirty] = useState(false);
+  const [confirmingDiscard, setConfirmingDiscard] = useState(false);
+
+  const close = () => {
+    setDirty(false);
+    setConfirmingDiscard(false);
+    onClose();
+  };
+  // Unsaved edits are never lost silently (HIG Sheets): Cancel, Escape and the backdrop ask first.
+  const requestClose = () => (dirty ? setConfirmingDiscard(true) : close());
+
   return (
-    <Sheet open={open} onClose={onClose} title={vehicle ? 'Edit Vehicle' : 'Add Vehicle'}>
-      {open && <VehicleForm vehicle={vehicle} onDone={onClose} />}
-    </Sheet>
+    <>
+      <Sheet open={open} onClose={requestClose} title={vehicle ? 'Edit Vehicle' : 'Add Vehicle'}>
+        {open && <VehicleForm vehicle={vehicle} onDone={close} onDirtyChange={setDirty} />}
+      </Sheet>
+      <Sheet
+        open={confirmingDiscard}
+        onClose={() => setConfirmingDiscard(false)}
+        variant="alert"
+        title="Discard changes?"
+        description="Your edits will be lost."
+      >
+        <div className="flex flex-col-reverse gap-2 sm:flex-row">
+          <Button
+            variant="plain"
+            fullWidth
+            data-autofocus
+            onClick={() => setConfirmingDiscard(false)}
+          >
+            Keep Editing
+          </Button>
+          <Button variant="destructive" fullWidth onClick={close}>
+            Discard
+          </Button>
+        </div>
+      </Sheet>
+    </>
   );
 }
 
-function VehicleForm({ vehicle, onDone }: { vehicle: Vehicle | null; onDone: () => void }) {
+function VehicleForm({
+  vehicle,
+  onDone,
+  onDirtyChange,
+}: {
+  vehicle: Vehicle | null;
+  onDone: () => void;
+  onDirtyChange: (dirty: boolean) => void;
+}) {
   const queryClient = useQueryClient();
   const isEdit = vehicle !== null;
   const {
@@ -61,6 +104,8 @@ function VehicleForm({ vehicle, onDone }: { vehicle: Vehicle | null; onDone: () 
     mode: 'onTouched',
     defaultValues: vehicle ? toFormValues(vehicle) : EMPTY_VEHICLE_FORM,
   });
+
+  useEffect(() => onDirtyChange(isDirty), [isDirty, onDirtyChange]);
 
   const save = useMutation({
     mutationFn: (values: VehicleFormValues) => {
