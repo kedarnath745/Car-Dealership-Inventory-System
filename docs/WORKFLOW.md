@@ -25,17 +25,17 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] Ambiguity log: each unclear point, the decision taken and why (to discuss in the interview)
 - [x] **Checkpoint 1**: matrix and ambiguity decisions approved
 
-## Phase 2 — Design  `[~]`
+## Phase 2 — Design  `[x]`
 
-- [ ] Architecture: layered backend (routes → controllers → services → repositories)
-- [ ] Data model: `User` (id, name, email, passwordHash, role), `Vehicle` (id, make, model,
+- [x] Architecture: layered backend (routes → controllers → services → repositories)
+- [x] Data model: `User` (id, name, email, passwordHash, role), `Vehicle` (id, make, model,
       category, price, quantity, timestamps), optional `Purchase` record
-- [ ] API contract (`docs/API.md`): request and response shapes, status codes, error format
-- [ ] Auth design: bcrypt password hashing, JWT (expiry, secret from env), role guard for admin
-- [ ] Frontend: pages, component tree, state and auth handling, routing
-- [ ] **Checkpoint 2**: design approved
+- [x] API contract (`docs/API.md`): request and response shapes, status codes, error format
+- [x] Auth design: bcrypt password hashing, JWT (expiry, secret from env), role guard for admin
+- [x] Frontend: pages, component tree, state and auth handling, routing
+- [x] **Checkpoint 2**: design approved
 
-## Phase 3 — Backend (strict TDD)  `[ ]`
+## Phase 3 — Backend (strict TDD)  `[~]`
 
 Each slice is committed as **Red → Green → Refactor** (refactor only when needed):
 

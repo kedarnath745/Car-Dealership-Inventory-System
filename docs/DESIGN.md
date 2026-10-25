@@ -141,7 +141,7 @@ Validation rules:
 | category | one of the `Category` enum values |
 | year | integer, 1886 (first car) to next year |
 | price | > 0, ≤ 9,999,999,999.99, at most 2 decimals |
-| quantity (create) | integer, 0–10,000 |
+| quantity (create) | integer, 0–10,000. Not accepted by PUT (D19) |
 | purchase / restock quantity | integer, 1–100 / 1–10,000 |
 | imageUrl | optional `http(s)` URL |
 

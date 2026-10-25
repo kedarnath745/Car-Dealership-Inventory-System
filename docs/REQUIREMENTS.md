@@ -72,3 +72,5 @@ Status: `todo` · `wip` · `done`
 | D16 | Does register log the user in? | Yes, `201` returns `{ token, user }` | One less step for the user in the UI. |
 | D17 | Currency | INR (₹), formatted with Indian digit grouping (`en-IN`, e.g. ₹12,50,000) | Matches the target market. Only affects display; the API stores plain decimal amounts. |
 | D18 | Deployment | Planned: Neon (Postgres) + Render (API) + Vercel (SPA). Config is env-driven from the first commit. | Brownie points, and env-driven config is good practice regardless. |
+| D19 | Can PUT change stock? | No. `PUT` edits details only; stock changes only through purchase (−) and restock (+). Initial stock is set on create. | One controlled path per stock change, so every change is explained by a purchase or a restock. |
+| D20 | How does the work reach `main`? | Pull request merged with a merge commit, never squashed | Squashing would erase the Red → Green → Refactor history reviewers look for. |
