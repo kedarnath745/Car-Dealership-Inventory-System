@@ -1,3 +1,4 @@
+import { CarFront, Receipt } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import { cn } from '../../lib/cn';
@@ -55,10 +56,36 @@ export function AppShell() {
       <main
         id="main"
         tabIndex={-1}
-        className="mx-auto max-w-[1280px] px-4 pt-6 pb-[max(3rem,env(safe-area-inset-bottom))] outline-none sm:px-6 lg:px-8"
+        className="mx-auto max-w-[1280px] px-4 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none sm:px-6 md:pb-12 lg:px-8"
       >
         <Outlet />
       </main>
+      <TabBar />
     </>
+  );
+}
+
+const tabClass = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    'flex flex-1 flex-col items-center justify-center gap-0.5 text-caption font-medium transition-colors duration-200',
+    isActive ? 'text-accent-text' : 'text-label-2',
+  );
+
+/** Bottom tab bar on small screens: HIG pattern for top-level sections (Should tier). */
+function TabBar() {
+  return (
+    <nav
+      aria-label="Tabs"
+      className="material-bar fixed inset-x-0 bottom-0 z-40 flex h-[calc(56px+env(safe-area-inset-bottom))] border-t border-separator pb-[env(safe-area-inset-bottom)] md:hidden"
+    >
+      <NavLink to="/" end className={tabClass}>
+        <CarFront aria-hidden="true" className="size-6" strokeWidth={1.75} />
+        Inventory
+      </NavLink>
+      <NavLink to="/purchases" className={tabClass}>
+        <Receipt aria-hidden="true" className="size-6" strokeWidth={1.75} />
+        Purchases
+      </NavLink>
+    </nav>
   );
 }

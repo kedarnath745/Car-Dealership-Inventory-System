@@ -1,11 +1,12 @@
-import { Search } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { TextField } from '../../components/ui/TextField';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { CATEGORIES, type Category } from '../../lib/api/types';
 import { cn } from '../../lib/cn';
-import { type Filters, validateFilters } from '../../lib/filters';
+import { type Filters, activeFilterChips, validateFilters } from '../../lib/filters';
 import { categoryLabel } from '../../lib/format';
+import { PriceSheet } from './PriceSheet';
 
 type TextDraft = Pick<Filters, 'make' | 'model' | 'minPrice' | 'maxPrice'>;
 
@@ -59,6 +60,11 @@ export function FilterBar({
 
   const selectCategory = (category: Category | '') => onChange({ ...filters, category });
 
+  // Small screens: the price range lives in a sheet behind a button that shows the range.
+  const [priceSheetOpen, setPriceSheetOpen] = useState(false);
+  const priceSummary =
+    activeFilterChips(filters).find((chip) => chip.key === 'price')?.label ?? 'Any';
+
   return (
     <section aria-label="Filters" className="rounded-card bg-surface p-3 shadow-card sm:p-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_1fr_160px_160px]">
@@ -80,8 +86,18 @@ export function FilterBar({
           value={draft.model}
           onChange={(event) => setField('model', event.target.value)}
         />
+        <button
+          type="button"
+          onClick={() => setPriceSheetOpen(true)}
+          className="col-span-2 flex h-11 cursor-pointer items-center gap-2 rounded-field border border-border-control bg-surface px-3 text-left text-body md:hidden"
+        >
+          <SlidersHorizontal aria-hidden="true" className="size-4 text-label-2" />
+          <span className="text-label-2">Price:</span>
+          <span className="truncate font-medium">{priceSummary}</span>
+        </button>
         <TextField
           label="Min price"
+          className="hidden md:block"
           placeholder="Any"
           inputMode="numeric"
           leading="₹"
@@ -91,6 +107,7 @@ export function FilterBar({
         />
         <TextField
           label="Max price"
+          className="hidden md:block"
           placeholder="Any"
           inputMode="numeric"
           leading="₹"
@@ -100,6 +117,15 @@ export function FilterBar({
         />
       </div>
       <CategoryChips value={filters.category} onChange={selectCategory} />
+      <PriceSheet
+        open={priceSheetOpen}
+        filters={filters}
+        onClose={() => setPriceSheetOpen(false)}
+        onApply={(range) => {
+          setPriceSheetOpen(false);
+          onChange({ ...filters, ...range });
+        }}
+      />
     </section>
   );
 }

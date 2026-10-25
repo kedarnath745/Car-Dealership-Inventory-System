@@ -1,6 +1,5 @@
 import { LogOut } from 'lucide-react';
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
-import { NavLink } from 'react-router';
 import { useAuth } from '../../features/auth/authContext';
 import { cn } from '../../lib/cn';
 import { Badge } from '../ui/Badge';
@@ -105,24 +104,6 @@ export function AccountMenu() {
             <p className="text-subhead font-semibold">{user.name}</p>
             <p className="truncate text-footnote text-label-2">{user.email}</p>
           </div>
-          <div className="my-1 h-px bg-separator md:hidden" />
-          <NavLink
-            role="menuitem"
-            to="/"
-            end
-            onClick={() => setOpen(false)}
-            className={cn(ITEM, 'md:hidden')}
-          >
-            Inventory
-          </NavLink>
-          <NavLink
-            role="menuitem"
-            to="/purchases"
-            onClick={() => setOpen(false)}
-            className={cn(ITEM, 'md:hidden')}
-          >
-            My Purchases
-          </NavLink>
           <div className="my-1 h-px bg-separator" />
           <button
             role="menuitem"

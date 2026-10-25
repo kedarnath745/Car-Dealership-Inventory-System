@@ -17,7 +17,14 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         {children}
-        <Toaster position="bottom-center" closeButton duration={5000} theme="system" />
+        <Toaster
+          position="bottom-center"
+          closeButton
+          duration={5000}
+          theme="system"
+          // Keep toasts above the mobile tab bar.
+          mobileOffset={{ bottom: 'calc(env(safe-area-inset-bottom) + 72px)' }}
+        />
       </AuthProvider>
     </QueryClientProvider>
   );
