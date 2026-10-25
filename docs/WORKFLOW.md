@@ -118,13 +118,13 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] Owner: add Neon storage + env vars in the Vercel dashboard, redeploy
 - [x] Live URL in the README; production checked end to end (API journey + browser on desktop and phone)
 
-## Phase 9 — Submission checklist  `[ ]`
+## Phase 9 — Submission checklist  `[x]`
 
-- [ ] Repo is public, final code on `main`
-- [ ] Commit history shows Red → Green → Refactor, every AI-assisted commit has the co-author trailer
-- [ ] README has every mandatory section
-- [ ] PROMPTS.md at the repo root
-- [ ] Fresh-clone test: follow the README from zero on a clean checkout and it works
+- [x] Repo is public, final code on `main` (PR #1 and PR #2, merged with merge commits)
+- [x] Commit history shows Red → Green → Refactor (29 `test:` commits each followed by their `feat:`/`fix:`), every AI-assisted commit has the co-author trailer (checked with `git log`; only the owner's initial LICENSE commit has none)
+- [x] README has every mandatory section
+- [x] PROMPTS.md at the repo root
+- [x] Fresh-clone test: cloned from GitHub into an empty folder with empty databases and followed the README as written. Install, migrate, seed (18 cars), both dev servers, the full "Try the brief's requirements" walk-through in a browser (register, filter + sort, buy 2, sold-out state, purchase history, admin add/edit/restock/delete, phone width in dark mode) with no console errors, and `npm run verify` + build in both apps (171 + 131 tests). PostgreSQL came from a local install; the Docker option was not exercised in this environment. Fixed on the way: a stale `frontend/.env.example` comment
 - [x] Interview prep notes (`docs/INTERVIEW_NOTES.md`): design decisions and how AI was used
 
 ---
