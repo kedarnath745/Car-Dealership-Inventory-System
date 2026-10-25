@@ -55,10 +55,18 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 | 3.12 | Central error handling, seed script (admin and sample cars) | — (admin seed done early for Checkpoint 3a) |
 
 - [x] Slices 3.1–3.4 done (auth), admin seed done
-- [ ] **Checkpoint 3a**: auth review (try register/login/me)
-- [ ] Slices 3.5–3.12
-- [ ] Coverage target: ≥ 90% backend
+- [x] **Checkpoint 3a**: auth review (try register/login/me)
+- [x] Slices 3.5–3.11 + purchase history (`GET /api/purchases/me`)
+- [ ] 3.12: sample-vehicle seed (after research)
+- [x] CI: GitHub Actions runs typecheck, lint and tests against Postgres
+- [x] Coverage target: ≥ 90% backend (98.9% statements, 92.7% branches)
 - [ ] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback
+
+## Phase 3.5 — User-centric research  `[~]`
+
+- [~] Desk research (surveys, papers, UX research, Apple HIG, WCAG, NIST) → `docs/research/`
+- [ ] Fold findings into requirements, design and the frontend spec
+- [ ] **Checkpoint R**: you approve the research-driven changes
 
 ## Phase 4 — Frontend (React + Tailwind)  `[ ]`
 

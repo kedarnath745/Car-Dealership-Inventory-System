@@ -15,14 +15,14 @@ Status: `todo` · `wip` · `done`
 | R3 | Users can register | `POST /api/auth/register` | `auth.register.test.ts` | done |
 | R4 | Users can log in | `POST /api/auth/login` | `auth.login.test.ts` | done |
 | R5 | Token-based auth (JWT) secures endpoints | `requireAuth` middleware | `auth.me.test.ts`, `middleware.requireRole.test.ts` | done |
-| R6 | Add a vehicle | `POST /api/vehicles` (admin, see D2) | `vehicles.create.test.ts` | todo |
-| R7 | List vehicles | `GET /api/vehicles` | `vehicles.list.test.ts` | todo |
-| R8 | Search by make, model, category, price range | `GET /api/vehicles/search` | `vehicles.search.test.ts` | todo |
-| R9 | Update a vehicle | `PUT /api/vehicles/:id` (admin, see D2) | `vehicles.update.test.ts` | todo |
-| R10 | Delete a vehicle (admin only) | `DELETE /api/vehicles/:id` | `vehicles.delete.test.ts` | todo |
-| R11 | Purchase decreases quantity | `POST /api/vehicles/:id/purchase` | `inventory.purchase.test.ts` | todo |
-| R12 | Restock increases quantity (admin only) | `POST /api/vehicles/:id/restock` | `inventory.restock.test.ts` | todo |
-| R13 | Vehicle has unique ID, make, model, category, price, quantity | Prisma `Vehicle` model | Schema and validation tests | todo |
+| R6 | Add a vehicle | `POST /api/vehicles` (admin, see D2) | `vehicles.create.test.ts` | done |
+| R7 | List vehicles | `GET /api/vehicles` | `vehicles.read.test.ts` | done |
+| R8 | Search by make, model, category, price range | `GET /api/vehicles/search` | `vehicles.search.test.ts`, `unit/vehicle.search.test.ts` | done |
+| R9 | Update a vehicle | `PUT /api/vehicles/:id` (admin, see D2) | `vehicles.update.test.ts` | done |
+| R10 | Delete a vehicle (admin only) | `DELETE /api/vehicles/:id` | `vehicles.delete.test.ts` | done |
+| R11 | Purchase decreases quantity | `POST /api/vehicles/:id/purchase` | `inventory.purchase.test.ts` | done |
+| R12 | Restock increases quantity (admin only) | `POST /api/vehicles/:id/restock` | `inventory.restock.test.ts` | done |
+| R13 | Vehicle has unique ID, make, model, category, price, quantity | Prisma `Vehicle` model | `vehicles.create.test.ts` (validation) | done |
 
 ## 2. Frontend
 
