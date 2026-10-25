@@ -1,18 +1,10 @@
 import { render } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import { AppProviders, AppRoutes } from '../App';
 import { TOKEN_STORAGE_KEY } from '../lib/api/tokenStore';
+import { LocationProbe } from './LocationProbe';
 
-let lastLocation = '';
-
-/** The URL (path + query) the app is currently showing, as a user would see in the address bar. */
-export const currentUrl = () => lastLocation;
-
-function LocationProbe() {
-  const { pathname, search } = useLocation();
-  lastLocation = pathname + search;
-  return null;
-}
+export { currentUrl } from './location';
 
 /**
  * Renders the whole app (providers + routes) at a route, optionally signed in with a
