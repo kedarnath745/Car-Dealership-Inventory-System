@@ -52,10 +52,13 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 | 3.9 | Delete vehicle (admin only) | `DELETE /api/vehicles/:id` |
 | 3.10 | Purchase (atomic decrement, out-of-stock) | `POST /api/vehicles/:id/purchase` |
 | 3.11 | Restock (admin only) | `POST /api/vehicles/:id/restock` |
-| 3.12 | Central error handling, seed script (admin and sample cars) | — |
+| 3.12 | Central error handling, seed script (admin and sample cars) | — (admin seed done early for Checkpoint 3a) |
 
+- [x] Slices 3.1–3.4 done (auth), admin seed done
+- [ ] **Checkpoint 3a**: auth review (try register/login/me)
+- [ ] Slices 3.5–3.12
 - [ ] Coverage target: ≥ 90% backend
-- [ ] **Checkpoint 3**: you run the API yourself (Postman/curl) and give feedback
+- [ ] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback
 
 ## Phase 4 — Frontend (React + Tailwind)  `[ ]`
 
@@ -111,10 +114,20 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 
 ---
 
+## Skills used per phase
+
+| Phase | Skill |
+|-------|-------|
+| 3 (setup) | `session-start-hook`: new cloud sessions install deps and start Postgres automatically |
+| 6 | `code-review`, `security-review` |
+| 7 | `run` (launch app, screenshots), `design:accessibility-review`, `engineering:documentation` |
+
 ## Commit rules
 
 - Conventional prefixes: `test:` (red), `feat:` (green), `refactor:`, `chore:`, `docs:`, `fix:`, `style:`
 - Red commits contain only the failing tests; green commits contain the minimum code that passes them
 - Messages narrate the work: what changed and why, plus how AI helped
+- Every message ends with a factual "AI assistance:" line saying what the AI did. Never claim a
+  human review that has not happened.
 - AI co-author trailer at the end of every AI-assisted commit, after two blank lines:
   `Co-authored-by: Claude <noreply@anthropic.com>`

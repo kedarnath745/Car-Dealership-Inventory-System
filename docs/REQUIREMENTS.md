@@ -10,11 +10,11 @@ Status: `todo` · `wip` · `done`
 
 | ID | Requirement (from brief) | Implementation | Verified by | Status |
 |----|--------------------------|----------------|-------------|--------|
-| R1 | Backend in Node.js/TypeScript (Express) | `backend/` | — | todo |
-| R2 | Persistent database (not in-memory) | PostgreSQL via Prisma | Integration tests against a real test DB | todo |
-| R3 | Users can register | `POST /api/auth/register` | `auth.register.test.ts` | todo |
-| R4 | Users can log in | `POST /api/auth/login` | `auth.login.test.ts` | todo |
-| R5 | Token-based auth (JWT) secures endpoints | `requireAuth` middleware | `auth.middleware.test.ts` | todo |
+| R1 | Backend in Node.js/TypeScript (Express) | `backend/` | — | done |
+| R2 | Persistent database (not in-memory) | PostgreSQL via Prisma | Integration tests against a real test DB | done |
+| R3 | Users can register | `POST /api/auth/register` | `auth.register.test.ts` | done |
+| R4 | Users can log in | `POST /api/auth/login` | `auth.login.test.ts` | done |
+| R5 | Token-based auth (JWT) secures endpoints | `requireAuth` middleware | `auth.me.test.ts`, `middleware.requireRole.test.ts` | done |
 | R6 | Add a vehicle | `POST /api/vehicles` (admin, see D2) | `vehicles.create.test.ts` | todo |
 | R7 | List vehicles | `GET /api/vehicles` | `vehicles.list.test.ts` | todo |
 | R8 | Search by make, model, category, price range | `GET /api/vehicles/search` | `vehicles.search.test.ts` | todo |
@@ -74,3 +74,5 @@ Status: `todo` · `wip` · `done`
 | D18 | Deployment | Planned: Neon (Postgres) + Render (API) + Vercel (SPA). Config is env-driven from the first commit. | Brownie points, and env-driven config is good practice regardless. |
 | D19 | Can PUT change stock? | No. `PUT` edits details only; stock changes only through purchase (−) and restock (+). Initial stock is set on create. | One controlled path per stock change, so every change is explained by a purchase or a restock. |
 | D20 | How does the work reach `main`? | Pull request merged with a merge commit, never squashed | Squashing would erase the Red → Green → Refactor history reviewers look for. |
+| D21 | Stateless JWT or DB check per request? | `requireAuth` verifies the token, then loads the user by primary key on every request. Role checks use the database role, not the token claim. | Deleting a user or changing a role takes effect immediately instead of at token expiry, and a deleted user gets a clean 401 instead of a foreign-key error. Cost: one indexed lookup per request. |
+| D22 | Does re-running the seed reset the admin password? | No. The seed creates the admin if missing; otherwise it only ensures the ADMIN role. | Safe to run on every deploy without overwriting a password the admin has changed. |
