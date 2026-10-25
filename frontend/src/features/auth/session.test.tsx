@@ -51,7 +51,7 @@ describe('session and route guards', () => {
     renderApp('/', { token: TOKENS.shopper });
 
     await userEvent.click(await screen.findByRole('button', { name: /Asha Rao/ }));
-    await userEvent.click(screen.getByRole('menuitem', { name: 'Sign Out' }));
+    await userEvent.click(screen.getByRole('menuitem', { name: 'Sign out' }));
 
     expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeInTheDocument();
     expect(localStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();

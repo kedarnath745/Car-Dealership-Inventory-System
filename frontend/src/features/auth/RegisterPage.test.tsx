@@ -38,7 +38,7 @@ describe('Register page', () => {
     renderApp('/register');
 
     await fillForm('Asha Rao', 'asha@example.com', 'correct horse battery');
-    await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByRole('heading', { name: 'Inventory' })).toBeInTheDocument();
     expect(await screen.findByText('Welcome, Asha')).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('Register page', () => {
     renderApp('/register');
 
     await fillForm('Asha Rao', 'asha@example.com', 'short pass');
-    await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByText('Password must be at least 15 characters')).toBeInTheDocument();
     expect(register).not.toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe('Register page', () => {
     renderApp('/register');
 
     await fillForm('Asha Rao', 'asha@example.com', 'correct horse battery');
-    await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByLabelText('Email')).toHaveAccessibleDescription(
       'An account with this email already exists.',
@@ -89,7 +89,7 @@ describe('Register page', () => {
     renderApp('/register');
 
     await fillForm('Asha Rao', 'asha@example.com', 'correct horse battery');
-    await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(await screen.findByLabelText('Name')).toHaveAccessibleDescription(
       'Name must be at most 60 characters',

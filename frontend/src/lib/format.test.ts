@@ -18,11 +18,11 @@ describe('formatINR', () => {
 
 describe('formatPriceHint', () => {
   it.each([
-    [1250000, '≈ ₹12.5 lakh'],
-    [649000, '≈ ₹6.49 lakh'],
-    [100000, '≈ ₹1 lakh'],
-    [10300000, '≈ ₹1.03 crore'],
-    [63900000, '≈ ₹6.39 crore'],
+    [1250000, '12.5 lakh'],
+    [649000, '6.49 lakh'],
+    [100000, '1 lakh'],
+    [10300000, '1.03 crore'],
+    [63900000, '6.39 crore'],
   ])('describes %d in lakh or crore', (value, expected) => {
     expect(formatPriceHint(value)).toBe(expected);
   });

@@ -19,7 +19,7 @@ describe('stockLabel', () => {
     [0, 'Sold out'],
     [1, 'Only 1 left'],
     [3, 'Only 3 left'],
-    [12, 'In stock · 12'],
+    [12, '12 in stock'],
   ])('labels %d as "%s"', (quantity, label) => {
     expect(stockLabel(quantity)).toBe(label);
   });

@@ -37,7 +37,7 @@ const verna = makeVehicle({
   createdAt: '2026-01-01T00:00:00.000Z',
 });
 
-const card = (name: string) => screen.getByRole('article', { name });
+const card = (name: string) => screen.getByRole('article', { name: new RegExp(`${name}$`) });
 const cardTitles = () =>
   screen.getAllByRole('article').map((article) => within(article).getByRole('heading').textContent);
 
@@ -52,25 +52,29 @@ describe('Inventory: browsing (US-S3)', () => {
   it('shows every vehicle, newest first, with a result count', async () => {
     setup();
 
-    expect(await screen.findByText('3 vehicles')).toBeInTheDocument();
-    expect(cardTitles()).toEqual(['Hyundai Creta', 'Tata Nexon EV', 'Hyundai Verna']);
+    expect(await screen.findByText('3 cars')).toBeInTheDocument();
+    expect(cardTitles()).toEqual([
+      '2025 Hyundai Creta',
+      '2025 Tata Nexon EV',
+      '2024 Hyundai Verna',
+    ]);
   });
 
   it('shows price in rupees, details and stock on each card', async () => {
     setup();
 
-    const cretaCard = await screen.findByRole('article', { name: 'Hyundai Creta' });
+    const cretaCard = await screen.findByRole('article', { name: /Hyundai Creta$/ });
     expect(within(cretaCard).getByText('₹12,50,000')).toBeInTheDocument();
-    expect(within(cretaCard).getByText('≈ ₹12.5 lakh')).toBeInTheDocument();
-    expect(within(cretaCard).getByText('2025 · Abyss Black · SUV')).toBeInTheDocument();
-    expect(within(cretaCard).getByText('In stock · 8')).toBeInTheDocument();
+    expect(within(cretaCard).getByText('12.5 lakh')).toBeInTheDocument();
+    expect(within(cretaCard).getByText('Abyss Black SUV')).toBeInTheDocument();
+    expect(within(cretaCard).getByText('8 in stock')).toBeInTheDocument();
     expect(within(card('Tata Nexon EV')).getByText('Only 2 left')).toBeInTheDocument();
   });
 
   it('disables purchasing a sold-out vehicle and says why (F5)', async () => {
     setup();
 
-    const vernaCard = await screen.findByRole('article', { name: 'Hyundai Verna' });
+    const vernaCard = await screen.findByRole('article', { name: /Hyundai Verna$/ });
     expect(within(vernaCard).getByRole('button', { name: 'Sold out' })).toBeDisabled();
     expect(within(vernaCard).queryByRole('button', { name: 'Purchase' })).not.toBeInTheDocument();
     expect(within(card('Hyundai Creta')).getByRole('button', { name: 'Purchase' })).toBeEnabled();
@@ -94,17 +98,15 @@ describe('Inventory: browsing (US-S3)', () => {
     expect(
       await screen.findByText("Couldn't load vehicles", {}, { timeout: 4000 }),
     ).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Try Again' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
 
-    expect(await screen.findByRole('article', { name: 'Hyundai Creta' })).toBeInTheDocument();
+    expect(await screen.findByRole('article', { name: /Hyundai Creta$/ })).toBeInTheDocument();
   });
 
   it('explains an empty showroom', async () => {
     setup([]);
 
-    expect(
-      await screen.findByText('No vehicles in the showroom yet. Check back soon.'),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('No cars in stock yet. Check back soon.')).toBeInTheDocument();
   });
 
   it('sends the user back to sign in when the session has expired', async () => {
@@ -124,23 +126,23 @@ describe('Inventory: browsing (US-S3)', () => {
 describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
   it('filters by category chip through the search endpoint', async () => {
     const mock = setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
 
     await userEvent.click(screen.getByRole('radio', { name: 'Electric' }));
 
-    expect(await screen.findByText('1 vehicle')).toBeInTheDocument();
-    expect(cardTitles()).toEqual(['Tata Nexon EV']);
+    expect(await screen.findByText('1 car')).toBeInTheDocument();
+    expect(cardTitles()).toEqual(['2025 Tata Nexon EV']);
     expect(mock.requests).toContain('/api/vehicles/search?category=ELECTRIC');
     expect(screen.getByRole('radio', { name: 'Electric' })).toBeChecked();
   });
 
   it('searches by make after the user stops typing', async () => {
     const mock = setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
 
     await userEvent.type(screen.getByLabelText('Make'), 'hyun');
 
-    expect(await screen.findByText('2 vehicles')).toBeInTheDocument();
+    expect(await screen.findByText('2 cars')).toBeInTheDocument();
     expect(mock.requests.filter((r) => r.startsWith('/api/vehicles/search'))).toEqual([
       '/api/vehicles/search?make=hyun',
     ]);
@@ -151,28 +153,28 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
     server.use(...mock.handlers);
     renderApp('/?category=SEDAN', { token: TOKENS.shopper });
 
-    expect(await screen.findByText('1 vehicle')).toBeInTheDocument();
+    expect(await screen.findByText('1 car')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Sedan' })).toBeChecked();
   });
 
   it('shows applied filters as removable chips and clears them all', async () => {
     setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
     await userEvent.click(screen.getByRole('radio', { name: 'SUV' }));
-    await screen.findByText('1 vehicle');
+    await screen.findByText('1 car');
 
     await userEvent.click(screen.getByRole('button', { name: 'Remove filter: SUV' }));
-    expect(await screen.findByText('3 vehicles')).toBeInTheDocument();
+    expect(await screen.findByText('3 cars')).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('radio', { name: 'Sedan' }));
-    await screen.findByText('1 vehicle');
-    await userEvent.click(screen.getByRole('button', { name: 'Clear All' }));
-    expect(await screen.findByText('3 vehicles')).toBeInTheDocument();
+    await screen.findByText('1 car');
+    await userEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+    expect(await screen.findByText('3 cars')).toBeInTheDocument();
   });
 
   it('blocks an inverted price range without calling the API', async () => {
     const mock = setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
 
     await userEvent.type(screen.getByLabelText('Min price'), '2000000');
     await userEvent.type(screen.getByLabelText('Max price'), '1000000');
@@ -184,22 +186,26 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
 
   it('explains when no vehicle matches and offers to clear the filters', async () => {
     setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
 
     await userEvent.type(screen.getByLabelText('Make'), 'Ferrari');
 
-    expect(await screen.findByText('No vehicles match these filters')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Clear Filters' }));
-    expect(await screen.findByText('3 vehicles')).toBeInTheDocument();
+    expect(await screen.findByText('No cars match these filters')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+    expect(await screen.findByText('3 cars')).toBeInTheDocument();
   });
 
   it('sorts by price', async () => {
     setup();
-    await screen.findByText('3 vehicles');
+    await screen.findByText('3 cars');
 
     await userEvent.selectOptions(screen.getByLabelText('Sort by'), 'Price: Low to High');
 
-    expect(cardTitles()).toEqual(['Hyundai Verna', 'Tata Nexon EV', 'Hyundai Creta']);
+    expect(cardTitles()).toEqual([
+      '2024 Hyundai Verna',
+      '2025 Tata Nexon EV',
+      '2025 Hyundai Creta',
+    ]);
   });
 });
 
@@ -210,7 +216,7 @@ describe('Inventory: purchasing (US-S6)', () => {
         name: 'Purchase',
       }),
     );
-    return screen.getByRole('dialog', { name: 'Confirm Purchase' });
+    return screen.getByRole('dialog', { name: 'Confirm purchase' });
   }
 
   it('opens a confirmation sheet with a quantity stepper and a live total', async () => {
@@ -234,8 +240,8 @@ describe('Inventory: purchasing (US-S6)', () => {
     await userEvent.click(within(sheet).getByRole('button', { name: 'Buy for ₹25,00,000' }));
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(await screen.findByText('Purchased 2 × Hyundai Creta')).toBeInTheDocument();
-    expect(within(card('Hyundai Creta')).getByText('In stock · 6')).toBeInTheDocument();
+    expect(await screen.findByText('Bought 2 × Hyundai Creta')).toBeInTheDocument();
+    expect(within(card('Hyundai Creta')).getByText('6 in stock')).toBeInTheDocument();
   });
 
   it('keeps the sheet open and explains when someone else bought the stock first', async () => {
@@ -247,7 +253,7 @@ describe('Inventory: purchasing (US-S6)', () => {
     await userEvent.click(within(sheet).getByRole('button', { name: 'Buy for ₹24,98,000' }));
 
     expect(await within(sheet).findByRole('alert')).toHaveTextContent(
-      'Only 1 left in stock. Someone may have just bought one.',
+      'Only 1 left in stock. The quantity has been updated; check it and try again.',
     );
     expect(await within(sheet).findByText('1 available')).toBeInTheDocument();
     expect(within(sheet).getByRole('button', { name: 'Buy for ₹12,49,000' })).toBeEnabled();
@@ -263,7 +269,7 @@ describe('Inventory: purchasing (US-S6)', () => {
     expect(await screen.findByText('This vehicle is no longer available.')).toBeInTheDocument();
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     await waitFor(() =>
-      expect(screen.queryByRole('article', { name: 'Hyundai Creta' })).not.toBeInTheDocument(),
+      expect(screen.queryByRole('article', { name: /Hyundai Creta$/ })).not.toBeInTheDocument(),
     );
   });
 });

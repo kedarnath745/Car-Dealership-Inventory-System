@@ -11,7 +11,7 @@ const vehiclesHandler = http.get('/api/vehicles', () => HttpResponse.json({ vehi
 async function fillAndSubmit(email: string, password: string) {
   await userEvent.type(await screen.findByLabelText('Email'), email);
   await userEvent.type(screen.getByLabelText('Password'), password);
-  await userEvent.click(screen.getByRole('button', { name: 'Sign In' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 }
 
 describe('Login page', () => {
@@ -71,7 +71,7 @@ describe('Login page', () => {
     server.use(http.post('/api/auth/login', login));
     renderApp('/login');
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Sign In' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Sign in' }));
 
     expect(await screen.findByText('Enter your email address')).toBeInTheDocument();
     expect(screen.getByText('Enter your password')).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe('Login page', () => {
 
     await fillAndSubmit('asha@example.com', 'correct horse battery');
 
-    expect(await screen.findByRole('button', { name: /Signing In…/ })).toBeDisabled();
+    expect(await screen.findByRole('button', { name: /Signing in…/ })).toBeDisabled();
   });
 
   it('links to registration', async () => {

@@ -33,7 +33,7 @@ describe('Sheet', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
 
-    expect(screen.getByRole('dialog', { name: 'Confirm Purchase' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Confirm purchase' })).toBeInTheDocument();
     expect(screen.getByRole('dialog')).toContainElement(document.activeElement as HTMLElement);
   });
 

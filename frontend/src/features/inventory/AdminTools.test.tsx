@@ -34,14 +34,14 @@ function setup(token: string = TOKENS.admin, vehicles = [creta, hilux]) {
   return mock;
 }
 
-const card = (name: string) => screen.getByRole('article', { name });
+const card = (name: string) => screen.getByRole('article', { name: new RegExp(`${name}$`) });
 
 describe('admin controls visibility (US-A6, F6)', () => {
   it('hides every admin control from shoppers', async () => {
     setup(TOKENS.shopper);
-    await screen.findByRole('article', { name: 'Hyundai Creta' });
+    await screen.findByRole('article', { name: /Hyundai Creta$/ });
 
-    expect(screen.queryByRole('button', { name: 'Add Vehicle' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Add vehicle' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^Edit / })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^Restock / })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^Delete / })).not.toBeInTheDocument();
@@ -49,9 +49,9 @@ describe('admin controls visibility (US-A6, F6)', () => {
 
   it('shows the admin tools on every card for admins', async () => {
     setup();
-    const cretaCard = await screen.findByRole('article', { name: 'Hyundai Creta' });
+    const cretaCard = await screen.findByRole('article', { name: /Hyundai Creta$/ });
 
-    expect(screen.getByRole('button', { name: 'Add Vehicle' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add vehicle' })).toBeInTheDocument();
     expect(
       within(cretaCard).getByRole('button', { name: 'Edit Hyundai Creta' }),
     ).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('admin controls visibility (US-A6, F6)', () => {
 
   it('makes Restock the main action on a sold-out card for admins', async () => {
     setup();
-    const hiluxCard = await screen.findByRole('article', { name: 'Toyota Hilux' });
+    const hiluxCard = await screen.findByRole('article', { name: /Toyota Hilux$/ });
 
     expect(within(hiluxCard).queryByRole('button', { name: 'Sold out' })).not.toBeInTheDocument();
     expect(within(hiluxCard).getAllByRole('button', { name: /Restock/ })[0]).toBeEnabled();
@@ -74,8 +74,8 @@ describe('admin controls visibility (US-A6, F6)', () => {
 
 describe('adding a vehicle (US-A2)', () => {
   async function openAddSheet() {
-    await userEvent.click(await screen.findByRole('button', { name: 'Add Vehicle' }));
-    return screen.getByRole('dialog', { name: 'Add Vehicle' });
+    await userEvent.click(await screen.findByRole('button', { name: 'Add vehicle' }));
+    return screen.getByRole('dialog', { name: 'Add vehicle' });
   }
 
   async function fillValidForm(sheet: HTMLElement) {
@@ -105,7 +105,7 @@ describe('adding a vehicle (US-A2)', () => {
     await userEvent.click(within(sheet).getByRole('button', { name: 'Save' }));
 
     expect(await screen.findByText('Added Kia Seltos')).toBeInTheDocument();
-    expect(await screen.findByRole('article', { name: 'Kia Seltos' })).toBeInTheDocument();
+    expect(await screen.findByRole('article', { name: /Kia Seltos$/ })).toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(body).toEqual({
       make: 'Kia',
@@ -182,11 +182,11 @@ describe('editing a vehicle (US-A3)', () => {
       ...mock.handlers,
     );
     await userEvent.click(
-      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+      within(await screen.findByRole('article', { name: /Hyundai Creta$/ })).getByRole('button', {
         name: 'Edit Hyundai Creta',
       }),
     );
-    const sheet = screen.getByRole('dialog', { name: 'Edit Vehicle' });
+    const sheet = screen.getByRole('dialog', { name: 'Edit vehicle' });
     const scope = within(sheet);
 
     expect(scope.getByLabelText('Make')).toHaveValue('Hyundai');
@@ -208,7 +208,7 @@ describe('restocking (US-A4)', () => {
   it('previews the new stock and updates the card', async () => {
     setup();
     await userEvent.click(
-      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+      within(await screen.findByRole('article', { name: /Hyundai Creta$/ })).getByRole('button', {
         name: 'Restock Hyundai Creta',
       }),
     );
@@ -219,10 +219,10 @@ describe('restocking (US-A4)', () => {
     await userEvent.type(units, '5');
 
     expect(within(sheet).getByText('Stock after restock: 8 → 13')).toBeInTheDocument();
-    await userEvent.click(within(sheet).getByRole('button', { name: 'Add 5 Units' }));
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Add 5 units' }));
 
     expect(await screen.findByText('Restocked Hyundai Creta: 13 in stock')).toBeInTheDocument();
-    expect(within(card('Hyundai Creta')).getByText('In stock · 13')).toBeInTheDocument();
+    expect(within(card('Hyundai Creta')).getByText('13 in stock')).toBeInTheDocument();
   });
 });
 
@@ -230,7 +230,7 @@ describe('deleting (US-A5)', () => {
   it('asks a specific question, defaults to Cancel and removes the card on confirm', async () => {
     const mock = setup();
     await userEvent.click(
-      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+      within(await screen.findByRole('article', { name: /Hyundai Creta$/ })).getByRole('button', {
         name: 'Delete Hyundai Creta',
       }),
     );
@@ -241,11 +241,11 @@ describe('deleting (US-A5)', () => {
     );
     expect(within(alert).getByRole('button', { name: 'Cancel' })).toHaveFocus();
 
-    await userEvent.click(within(alert).getByRole('button', { name: 'Delete Vehicle' }));
+    await userEvent.click(within(alert).getByRole('button', { name: 'Delete vehicle' }));
 
     expect(await screen.findByText('Deleted Hyundai Creta')).toBeInTheDocument();
     await waitFor(() =>
-      expect(screen.queryByRole('article', { name: 'Hyundai Creta' })).not.toBeInTheDocument(),
+      expect(screen.queryByRole('article', { name: /Hyundai Creta$/ })).not.toBeInTheDocument(),
     );
     expect(mock.requests).toContain(`DELETE /api/vehicles/${creta.id}`);
   });
@@ -253,7 +253,7 @@ describe('deleting (US-A5)', () => {
   it('cancelling keeps the vehicle', async () => {
     const mock = setup();
     await userEvent.click(
-      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+      within(await screen.findByRole('article', { name: /Hyundai Creta$/ })).getByRole('button', {
         name: 'Delete Hyundai Creta',
       }),
     );
@@ -270,19 +270,19 @@ describe('admin empty state', () => {
   it('invites the admin to add the first vehicle', async () => {
     setup(TOKENS.admin, []);
 
-    expect(await screen.findByText('No vehicles yet')).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: 'Add Vehicle' }).length).toBeGreaterThan(1);
+    expect(await screen.findByText('No cars in stock yet')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Add vehicle' }).length).toBeGreaterThan(1);
   });
 });
 
 describe('discarding unsaved changes (Should)', () => {
   async function openEdit() {
     await userEvent.click(
-      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+      within(await screen.findByRole('article', { name: /Hyundai Creta$/ })).getByRole('button', {
         name: 'Edit Hyundai Creta',
       }),
     );
-    return screen.getByRole('dialog', { name: 'Edit Vehicle' });
+    return screen.getByRole('dialog', { name: 'Edit vehicle' });
   }
 
   it('closes at once when nothing was changed', async () => {
@@ -302,7 +302,7 @@ describe('discarding unsaved changes (Should)', () => {
 
     await userEvent.click(within(sheet).getByRole('button', { name: 'Cancel' }));
     const confirm = screen.getByRole('alertdialog', { name: 'Discard changes?' });
-    await userEvent.click(within(confirm).getByRole('button', { name: 'Keep Editing' }));
+    await userEvent.click(within(confirm).getByRole('button', { name: 'Keep editing' }));
 
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
     expect(within(sheet).getByLabelText('Colour')).toHaveValue('Abyss Black Matte');

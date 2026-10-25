@@ -42,7 +42,7 @@ describe('My Purchases (US-S7)', () => {
   it('lists purchases newest first with quantity, date and total', async () => {
     setup(() => HttpResponse.json({ purchases }));
 
-    expect(await screen.findByRole('heading', { name: 'My Purchases' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'My purchases' })).toBeInTheDocument();
     const rows = within(await screen.findByRole('list', { name: 'Purchases' })).getAllByRole(
       'listitem',
     );
@@ -56,7 +56,7 @@ describe('My Purchases (US-S7)', () => {
   it('summarises the number of purchases and the amount spent', async () => {
     setup(() => HttpResponse.json({ purchases }));
 
-    expect(await screen.findByText('2 purchases · ₹41,19,800 total')).toBeInTheDocument();
+    expect(await screen.findByText('2 purchases, ₹41,19,800 in total')).toBeInTheDocument();
   });
 
   it('keeps purchases of vehicles that were removed, marked as no longer listed (D7)', async () => {
@@ -71,7 +71,7 @@ describe('My Purchases (US-S7)', () => {
     setup(() => HttpResponse.json({ purchases: [] }));
 
     expect(await screen.findByText('No purchases yet')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('link', { name: 'Browse Inventory' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Browse inventory' }));
     expect(await screen.findByRole('heading', { name: 'Inventory' })).toBeInTheDocument();
   });
 
@@ -87,7 +87,7 @@ describe('My Purchases (US-S7)', () => {
     expect(
       await screen.findByText("Couldn't load your purchases", {}, { timeout: 4000 }),
     ).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Try Again' }));
-    expect(await screen.findByText('2 purchases · ₹41,19,800 total')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(await screen.findByText('2 purchases, ₹41,19,800 in total')).toBeInTheDocument();
   });
 });
