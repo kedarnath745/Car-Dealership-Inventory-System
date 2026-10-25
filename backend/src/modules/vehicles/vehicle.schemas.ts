@@ -57,3 +57,7 @@ export const createVehicleSchema = z.object({
 });
 
 export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;
+
+export const vehicleIdParamsSchema = z.object({
+  id: z.uuid('Invalid vehicle id'),
+});
