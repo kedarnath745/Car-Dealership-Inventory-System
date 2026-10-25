@@ -63,6 +63,42 @@ export function mockInventoryApi(initial: Vehicle[]) {
         { status: 201 },
       );
     }),
+    http.post('/api/vehicles', async ({ request }) => {
+      const body = (await request.json()) as Omit<Vehicle, 'id' | 'createdAt' | 'updatedAt'>;
+      requests.push('POST /api/vehicles');
+      const created: Vehicle = {
+        ...body,
+        id: `v-new-${vehicles.length + 1}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      vehicles = [...vehicles, created];
+      return HttpResponse.json({ vehicle: created }, { status: 201 });
+    }),
+    http.put('/api/vehicles/:id', async ({ params, request }) => {
+      const changes = (await request.json()) as Partial<Vehicle>;
+      const vehicle = vehicles.find((v) => v.id === params.id);
+      if (!vehicle) return apiError(404, 'NOT_FOUND', 'Vehicle not found');
+      const updated = { ...vehicle, ...changes, updatedAt: new Date().toISOString() };
+      vehicles = vehicles.map((v) => (v.id === vehicle.id ? updated : v));
+      return HttpResponse.json({ vehicle: updated });
+    }),
+    http.delete('/api/vehicles/:id', ({ params }) => {
+      if (!vehicles.some((v) => v.id === params.id)) {
+        return apiError(404, 'NOT_FOUND', 'Vehicle not found');
+      }
+      requests.push(`DELETE /api/vehicles/${String(params.id)}`);
+      vehicles = vehicles.filter((v) => v.id !== params.id);
+      return new HttpResponse(null, { status: 204 });
+    }),
+    http.post('/api/vehicles/:id/restock', async ({ params, request }) => {
+      const { quantity } = (await request.json()) as { quantity: number };
+      const vehicle = vehicles.find((v) => v.id === params.id);
+      if (!vehicle) return apiError(404, 'NOT_FOUND', 'Vehicle not found');
+      const updated = { ...vehicle, quantity: vehicle.quantity + quantity };
+      vehicles = vehicles.map((v) => (v.id === vehicle.id ? updated : v));
+      return HttpResponse.json({ vehicle: updated });
+    }),
   ];
 
   return {
