@@ -39,16 +39,24 @@ const isCategory = (value: string): value is Category =>
 const isSort = (value: string): value is SortOption =>
   SORT_OPTIONS.some((option) => option.value === value);
 
-/** Reads filters from the URL; unknown values fall back to defaults. */
+/** Reads filters from the URL; unknown or invalid values fall back to defaults. */
 export function parseFilters(params: URLSearchParams): Filters {
   const category = (params.get('category') ?? '').toUpperCase();
   const sort = params.get('sort') ?? '';
+  // Links can be hand-edited or stale: invalid prices are dropped and an inverted
+  // range is swapped, so a bad URL can never leave the page waiting on invalid input.
+  const wholeRupees = (value: string | null) => (value && /^\d+$/.test(value) ? value : '');
+  let minPrice = wholeRupees(params.get('minPrice'));
+  let maxPrice = wholeRupees(params.get('maxPrice'));
+  if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
+    [minPrice, maxPrice] = [maxPrice, minPrice];
+  }
   return {
     make: params.get('make') ?? '',
     model: params.get('model') ?? '',
     category: isCategory(category) ? category : '',
-    minPrice: params.get('minPrice') ?? '',
-    maxPrice: params.get('maxPrice') ?? '',
+    minPrice,
+    maxPrice,
     sort: isSort(sort) ? sort : DEFAULT_FILTERS.sort,
   };
 }

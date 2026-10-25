@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router';
+import { Button } from '../../components/ui/Button';
 import { Spinner } from '../../components/ui/Spinner';
 import { useAuth } from './authContext';
 
@@ -16,11 +17,31 @@ function FullPageLoader() {
   );
 }
 
+/** Shown when a stored session could not be confirmed because the server is unreachable. */
+function Unreachable() {
+  const { retry, logout } = useAuth();
+  return (
+    <main className="flex min-h-dvh flex-col items-start justify-center px-6 sm:mx-auto sm:w-[400px] sm:px-0">
+      <h1 className="wide text-title font-semibold">Couldn't reach Showroom</h1>
+      <p className="mt-1.5 text-body text-ink-2">
+        Check your connection and try again. You are still signed in.
+      </p>
+      <div className="mt-6 flex gap-2">
+        <Button onClick={retry}>Try again</Button>
+        <Button variant="quiet" onClick={logout}>
+          Sign out
+        </Button>
+      </div>
+    </main>
+  );
+}
+
 /** Pages for signed-in users. Visitors are sent to sign in and brought back afterwards. */
 export function RequireAuth({ children }: { children: ReactNode }) {
   const { status } = useAuth();
   const location = useLocation();
   if (status === 'loading') return <FullPageLoader />;
+  if (status === 'unreachable') return <Unreachable />;
   if (status === 'guest') {
     const from = location.pathname + location.search;
     return <Navigate to="/login" replace state={{ from } satisfies FromState} />;
@@ -33,6 +54,7 @@ export function GuestOnly({ children }: { children: ReactNode }) {
   const { status } = useAuth();
   const location = useLocation();
   if (status === 'loading') return <FullPageLoader />;
+  if (status === 'unreachable') return <Unreachable />;
   if (status === 'authenticated') {
     const from = (location.state as FromState | null)?.from ?? '/';
     return <Navigate to={from} replace />;

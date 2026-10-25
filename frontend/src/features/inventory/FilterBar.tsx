@@ -38,7 +38,13 @@ export function FilterBar({
 }) {
   const [draft, setDraft] = useState<TextDraft>(() => draftOf(filters));
   const debouncedDraft = useDebouncedValue(draft, 300);
-  const applied = useMemo(() => draftOf(filters), [filters]);
+  // Memoised on the values, not the object: the page rebuilds `filters` on every
+  // render, and an object dependency would reset whatever the user is still typing.
+  const { make, model, minPrice, maxPrice } = filters;
+  const applied = useMemo(
+    () => ({ make, model, minPrice, maxPrice }),
+    [make, model, minPrice, maxPrice],
+  );
 
   // Outside changes (Clear All, removing a chip, Back button) reset the inputs.
   useEffect(() => {

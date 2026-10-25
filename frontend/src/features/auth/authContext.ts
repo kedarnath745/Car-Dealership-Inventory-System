@@ -1,7 +1,8 @@
 import { createContext, useContext } from 'react';
 import type { User } from '../../lib/api/types';
 
-export type AuthStatus = 'loading' | 'authenticated' | 'guest';
+/** `unreachable`: a stored session exists but the server could not be reached to confirm it. */
+export type AuthStatus = 'loading' | 'authenticated' | 'guest' | 'unreachable';
 
 export interface AuthContextValue {
   status: AuthStatus;
@@ -11,6 +12,8 @@ export interface AuthContextValue {
   login: (input: { email: string; password: string }) => Promise<User>;
   register: (input: { name: string; email: string; password: string }) => Promise<User>;
   logout: () => void;
+  /** Tries again to restore a stored session after the server was unreachable. */
+  retry: () => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

@@ -188,7 +188,7 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
   it('opens a shared link with an inverted price range instead of hanging', async () => {
     const mock = mockInventoryApi([creta, nexon, verna]);
     server.use(...mock.handlers);
-    renderApp('/?minPrice=1300000&maxPrice=1000000', { token: TOKENS.shopper });
+    renderApp('/?minPrice=1260000&maxPrice=1200000', { token: TOKENS.shopper });
 
     expect(await screen.findByText('2 cars')).toBeInTheDocument();
   });

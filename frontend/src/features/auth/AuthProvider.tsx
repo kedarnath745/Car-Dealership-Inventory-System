@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { authApi } from '../../lib/api/endpoints';
-import { onSessionExpired } from '../../lib/api';
+import { ApiError, onSessionExpired } from '../../lib/api';
 import { tokenStore } from '../../lib/api/tokenStore';
 import type { AuthResponse, User } from '../../lib/api/types';
 import { AuthContext, type AuthContextValue, type AuthStatus } from './authContext';
@@ -23,6 +23,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus('guest');
   }, [queryClient]);
 
+  // Restores a stored session. Only a 401 means the token is bad (and is handled by
+  // onSessionExpired); a network or server error keeps the token so the user can retry.
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     if (!tokenStore.get()) return;
     let cancelled = false;
@@ -33,13 +36,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(me);
         setStatus('authenticated');
       })
-      .catch(() => {
-        if (!cancelled) endSession();
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        if (error instanceof ApiError && error.status === 401) endSession();
+        else setStatus('unreachable');
       });
     return () => {
       cancelled = true;
     };
-  }, [endSession]);
+  }, [endSession, attempt]);
+
+  const retry = useCallback(() => {
+    setStatus('loading');
+    setAttempt((count) => count + 1);
+  }, []);
 
   useEffect(
     () =>
@@ -66,8 +76,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login: (input) => authApi.login(input).then(startSession),
       register: (input) => authApi.register(input).then(startSession),
       logout: endSession,
+      retry,
     }),
-    [status, user, sessionExpired, startSession, endSession],
+    [status, user, sessionExpired, startSession, endSession, retry],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

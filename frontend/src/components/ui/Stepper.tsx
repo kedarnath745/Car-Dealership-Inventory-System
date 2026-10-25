@@ -56,8 +56,16 @@ export function Stepper({
         disabled={disabled}
         onChange={(event) => {
           const digits = event.target.value.replace(/\D/g, '');
-          setText(digits);
-          if (digits !== '') onChange(clamp(Number.parseInt(digits, 10)));
+          if (digits === '') {
+            setText('');
+            return;
+          }
+          const typed = Number.parseInt(digits, 10);
+          const clamped = clamp(typed);
+          // Out-of-range input snaps to the limit at once, so the field always shows
+          // the quantity that will actually be used.
+          setText(clamped === typed ? digits : String(clamped));
+          onChange(clamped);
         }}
         onBlur={() => setText(String(value))}
         className={cn(
