@@ -35,7 +35,7 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] Frontend: pages, component tree, state and auth handling, routing
 - [x] **Checkpoint 2**: design approved
 
-## Phase 3 — Backend (strict TDD)  `[~]`
+## Phase 3 — Backend (strict TDD)  `[x]`
 
 Each slice is committed as **Red → Green → Refactor** (refactor only when needed):
 
@@ -57,9 +57,10 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] Slices 3.1–3.4 done (auth), admin seed done
 - [x] **Checkpoint 3a**: auth review (try register/login/me)
 - [x] Slices 3.5–3.11 + purchase history (`GET /api/purchases/me`)
-- [ ] 3.12: sample-vehicle seed (after research)
+- [x] 3.12: sample-vehicle seed (18 Indian-market cars, idempotent)
 - [x] CI: GitHub Actions runs typecheck, lint and tests against Postgres
-- [x] Coverage target: ≥ 90% backend (98.9% statements, 92.7% branches)
+- [x] Coverage target: ≥ 90% backend
+- [x] `npm audit`: 0 vulnerabilities
 - [ ] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback
 
 ## Phase 3.5 — User-centric research  `[x]`
@@ -67,7 +68,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] Desk research (surveys, papers, UX research, Apple HIG, WCAG, NIST) → `docs/research/`
 - [x] Fold findings into requirements, design and the frontend spec (D23–D33)
 - [x] **Checkpoint R**: approved (15-character passwords + rate limiting, name "Showroom", Must then Should)
-- [ ] Backend follow-ups: password minimum 15 (D23), auth rate limiting (D24), sample-vehicle seed
+- [x] Backend follow-ups: password minimum 15 (D23), auth rate limiting (D24), sample-vehicle seed
 
 ## Phase 4 — Frontend (React + Tailwind)  `[ ]`
 
