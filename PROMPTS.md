@@ -3213,3 +3213,103 @@ Sign-in and the deep link redirect both work. My script just guessed the wrong h
 Now I'll regenerate `PROMPTS.md` from the full session transcript. Before committing, I'll check it doesn't contain any secrets.
 
 - _Tool: Bash_: Regenerate PROMPTS.md and scan it for secrets
+
+## Assistant
+
+No secrets turned up: the smoke-test password and database connection strings don't appear, and no API tokens were found. Committing and pushing.
+
+- _Tool: Bash_: Commit PROMPTS.md and push the branch
+- _Tool: SendUserFile_
+
+## Assistant
+
+Showroom is live at **https://car-dealership-inventory-system-gold.vercel.app**. Anyone can open it without a Vercel login. PR #1 is merged into `main` with a merge commit, so the red/green test history is visible there.
+
+**What I checked on the live site:**
+- **API:**
+  - The health check works.
+  - Unknown routes return a proper 404.
+  - Pages that need sign-in refuse requests without it.
+  - A new account gets the shopper role.
+  - All 18 cars load, and a search for SUVs up to ₹15 lakh returns the right ones.
+  - Buying a car works, and stock drops by one.
+  - A shopper trying to restock or delete gets 403, and a wrong password gets 401.
+- **Browser:**
+  - Opening a sign-in-only page redirects to sign-in, then back.
+  - The purchase history shows the purchase.
+  - Category filters work straight from the URL.
+  - A sold-out car shows a disabled button, and shoppers see no admin buttons.
+  - No console errors, on desktop or phone.
+- **Security headers:** HTTPS enforcement, a content security policy, and clickjacking protection are all in place.
+
+My test registered a shopper called **"Smoke Test"** and bought one Hyundai Creta, so its stock is now 9. That's harmless on a demo, and you can restock it as admin if you like.
+
+**Two docs commits are still only on the working branch, not on `main`:**
+1. **The live demo link** at the top of the README and in its Deployment section. I also added a note to tick **Preview** for the environment variables, since that's what tripped us up. The README says admin access is "available on request", so visitors can't wipe the inventory. Give interviewers the admin login privately, not in the README.
+2. **`PROMPTS.md`** regenerated with the full conversation up to now, including deployment. I checked it for secrets and found none.
+
+**Your call:**
+- **Merge the two commits into `main`?** Interviewers will read the README on `main`. I'd open PR #2 and merge it with a merge commit, the same as before. The Vercel production deploy runs again, but nothing in the database changes.
+- **Rewrite the README's "My AI Usage" section in your own words.** Interviewers can tell when it's the AI's voice.
+- **Is the repo public?** It looks public from here, but please confirm in GitHub settings. It has to be public for submission.
+
+After that, the only item left on the Phase 9 checklist is a fresh-clone run-through of the README, which I can do next.
+
+## User
+
+yes, merge it and do the fresh-clone check
+
+## Assistant
+
+I'll run the fresh-clone check first, so any README fixes it turns up go into the same PR, then merge. First, the README's setup instructions:
+
+- _Tool: Bash_: Show the README run-locally and testing sections
+- _Tool: Bash_: List README section headings
+- _Tool: Bash_: Read run-locally and tests sections plus compose files
+- _Tool: Bash_: Reset local databases to empty and show tool versions
+- _Tool: Bash_: Fresh clone and follow README backend setup steps
+- _Tool: Bash_: Start fresh backend and frontend dev servers
+- _Tool: Bash_: Look up UI selectors used by the screenshot script
+- _Tool: Bash_: Collect form labels and button names from the UI
+- _Tool: Bash_: Find submit buttons and action labels
+- _Tool: Bash_: Inspect card and purchase sheet buttons
+- _Tool: Bash_: List accessible names used in admin and inventory tests
+- _Tool: Bash_: Walk the README's requirement checklist in a browser
+
+## Assistant
+
+Every step through editing passed. The restock step failed only in my script: the "Units to add" stepper has buttons whose labels also contain "Units to add", so the selector needs an exact match.
+
+- _Tool: Bash_: Rerun the walk-through with an exact stepper label
+- _Tool: Bash_: Clean leftover data and rerun the walk-through
+- _Tool: Bash_: Remove leftover Kia rows and rerun
+- _Tool: Bash_: Reset to a fresh database and rerun the walk-through once
+
+## Assistant
+
+It fails at the restock confirm button now. Let me check what that button is actually called.
+
+- _Tool: Bash_: Read the restock sheet's buttons
+- _Tool: Bash_: Show restock submit button and its test usage
+- _Tool: Bash_: Fix restock step and run the walk-through on a fresh database
+
+## Assistant
+
+The whole README walk-through passes on a fresh clone with a fresh database, with no console errors. Next, the README's test commands, run in the fresh clone:
+
+- _Tool: Bash_: Run verify (typecheck, lint, tests) and build in the fresh clone
+- _Tool: Bash_: Stop test servers and check VITE_API_URL usage and checklist
+
+## Assistant
+
+Before ticking the checklist, I'll verify its claims against the git history rather than assume them.
+
+- _Tool: Bash_: Verify trailers, red-green pairs and README sections
+- _Tool: Bash_: Check whether the repository is publicly visible
+
+## Assistant
+
+The repo shows as **Public**, and raw files load without signing in. Now the doc updates:
+
+- _Tool: Bash_: Fix stale env example and tick the submission checklist
+- _Tool: Bash_: Commit, refresh PROMPTS.md, scan, and push
