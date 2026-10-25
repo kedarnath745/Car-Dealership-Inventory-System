@@ -145,7 +145,9 @@ npm run test:coverage             # with coverage
 
 **End-to-end tests** drive the real app (API, PostgreSQL and the React SPA) in Chromium with
 Playwright: a shopper registers, filters, shares a link and buys; sessions and deep links;
-an admin adds, edits, restocks and deletes a car.
+an admin adds, edits, restocks and deletes a car. An accessibility suite runs axe-core
+(WCAG 2.2 A/AA, including colour contrast) on every main screen in light and dark mode and at
+phone width.
 
 ```bash
 cd e2e && npm install && npx playwright install chromium   # first time only
