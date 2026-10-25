@@ -28,27 +28,27 @@ Status: `todo` · `wip` · `done`
 
 | ID | Requirement (from brief) | Implementation | Verified by | Status |
 |----|--------------------------|----------------|-------------|--------|
-| F1 | SPA with React, Tailwind, HTML5, CSS3 | `frontend/` (Vite) | — | todo |
-| F2 | Registration and login forms | `/register`, `/login` | Component tests + end-to-end | todo |
-| F3 | Dashboard listing vehicles | `/` | Component tests + end-to-end | todo |
-| F4 | Search and filter vehicles | Filter bar on the dashboard | Component tests + end-to-end | todo |
-| F5 | Purchase button, disabled at quantity 0 | `VehicleCard` | Component test | todo |
-| F6 | Admin forms to add, update and delete | Admin-only modal and actions | Component tests + end-to-end | todo |
-| F7 | Visually appealing, responsive, good UX | Tailwind, mobile-first | Manual check + screenshots | todo |
+| F1 | SPA with React, Tailwind, HTML5, CSS3 | `frontend/` (Vite, React 19, Tailwind 4, React Router) | Build in CI; `App.test.tsx` | done |
+| F2 | Registration and login forms | `/register`, `/login` | `LoginPage.test.tsx`, `RegisterPage.test.tsx`, `session.test.tsx`; e2e `auth.spec.ts`, `shopper.spec.ts` | done |
+| F3 | Dashboard listing vehicles | `/` (`InventoryPage`) | `InventoryPage.test.tsx`; e2e `shopper.spec.ts` | done |
+| F4 | Search and filter vehicles | Filter bar on the dashboard, synced to the URL | `InventoryPage.test.tsx`, `MobileFilters.test.tsx`, `filters.test.ts`; e2e `shopper.spec.ts` | done |
+| F5 | Purchase button, disabled at quantity 0 | `VehicleCard`, `PurchaseSheet` | `InventoryPage.test.tsx`; e2e `shopper.spec.ts` (sold-out car, buying two) | done |
+| F6 | Admin forms to add, update and delete | Admin-only sheets and actions, plus restock | `AdminTools.test.tsx`; e2e `admin.spec.ts` | done |
+| F7 | Visually appealing, responsive, good UX | Own visual identity (D35–D37), mobile tab bar and sheets | Screenshots (`docs/screenshots/`), research pack, e2e `accessibility.spec.ts` (axe, light and dark, phone width) | done |
 
 ## 3. Process & deliverables
 
 | ID | Requirement | How | Status |
 |----|-------------|-----|--------|
-| P1 | TDD with a visible Red → Green → Refactor history | Separate `test:` / `feat:` / `refactor:` commits | todo |
-| P2 | High, meaningful test coverage | Coverage report, ≥ 90% backend | todo |
-| P3 | Clean code, SOLID, documented | Layered architecture, TSDoc on public functions | todo |
-| P4 | Frequent, descriptive commits | Commit rules in `WORKFLOW.md` | wip |
-| P5 | AI co-author trailer on AI-assisted commits | `Co-authored-by: Claude <noreply@anthropic.com>` | wip |
-| P6 | README: overview, setup, screenshots, My AI Usage, test report | `README.md` | todo |
-| P7 | PROMPTS.md with raw chat logs | Word-for-word transcript export | todo |
-| P8 | Public repository | GitHub | todo |
-| P9 | (Optional) Deployed live app | See Phase 8 | todo |
+| P1 | TDD with a visible Red → Green → Refactor history | Separate `test:` / `feat:` / `fix:` commits; 30 red → green pairs in `git log` | done |
+| P2 | High, meaningful test coverage | Backend 99% statements, frontend 94%, plus 17 e2e tests (`docs/TEST_REPORT.md`) | done |
+| P3 | Clean code, SOLID, documented | Layered architecture (routes → controllers → services → Prisma), TSDoc on public functions, lint in CI | done |
+| P4 | Frequent, descriptive commits | Commit rules in `WORKFLOW.md`; 100+ commits, each saying what changed and why | done |
+| P5 | AI co-author trailer on AI-assisted commits | `Co-authored-by: Claude <noreply@anthropic.com>` on every AI-assisted commit. Six commits from the deployment session carry the equivalent `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` (same address, so GitHub credits the same co-author); they are on `main` and are not rewritten | done |
+| P6 | README: overview, setup, screenshots, My AI Usage, test report | `README.md` ("My AI Usage" still to be personalised by the author) | done |
+| P7 | PROMPTS.md with raw chat logs | Word-for-word transcript export (`scripts/export_prompts.py`) | done |
+| P8 | Public repository | GitHub (public) | done |
+| P9 | (Optional) Deployed live app | https://car-dealership-inventory-system-gold.vercel.app (Vercel + Neon) | done |
 
 ## 4. Decision Log
 
@@ -87,7 +87,7 @@ Status: `todo` · `wip` · `done`
 | D31 | Theme | Follows the operating system's light/dark setting, with no in-app toggle | Apple behaviour, and less UI to maintain. |
 | D32 | Sorting and filters | Sort (Newest, Price ↑, Price ↓, Year) runs in the browser; single-select category; filters and sort kept in the URL | No API change needed for the current inventory size. |
 | D33 | Name & visual language | App name **Showroom**. Apple-HIG-inspired design system (`docs/research/03-design-system.md`): system font stack, Lucide icons, WCAG-checked tokens. No Apple fonts, icons, names or marks. | The user asked for an Apple-quality look; SF Pro and SF Symbols are licensed for Apple platforms only. |
-| D34 | Frontend `npm audit` reports Vitest 3.2 advisories (GHSA-82fw-gwwq-j7x9, GHSA-qxg6-89mg-rqv8, tinypool) | Accepted temporarily: they affect only the local test runner (mock registration and worker pool), never the built SPA or the API. Upgrade to Vitest 4.1.12+ in Phase 6, once it meets the two-week rule. | An upgrade to Vitest 5.0.3 was tried but blocked by an npm 10.9 installer crash ("reading 'edgesOut'"). Kept the stable toolchain instead of forcing it. |
+| D34 | Frontend `npm audit` reported Vitest 3.2 advisories (GHSA-82fw-gwwq-j7x9, GHSA-qxg6-89mg-rqv8, two critical tinypool advisories) | **Resolved in part:** upgraded to Vitest 4.1.11, the newest release that is outside the vulnerable range and meets the two-week rule. That removes tinypool and both critical advisories. One moderate advisory remains (`@vitest/mocker` ≤ 4.1.11, GHSA-xp26-3454-mjgp, Windows-only path handling in mock registration); its fix is in 4.1.12, released 2026-10-15, which meets the rule on 2026-10-29. | It affects only the local test runner, never the built SPA or the API. npm 10.9 crashes resolving Vitest 4's optional peers ("reading 'edgesOut'"), so the lockfile was regenerated once with npm 11.21.0; CI's `npm ci` on npm 10 installs from it unchanged. |
 | D35 | Visual identity (supersedes the Apple-imitation parts of D33) | Applied `research/07-visual-identity.md`: Mona Sans, one Petrol hue with ink neutrals, four radii, hairline cards, rectangular buttons, painted "studio plate" car profiles, sentence-case copy. Accessibility rules from D33 still hold. | The product owner found the first UI looked AI-generated; research showed the defaults it used (system font, one radius, soft shadows, pastel tiles, the most common icon set) are the recognised tells. |
 | D36 | Icon set | Original hand-drawn icons (`frontend/src/components/icons`), replacing Lucide and the researched Phosphor option | The product owner asked for hand-drawn icons in the spirit of the Claude desktop app. Drawing our own removes the most common icon set, avoids licence questions and gives the app its own character. |
 | D37 | Car illustrations | Monochrome hand-drawn line art per body style (same stroke language as the icons, `currentColor`), replacing the painted silhouettes | The product owner asked for car drawings in the icon style without colour so they sit well in dark mode; single-colour strokes follow the theme automatically. |

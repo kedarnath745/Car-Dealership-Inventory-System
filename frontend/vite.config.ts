@@ -8,9 +8,9 @@ export default defineConfig({
   server: {
     port: 5173,
     // In development the SPA calls /api on its own origin and Vite forwards it,
-    // so no CORS setup is needed locally.
+    // so no CORS setup is needed locally. The end-to-end suite points it at its own API.
     proxy: {
-      '/api': 'http://localhost:4000',
+      '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:4000',
     },
   },
   test: {

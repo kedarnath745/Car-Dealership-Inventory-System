@@ -7,6 +7,8 @@ filter and buy cars priced in rupees; admins add, edit, restock and remove them.
 Express + TypeScript REST API on PostgreSQL; the frontend is a React + Tailwind single-page app with
 its own visual identity, hand-drawn icons and line-art cars.
 
+**Live demo:** [car-dealership-inventory-system-gold.vercel.app](https://car-dealership-inventory-system-gold.vercel.app)
+
 ![Inventory screen](docs/screenshots/inventory.png)
 
 **Contents:** [Features](#features) · [Screenshots](#screenshots) · [Engineering highlights](#engineering-highlights) ·
@@ -69,7 +71,8 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
   - Errors return a generic 500 with no stack traces.
 - **Test-first, with history to show it.** Every feature and every bug found in review went red →
   green in separate commits. 171 backend tests (99% statements) run against a real PostgreSQL
-  database; 131 frontend tests (98% statements) drive the whole app through a mocked API.
+  database; 133 frontend tests (94% statements) drive the whole app through a mocked API; 17
+  end-to-end tests run the real stack in a browser, including automated accessibility scans.
 - **Decisions are written down.** 37 decisions (D1–D37), each with its reasoning, from "how does
   someone become admin?" to "why a hand-drawn icon set?".
 - **Research before screens.** User and market research, UX and accessibility guidance, and a visual
@@ -83,7 +86,7 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
 |-------|--------|
 | Backend | Node.js 22, TypeScript 5.9, Express 5, Prisma 6 (PostgreSQL 16), zod 4, bcryptjs, jsonwebtoken, helmet, express-rate-limit |
 | Frontend | React 19, Vite 7, TypeScript 5.9, Tailwind CSS 4, React Router 7, TanStack Query 5, react-hook-form + zod, sonner |
-| Tests | Jest 30 + Supertest (backend), Vitest 3 + React Testing Library + MSW (frontend), Playwright (screenshots) |
+| Tests | Jest 30 + Supertest (backend), Vitest 4 + React Testing Library + MSW (frontend), Playwright (end-to-end tests and screenshots) |
 | Design | Mona Sans (SIL OFL), original hand-drawn icons and car drawings, WCAG-checked colour tokens |
 | Tooling | ESLint (incl. jsx-a11y), Prettier, GitHub Actions CI, Docker Compose for local Postgres |
 
@@ -94,8 +97,8 @@ All dependencies are pinned to releases that were at least two weeks old when ad
 ### Prerequisites
 - **Node.js 20+** (developed on 22)
 - **PostgreSQL 16**, either with Docker (`docker compose up -d` from the repo root, which creates the
-  `dealership` and `dealership_test` databases) or a local install with those two databases owned by
-  a `dealership` user (password `dealership`).
+  `dealership`, `dealership_test` and `dealership_e2e` databases) or a local install with those
+  databases owned by a `dealership` user (password `dealership`).
 
 ### 1. Backend (API on http://localhost:4000)
 
@@ -141,12 +144,29 @@ npm run verify                    # in either folder: typecheck + lint + tests
 npm run test:coverage             # with coverage
 ```
 
+**End-to-end tests** drive the real app (API, PostgreSQL and the React SPA) in Chromium with
+Playwright: a shopper registers, filters, shares a link and buys; sessions and deep links;
+an admin adds, edits, restocks and deletes a car. An accessibility suite runs axe-core
+(WCAG 2.2 A/AA, including colour contrast) on every main screen in light and dark mode and at
+phone width.
+
+```bash
+cd e2e && npm install && npx playwright install chromium   # first time only
+npx playwright test
+```
+
+The suite starts its own API (port 4100) and Vite server (port 5174) on a separate
+`dealership_e2e` database. It empties and seeds that database on
+every run, and refuses to touch any database whose name doesn't end in `_e2e`. CI runs it as a
+third job.
+
 The full results, coverage tables and every test name are in **[docs/TEST_REPORT.md](docs/TEST_REPORT.md)**.
 
 | Suite | Tests | Statements | Branches |
 |-------|-------|-----------|----------|
 | Backend | 171 passed | 99.2% | 95.2% |
-| Frontend | 131 passed | 98.1% | 92.5% |
+| Frontend | 133 passed | 93.8% | 88.6% |
+| End-to-end | 17 passed | — | — |
 
 ## API
 
@@ -277,7 +297,8 @@ session transcript by `scripts/export_prompts.py`.
 
 ## Deployment
 
-**Live demo:** _link added after the first production deployment._
+**Live demo:** **[car-dealership-inventory-system-gold.vercel.app](https://car-dealership-inventory-system-gold.vercel.app)**. Register any account to shop (passwords need 15+ characters). Admin access is available on request, so the public demo
+inventory can't be wiped by visitors.
 
 The whole app deploys as **one Vercel project** using
 [Vercel Services](https://vercel.com/docs/services), configured in the root [`vercel.json`](vercel.json):
@@ -285,7 +306,7 @@ The whole app deploys as **one Vercel project** using
 | Path | Served by |
 |------|-----------|
 | `/api/*` | `backend` service: the Express app (`backend/server.ts` → `src/app.ts`) as a Vercel Function |
-| everything else | `frontend` service: the Vite build; `/login`, `/register` and `/purchases` fall back to `index.html` |
+| everything else | `frontend` service: the Vite build. Real files are served first; any other path without a file extension falls back to `index.html`, so the app's router handles it (unknown pages redirect home) |
 
 The frontend calls `/api` on its own origin, so there is no CORS setup and no API URL to configure.
 On every deployment the backend's build step (`backend/scripts/vercel-build.sh`) applies the Prisma
@@ -299,7 +320,9 @@ if they are missing.
 2. **Add a database.** *Storage → Create Database → Neon (Postgres)*, then connect it to the
    project for all environments. This sets `DATABASE_URL` (pooled, used at runtime) and
    `DATABASE_URL_UNPOOLED` (direct, used for migrations).
-3. **Add environment variables** (*Settings → Environment Variables*):
+3. **Add environment variables** (*Settings → Environment Variables*). Tick **Production and
+   Preview** for each one: pull-request builds are Preview builds, and the seed fails without
+   the admin variables.
 
    | Name | Value |
    |------|-------|

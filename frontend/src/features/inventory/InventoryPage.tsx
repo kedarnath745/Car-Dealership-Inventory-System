@@ -8,7 +8,7 @@ import {
   RetryIcon,
   TrashIcon,
 } from '../../components/icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Alert } from '../../components/ui/Alert';
 import { Button } from '../../components/ui/Button';
@@ -57,6 +57,14 @@ export function InventoryPage() {
   const [notice, setNotice] = useState<string | null>(null);
 
   const setFilters = (next: Filters) => setSearchParams(toSearchParams(next), { replace: true });
+
+  // A hand-edited or stale link may carry values parseFilters ignored or swapped; show the
+  // filters actually applied, so the address bar is always safe to share again.
+  const appliedQuery = toSearchParams(filters).toString();
+  const urlQuery = searchParams.toString();
+  useEffect(() => {
+    if (appliedQuery !== urlQuery) setSearchParams(appliedQuery, { replace: true });
+  }, [appliedQuery, urlQuery, setSearchParams]);
   const clearFilters = () => setFilters({ ...DEFAULT_FILTERS, sort: filters.sort });
 
   const vehicles = vehiclesQuery.data ? sortVehicles(vehiclesQuery.data, filters.sort) : null;

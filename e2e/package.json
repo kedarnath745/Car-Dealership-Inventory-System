@@ -1,0 +1,16 @@
+{
+  "name": "car-dealership-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "End-to-end tests: the real API, database and SPA driven in Chromium",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}

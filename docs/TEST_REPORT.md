@@ -1,21 +1,26 @@
 # Test report
 
-Generated on 25 Oct 2026 from the commit `09175e3` on branch `claude/brave-pasteur-4fmup1`.
-Both suites also run on every push in GitHub Actions (`.github/workflows/ci.yml`).
+Generated on 25 Oct 2026 from commit `a46c5ab` on branch `claude/brave-pasteur-4fmup1`.
+All three suites also run on every push in GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Summary
 
 | Suite | Tool | Tests | Statements | Branches | Functions | Lines |
 |-------|------|-------|-----------|----------|-----------|-------|
 | Backend | Jest + Supertest against a real PostgreSQL test database | **171 / 171 passed** (20 files) | 99.23% | 95.23% | 100% | 99.18% |
-| Frontend | Vitest + React Testing Library + MSW | **131 / 131 passed** (16 files) | 98.05% | 92.53% | 94.89% | 98.05% |
+| Frontend | Vitest 4 + React Testing Library + MSW | **133 / 133 passed** (16 files) | 93.84% | 88.56% | 95.94% | 94.78% |
+| End-to-end | Playwright + axe-core: real API, PostgreSQL and SPA in Chromium | **17 / 17 passed** (4 files) | — | — | — | — |
 
 How to reproduce:
 
 ```bash
 cd backend && npm run test:coverage    # needs the test database, see README
 cd frontend && npm run test:coverage
+cd e2e && npx playwright test          # needs the dealership_e2e database, see README
 ```
+
+Frontend coverage reads lower than in earlier reports (98% before) with no tests removed: Vitest 4's
+v8 provider maps coverage through `ast-v8-to-istanbul` and counts more statements and branches.
 
 ## How the tests were written (TDD)
 
@@ -23,8 +28,11 @@ cd frontend && npm run test:coverage
   `test:` commit (red), then a `feat:` or `fix:` commit that makes it pass (green);
   `git log --oneline` shows the pairs. Visual fixes found while reviewing screenshots, the
   Vercel deployment configuration, tooling (`chore:`), styling (`style:`) and documentation
-  (`docs:`) commits have no red step, and one `test: cover …` commit added tests for error paths after the code existed. Each commit message
-  says which kind it is. On this branch: 30 `test:` commits, 35 `feat:`/`fix:` commits, 92 in total.
+  (`docs:`) commits have no red step. Tests added after the code existed are labelled as such:
+  one `test: cover …` commit for error paths, and the end-to-end and accessibility suites, which
+  are acceptance tests over features that were already built test-first. Each commit message says
+  which kind it is. At the time of writing: 33 `test:` commits, 37 `feat:`/`fix:` commits, 104 in
+  total (merge commits excluded).
 - Backend tests are integration tests through the real HTTP stack and a real PostgreSQL
   database (tables are truncated between tests; the harness refuses to run against a database
   whose name does not contain `_test`). Pure helpers have unit tests.
@@ -34,6 +42,10 @@ cd frontend && npm run test:coverage
   produce exactly one sale. To make sure the test can fail, the atomic update was temporarily
   replaced by a naive read-check-write version; the test caught the oversell, and the real
   version then passed 8 out of 8 repeated runs.
+- **End-to-end tests that prove themselves:** with the URL-cleanup fix switched off, exactly the
+  matching end-to-end test failed; injecting an unlabeled button and low-contrast text made the
+  accessibility test fail with `button-name` and `color-contrast`. Each e2e run migrates, empties
+  and seeds a dedicated `dealership_e2e` database, so runs are repeatable.
 - **Audit:** a code review (Phase 6) found 10 issues; each was first reproduced by a failing
   test, then fixed (see commits `test: reproduce … findings` and `fix: close the … gaps`).
 
@@ -104,71 +116,37 @@ Ran all test suites.
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   98.05 |    92.53 |   94.89 |   98.05 |                   
- src               |     100 |      100 |     100 |     100 |                   
-  App.tsx          |     100 |      100 |     100 |     100 |                   
- src/components    |     100 |      100 |     100 |     100 |                   
-  Wordmark.tsx     |     100 |      100 |     100 |     100 |                   
- ...mponents/icons |     100 |      100 |     100 |     100 |                   
-  index.tsx        |     100 |      100 |     100 |     100 |                   
- ...ponents/layout |   88.95 |    82.14 |   81.81 |   88.95 |                   
-  AccountMenu.tsx  |   81.63 |       75 |   71.42 |   81.63 | 46-48,51-65       
-  AppShell.tsx     |     100 |      100 |     100 |     100 |                   
- src/components/ui |   98.39 |    93.61 |      95 |   98.39 |                   
-  Alert.tsx        |     100 |      100 |     100 |     100 |                   
-  Badge.tsx        |     100 |      100 |     100 |     100 |                   
-  Button.tsx       |     100 |      100 |     100 |     100 |                   
-  EmptyState.tsx   |     100 |      100 |     100 |     100 |                   
-  ...wordField.tsx |     100 |      100 |     100 |     100 |                   
-  SelectField.tsx  |     100 |      100 |     100 |     100 |                   
-  Sheet.tsx        |   94.16 |       80 |     100 |   94.16 | ...52-154,162-164 
-  Spinner.tsx      |     100 |      100 |     100 |     100 |                   
-  Stepper.tsx      |     100 |      100 |   83.33 |     100 |                   
-  TextField.tsx    |     100 |    94.44 |     100 |     100 | 42                
- src/features/auth |   98.67 |    84.93 |     100 |   98.67 |                   
-  AuthLayout.tsx   |     100 |      100 |     100 |     100 |                   
-  AuthProvider.tsx |     100 |     90.9 |     100 |     100 | 35,40             
-  LoginPage.tsx    |     100 |    91.66 |     100 |     100 | 43                
-  RegisterPage.tsx |   95.57 |    72.22 |     100 |   95.57 | 40-42,59-60       
-  authContext.ts   |     100 |       50 |     100 |     100 | 24                
-  guards.tsx       |     100 |    88.88 |     100 |     100 | 57,59             
-  schemas.ts       |     100 |      100 |     100 |     100 |                   
- ...ures/inventory |   99.64 |    96.38 |    92.3 |   99.64 |                   
-  CategoryArt.tsx  |     100 |      100 |     100 |     100 |                   
-  FilterBar.tsx    |     100 |      100 |   86.66 |     100 |                   
-  ...ntoryPage.tsx |     100 |      100 |   94.73 |     100 |                   
-  PriceSheet.tsx   |     100 |      100 |     100 |     100 |                   
-  ...haseSheet.tsx |   97.76 |       75 |   85.71 |   97.76 | 79,83-84          
-  ResultsBar.tsx   |     100 |      100 |     100 |     100 |                   
-  StockBadge.tsx   |     100 |      100 |     100 |     100 |                   
-  VehicleCard.tsx  |     100 |      100 |     100 |     100 |                   
-  ...dSkeleton.tsx |     100 |      100 |     100 |     100 |                   
-  VehicleMedia.tsx |     100 |    66.66 |      50 |     100 | 24-26             
-  carProfiles.ts   |     100 |      100 |     100 |     100 |                   
-  useVehicles.ts   |     100 |      100 |     100 |     100 |                   
-  vehicleCache.ts  |     100 |      100 |     100 |     100 |                   
- ...nventory/admin |   95.84 |    89.47 |      92 |   95.84 |                   
-  ...cleDialog.tsx |    89.7 |    81.81 |   85.71 |    89.7 | 28-29,56-60       
-  RestockSheet.tsx |   92.53 |    88.88 |     100 |   92.53 | 63-67             
-  ...FormSheet.tsx |   97.39 |    89.79 |   85.71 |   97.39 | 136-138,143-145   
-  vehicleForm.ts   |   98.27 |     92.3 |     100 |   98.27 | 22-23             
- ...ures/purchases |     100 |    94.11 |     100 |     100 |                   
-  ...hasesPage.tsx |     100 |    94.11 |     100 |     100 | 79                
- src/hooks         |     100 |      100 |     100 |     100 |                   
-  ...uncedValue.ts |     100 |      100 |     100 |     100 |                   
-  ...elayedFlag.ts |     100 |      100 |     100 |     100 |                   
- src/lib           |     100 |    95.41 |     100 |     100 |                   
-  cn.ts            |     100 |      100 |     100 |     100 |                   
-  filters.ts       |     100 |    95.18 |     100 |     100 | 114,130,150-151   
-  format.ts        |     100 |      100 |     100 |     100 |                   
-  queryClient.ts   |     100 |    66.66 |     100 |     100 | 9                 
-  stock.ts         |     100 |      100 |     100 |     100 |                   
- src/lib/api       |   96.85 |    91.07 |     100 |   96.85 |                   
-  client.ts        |     100 |    92.85 |     100 |     100 | 68-69             
-  endpoints.ts     |     100 |      100 |     100 |     100 |                   
-  index.ts         |     100 |      100 |     100 |     100 |                   
-  tokenStore.ts    |   81.81 |       50 |     100 |   81.81 | 14-15,22,29       
-  types.ts         |     100 |      100 |     100 |     100 |                   
+All files          |   93.84 |    88.56 |   95.94 |   94.78 |                   
+ ...ponents/layout |   66.66 |    56.66 |   86.66 |   64.44 |                   
+  AccountMenu.tsx  |   62.22 |       50 |   81.81 |   60.97 | 37,46-47,51-63    
+ src/components/ui |    96.1 |    94.01 |   96.15 |   98.55 |                   
+  Sheet.tsx        |   93.54 |    80.64 |     100 |     100 | 76-85,101,151,161 
+  Stepper.tsx      |   94.73 |      100 |    87.5 |   94.11 | 45                
+  TextField.tsx    |     100 |       96 |     100 |     100 | 42                
+ src/features/auth |   94.11 |    83.01 |     100 |   97.16 |                   
+  AuthProvider.tsx |   95.65 |    83.33 |     100 |     100 | 35-40             
+  LoginPage.tsx    |     100 |     90.9 |     100 |     100 | 43                
+  RegisterPage.tsx |   88.88 |    71.42 |     100 |      88 | 40-41,59          
+  authContext.ts   |      80 |       50 |     100 |     100 | 24                
+  guards.tsx       |   95.65 |    92.85 |     100 |     100 | 57                
+ ...ures/inventory |   96.13 |    93.98 |   94.11 |   95.73 |                   
+  FilterBar.tsx    |   95.55 |      100 |   91.66 |   94.59 | 93,129            
+  ...ntoryPage.tsx |   98.07 |      100 |   95.45 |   97.87 | 164               
+  ...haseSheet.tsx |   90.32 |    78.57 |    87.5 |      90 | 68,79,83          
+  VehicleMedia.tsx |      75 |       80 |      50 |      75 | 28                
+ ...nventory/admin |   92.45 |    77.21 |   94.44 |   93.13 |                   
+  ...cleDialog.tsx |   86.66 |    33.33 |   85.71 |   92.85 | 28                
+  RestockSheet.tsx |     100 |     62.5 |     100 |     100 | 62-64             
+  ...FormSheet.tsx |   89.13 |    88.23 |    92.3 |   88.37 | ...36-137,143-144 
+  vehicleForm.ts   |   97.05 |    95.45 |     100 |   97.05 | 22                
+ ...ures/purchases |     100 |    93.33 |     100 |     100 |                   
+  ...hasesPage.tsx |     100 |    93.33 |     100 |     100 | 79                
+ src/lib           |   97.16 |    95.04 |     100 |     100 |                   
+  filters.ts       |   97.29 |    95.18 |     100 |     100 | 114,130,150-151   
+  queryClient.ts   |      75 |       80 |     100 |     100 | 9                 
+ src/lib/api       |   97.05 |       90 |   96.96 |   98.18 |                   
+  client.ts        |   96.66 |    88.88 |    87.5 |     100 | 68-69             
+  tokenStore.ts    |   88.88 |      100 |     100 |   88.88 | 14                
 -------------------|---------|----------|---------|---------|-------------------
 ```
 
@@ -447,7 +425,7 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 
 </details>
 
-### Frontend (Vitest + Testing Library + MSW): 131/131 tests passed in 53 files
+### Frontend (Vitest + Testing Library + MSW): 133/133 tests passed in 16 files
 
 <details><summary><code>src/App.test.tsx</code>: 1/1 passed</summary>
 
@@ -543,7 +521,7 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 
 </details>
 
-<details><summary><code>src/features/inventory/InventoryPage.test.tsx</code>: 19/19 passed</summary>
+<details><summary><code>src/features/inventory/InventoryPage.test.tsx</code>: 21/21 passed</summary>
 
 - ✅ Inventory: browsing (US-S3) › shows every vehicle, newest first, with a result count
 - ✅ Inventory: browsing (US-S3) › shows price in rupees, details and stock on each card
@@ -557,6 +535,8 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › shows applied filters as removable chips and clears them all
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › keeps what the user is typing when the page re-renders before it is applied
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › opens a shared link with an inverted price range instead of hanging
+- ✅ Inventory: filtering and sorting (US-S4, US-S5) › rewrites a shared link with an inverted price range to the range it applied
+- ✅ Inventory: filtering and sorting (US-S4, US-S5) › drops invalid filter values from a hand-edited link
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › blocks an inverted price range without calling the API
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › explains when no vehicle matches and offers to clear the filters
 - ✅ Inventory: filtering and sorting (US-S4, US-S5) › sorts by price
@@ -657,5 +637,44 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 - ✅ stockLabel › labels 1 as "Only 1 left"
 - ✅ stockLabel › labels 3 as "Only 3 left"
 - ✅ stockLabel › labels 12 as "12 in stock"
+
+</details>
+
+### End-to-end (Playwright, real API + PostgreSQL + SPA in Chromium): 17/17 tests passed
+
+<details><summary><code>e2e/tests/accessibility.spec.ts</code>: 8/8 passed</summary>
+
+- ✅ accessibility in light mode › sign-in and registration pages
+- ✅ accessibility in light mode › inventory, purchase sheet and purchase history for a shopper
+- ✅ accessibility in light mode › admin tools
+- ✅ accessibility in light mode › phone layout with the tab bar
+- ✅ accessibility in dark mode › sign-in and registration pages
+- ✅ accessibility in dark mode › inventory, purchase sheet and purchase history for a shopper
+- ✅ accessibility in dark mode › admin tools
+- ✅ accessibility in dark mode › phone layout with the tab bar
+
+</details>
+
+<details><summary><code>e2e/tests/admin.spec.ts</code>: 1/1 passed</summary>
+
+- ✅ admin adds, edits, restocks and deletes a car (F6)
+
+</details>
+
+<details><summary><code>e2e/tests/auth.spec.ts</code>: 4/4 passed</summary>
+
+- ✅ sign-in and sessions (F2) › a deep link asks for sign-in first, then opens the page that was asked for
+- ✅ sign-in and sessions (F2) › a wrong password gets one generic message
+- ✅ sign-in and sessions (F2) › a tampered session ends cleanly with an explanation
+- ✅ sign-in and sessions (F2) › an unknown page takes a signed-in user back to the inventory
+
+</details>
+
+<details><summary><code>e2e/tests/shopper.spec.ts</code>: 4/4 passed</summary>
+
+- ✅ shopper journey (F2–F5) › registers, filters with a shareable link, buys two cars and sees the purchase
+- ✅ shopper journey (F2–F5) › cannot buy a sold-out car
+- ✅ shopper journey (F2–F5) › cleans a hand-edited link to the filters it applied
+- ✅ shopper journey (F2–F5) › sees no admin tools
 
 </details>

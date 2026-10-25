@@ -5,7 +5,7 @@
       "root": "frontend",
       "rewrites": [
         {
-          "source": "/(login|register|purchases)",
+          "source": "/((?!api/|assets/|src/|node_modules/|@)[^.]*)",
           "destination": "/index.html"
         }
       ]
