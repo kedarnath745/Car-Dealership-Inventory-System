@@ -16,14 +16,15 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(uuid())
+  id           String     @id @default(uuid())
   name         String
   /// Always stored lowercase so lookups are case-insensitive.
-  email        String   @unique
+  email        String     @unique
   passwordHash String
-  role         Role     @default(USER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  role         Role       @default(USER)
+  purchases    Purchase[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 enum Category {
@@ -38,20 +39,40 @@ enum Category {
 }
 
 model Vehicle {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   make      String
   model     String
   category  Category
   /// Money is stored as an exact decimal, never a float.
-  price     Decimal  @db.Decimal(12, 2)
+  price     Decimal    @db.Decimal(12, 2)
   /// Units in stock. A CHECK constraint in the migration keeps it >= 0.
-  quantity  Int      @default(0)
+  quantity  Int        @default(0)
   year      Int
   color     String
   imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  purchases Purchase[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@index([category])
   @@index([price])
+}
+
+/// One completed purchase. Make, model and prices are copied from the vehicle at
+/// purchase time, so history stays correct after the vehicle is edited or deleted.
+model Purchase {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Set to NULL if the vehicle is later deleted (decision D7).
+  vehicleId  String?
+  vehicle    Vehicle? @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  make       String
+  model      String
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(12, 2)
+  totalPrice Decimal  @db.Decimal(14, 2)
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
 }
