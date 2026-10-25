@@ -11,6 +11,7 @@ import { vehiclesApi } from '../../lib/api/endpoints';
 import type { Vehicle } from '../../lib/api/types';
 import { categoryLabel, formatINR } from '../../lib/format';
 import { VehicleMedia } from './VehicleMedia';
+import { replaceCachedVehicle } from './vehicleCache';
 import { vehicleKeys } from './useVehicles';
 
 /** Matches the API's per-order limit (D4, Q6). */
@@ -61,9 +62,7 @@ function PurchaseForm({
   const purchase = useMutation({
     mutationFn: () => vehiclesApi.purchase(vehicle.id, quantity),
     onSuccess: ({ vehicle: updated, purchase: bought }) => {
-      queryClient.setQueriesData<Vehicle[]>({ queryKey: vehicleKeys.all }, (list) =>
-        list?.map((item) => (item.id === updated.id ? updated : item)),
-      );
+      replaceCachedVehicle(queryClient, updated);
       void queryClient.invalidateQueries({ queryKey: ['purchases'] });
       toast.success(`Purchased ${bought.quantity} × ${bought.make} ${bought.model}`, {
         action: { label: 'View Purchases', onClick: () => navigate('/purchases') },

@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { HttpResponse, http } from 'msw';
+import { http } from 'msw';
 import { TOKENS, apiError, makeVehicle } from '../../test/fixtures';
 import { mockInventoryApi } from '../../test/inventoryApi';
 import { renderApp } from '../../test/renderApp';
@@ -274,6 +274,3 @@ describe('admin empty state', () => {
     expect(screen.getAllByRole('button', { name: 'Add Vehicle' }).length).toBeGreaterThan(1);
   });
 });
-
-// Keeps HttpResponse import used for handler typing in overrides above.
-void HttpResponse;

@@ -20,9 +20,10 @@ if (!window.matchMedia) {
 }
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+// Unmount first so no background refetch can fire after the handlers are reset.
 afterEach(() => {
-  server.resetHandlers();
   cleanup();
+  server.resetHandlers();
   localStorage.clear();
 });
 afterAll(() => server.close());

@@ -1,11 +1,14 @@
 import { Minus, Plus } from 'lucide-react';
-import { useId } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '../../lib/cn';
 
 const STEP_BUTTON =
   'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-surface text-label shadow-card transition-transform duration-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100';
 
-/** − value + control with 44px buttons; typing a number is also allowed and is clamped. */
+/**
+ * − value + control with 44px buttons. Typing is allowed too: the field keeps what
+ * the user types (even briefly empty) and reports a clamped number when it is valid.
+ */
 export function Stepper({
   label,
   value,
@@ -24,13 +27,16 @@ export function Stepper({
   /** Marks the input as the first thing focused when a sheet opens (dialog pattern). */
   initialFocus?: boolean;
 }) {
-  const id = useId();
+  const [text, setText] = useState(String(value));
   const clamp = (next: number) => Math.min(max, Math.max(min, next));
+
+  // Keep the field in sync when the value changes from outside (buttons, clamping).
+  useEffect(() => {
+    setText((current) => (Number(current) === value ? current : String(value)));
+  }, [value]);
+
   return (
-    <div className="flex items-center gap-2" role="group" aria-labelledby={`${id}-label`}>
-      <span id={`${id}-label`} className="sr-only">
-        {label}
-      </span>
+    <div className="flex items-center gap-2">
       <button
         type="button"
         aria-label={`Decrease ${label.toLowerCase()}`}
@@ -41,21 +47,21 @@ export function Stepper({
         <Minus aria-hidden="true" className="size-4" strokeWidth={2.25} />
       </button>
       <input
-        type="number"
+        type="text"
         inputMode="numeric"
+        pattern="[0-9]*"
         aria-label={label}
         data-autofocus={initialFocus || undefined}
-        min={min}
-        max={max}
-        value={value}
+        value={text}
         disabled={disabled}
         onChange={(event) => {
-          const next = Number.parseInt(event.target.value, 10);
-          if (!Number.isNaN(next)) onChange(clamp(next));
+          const digits = event.target.value.replace(/\D/g, '');
+          setText(digits);
+          if (digits !== '') onChange(clamp(Number.parseInt(digits, 10)));
         }}
+        onBlur={() => setText(String(value))}
         className={cn(
-          'h-11 w-16 rounded-field border border-border-control bg-surface text-center text-body font-semibold tabular-nums',
-          '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          'h-11 w-20 rounded-field border border-border-control bg-surface text-center text-body font-semibold tabular-nums',
         )}
       />
       <button
