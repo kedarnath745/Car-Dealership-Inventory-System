@@ -1,4 +1,4 @@
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { SearchIcon, SlidersIcon } from '../../components/icons';
 import { useEffect, useMemo, useState } from 'react';
 import { TextField } from '../../components/ui/TextField';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
@@ -73,7 +73,7 @@ export function FilterBar({
           placeholder="Any"
           type="search"
           enterKeyHint="search"
-          leading={<Search className="size-4" aria-hidden="true" />}
+          leading={<SearchIcon className="size-4" aria-hidden="true" />}
           value={draft.make}
           onChange={(event) => setField('make', event.target.value)}
         />
@@ -82,7 +82,7 @@ export function FilterBar({
           placeholder="Any"
           type="search"
           enterKeyHint="search"
-          leading={<Search className="size-4" aria-hidden="true" />}
+          leading={<SearchIcon className="size-4" aria-hidden="true" />}
           value={draft.model}
           onChange={(event) => setField('model', event.target.value)}
         />
@@ -91,7 +91,7 @@ export function FilterBar({
           onClick={() => setPriceSheetOpen(true)}
           className="col-span-2 flex h-11 cursor-pointer items-center gap-2 rounded-md border border-line-strong bg-surface px-3 text-left text-body md:hidden"
         >
-          <SlidersHorizontal aria-hidden="true" className="size-4 text-ink-2" />
+          <SlidersIcon aria-hidden="true" className="size-4 text-ink-2" />
           <span className="text-ink-2">Price:</span>
           <span className="truncate font-medium">{priceSummary}</span>
         </button>

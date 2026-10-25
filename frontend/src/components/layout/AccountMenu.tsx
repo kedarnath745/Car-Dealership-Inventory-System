@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react';
+import { SignOutIcon } from '../icons';
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
 import { useAuth } from '../../features/auth/authContext';
 import { cn } from '../../lib/cn';
@@ -111,7 +111,7 @@ export function AccountMenu() {
             onClick={logout}
             className={cn(ITEM, 'text-danger')}
           >
-            <LogOut aria-hidden="true" className="size-4" />
+            <SignOutIcon aria-hidden="true" className="size-4" />
             Sign out
           </button>
         </div>

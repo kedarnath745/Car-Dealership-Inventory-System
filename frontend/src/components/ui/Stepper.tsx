@@ -1,4 +1,4 @@
-import { Minus, Plus } from 'lucide-react';
+import { MinusIcon, PlusIcon } from '../icons';
 import { useEffect, useState } from 'react';
 import { cn } from '../../lib/cn';
 
@@ -44,7 +44,7 @@ export function Stepper({
         disabled={disabled || value <= min}
         onClick={() => onChange(clamp(value - 1))}
       >
-        <Minus aria-hidden="true" className="size-4" strokeWidth={2.25} />
+        <MinusIcon aria-hidden="true" className="size-4" strokeWidth={2.25} />
       </button>
       <input
         type="text"
@@ -71,7 +71,7 @@ export function Stepper({
         disabled={disabled || value >= max}
         onClick={() => onChange(clamp(value + 1))}
       >
-        <Plus aria-hidden="true" className="size-4" strokeWidth={2.25} />
+        <PlusIcon aria-hidden="true" className="size-4" strokeWidth={2.25} />
       </button>
     </div>
   );

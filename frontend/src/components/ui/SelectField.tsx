@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react';
+import { CaretDownIcon } from '../icons';
 import { type Ref, type SelectHTMLAttributes, useId } from 'react';
 import { cn } from '../../lib/cn';
 
@@ -49,7 +49,7 @@ export function SelectField({
             </option>
           ))}
         </select>
-        <ChevronDown
+        <CaretDownIcon
           aria-hidden="true"
           className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-ink-2"
         />

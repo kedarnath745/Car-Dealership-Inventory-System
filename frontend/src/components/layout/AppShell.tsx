@@ -1,4 +1,4 @@
-import { CarFront, Receipt } from 'lucide-react';
+import { CarIcon, ReceiptIcon } from '../icons';
 import { Link, NavLink, Outlet } from 'react-router';
 import { cn } from '../../lib/cn';
 import { Wordmark } from '../Wordmark';
@@ -69,11 +69,11 @@ function TabBar() {
       className="material-bar fixed inset-x-0 bottom-0 z-40 flex h-[calc(56px+env(safe-area-inset-bottom))] border-t border-line pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <NavLink to="/" end className={tabClass}>
-        <CarFront aria-hidden="true" className="size-6" strokeWidth={1.75} />
+        <CarIcon aria-hidden="true" className="size-6" strokeWidth={1.75} />
         Inventory
       </NavLink>
       <NavLink to="/purchases" className={tabClass}>
-        <Receipt aria-hidden="true" className="size-6" strokeWidth={1.75} />
+        <ReceiptIcon aria-hidden="true" className="size-6" strokeWidth={1.75} />
         Purchases
       </NavLink>
     </nav>

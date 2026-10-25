@@ -1,4 +1,4 @@
-import { CircleAlert, Info } from 'lucide-react';
+import { AlertIcon, InfoIcon } from '../icons';
 import type { ReactNode } from 'react';
 import { cn } from '../../lib/cn';
 
@@ -12,7 +12,7 @@ export function Alert({
   children: ReactNode;
   className?: string;
 }) {
-  const Icon = tone === 'error' ? CircleAlert : Info;
+  const Icon = tone === 'error' ? AlertIcon : InfoIcon;
   return (
     <div
       role={tone === 'error' ? 'alert' : 'status'}

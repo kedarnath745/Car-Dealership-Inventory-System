@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Receipt, RotateCw } from 'lucide-react';
+import { ReceiptIcon, RetryIcon } from '../../components/icons';
 import { Link } from 'react-router';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
@@ -25,7 +25,7 @@ export function PurchasesPage() {
 
       {query.isError && !purchases ? (
         <EmptyState
-          icon={<RotateCw className="size-6" aria-hidden="true" />}
+          icon={<RetryIcon className="size-6" aria-hidden="true" />}
           title="Couldn't load your purchases"
           description="Check your connection and try again."
           action={
@@ -45,7 +45,7 @@ export function PurchasesPage() {
         </div>
       ) : purchases.length === 0 ? (
         <EmptyState
-          icon={<Receipt className="size-6" aria-hidden="true" />}
+          icon={<ReceiptIcon className="size-6" aria-hidden="true" />}
           title="No purchases yet"
           description="Cars you buy will appear here."
           action={

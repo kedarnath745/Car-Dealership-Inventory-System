@@ -1,5 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { CarFront, PackagePlus, Pencil, Plus, RotateCw, SearchX, Trash2 } from 'lucide-react';
+import {
+  CarIcon,
+  NoResultsIcon,
+  PencilIcon,
+  PlusIcon,
+  RestockIcon,
+  RetryIcon,
+  TrashIcon,
+} from '../../components/icons';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { Alert } from '../../components/ui/Alert';
@@ -60,7 +68,7 @@ export function InventoryPage() {
   const addButton = (
     <Button
       variant="secondary"
-      icon={<Plus aria-hidden="true" className="size-4" strokeWidth={2.25} />}
+      icon={<PlusIcon aria-hidden="true" className="size-4" strokeWidth={2.25} />}
       onClick={() => setEditing('new')}
     >
       Add vehicle
@@ -94,7 +102,7 @@ export function InventoryPage() {
       <div className="mt-4">
         {vehiclesQuery.isError && !vehicles ? (
           <EmptyState
-            icon={<RotateCw className="size-6" aria-hidden="true" />}
+            icon={<RetryIcon className="size-6" aria-hidden="true" />}
             title="Couldn't load cars"
             description="Check your connection and try again."
             action={
@@ -114,14 +122,14 @@ export function InventoryPage() {
         ) : vehicles.length === 0 ? (
           hasActiveFilters(filters) ? (
             <EmptyState
-              icon={<SearchX className="size-6" aria-hidden="true" />}
+              icon={<NoResultsIcon className="size-6" aria-hidden="true" />}
               title="No cars match these filters"
               description="Try a wider price range or a different category."
               action={<Button onClick={clearFilters}>Clear filters</Button>}
             />
           ) : (
             <EmptyState
-              icon={<CarFront className="size-6" aria-hidden="true" />}
+              icon={<CarIcon className="size-6" aria-hidden="true" />}
               title="No cars in stock yet"
               description={isAdmin ? 'Add the first car to start selling.' : 'Check back soon.'}
               action={isAdmin ? addButton : undefined}
@@ -143,7 +151,7 @@ export function InventoryPage() {
                     vehicle.quantity === 0 ? (
                       <Button
                         fullWidth
-                        icon={<PackagePlus aria-hidden="true" className="size-4" />}
+                        icon={<RestockIcon aria-hidden="true" className="size-4" />}
                         aria-label={`Restock ${vehicle.make} ${vehicle.model}`}
                         onClick={() => setRestockingId(vehicle.id)}
                       >
@@ -213,7 +221,7 @@ function AdminActions({
         variant="quiet"
         size="sm"
         aria-label={`Edit ${name}`}
-        icon={<Pencil aria-hidden="true" className={icon} />}
+        icon={<PencilIcon aria-hidden="true" className={icon} />}
         onClick={onEdit}
       >
         Edit
@@ -223,7 +231,7 @@ function AdminActions({
           variant="quiet"
           size="sm"
           aria-label={`Restock ${name}`}
-          icon={<PackagePlus aria-hidden="true" className={icon} />}
+          icon={<RestockIcon aria-hidden="true" className={icon} />}
           onClick={onRestock}
         >
           Restock
@@ -233,7 +241,7 @@ function AdminActions({
         variant="quiet-danger"
         size="sm"
         aria-label={`Delete ${name}`}
-        icon={<Trash2 aria-hidden="true" className={icon} />}
+        icon={<TrashIcon aria-hidden="true" className={icon} />}
         onClick={onDelete}
       >
         Delete

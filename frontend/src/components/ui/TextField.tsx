@@ -1,4 +1,4 @@
-import { CircleAlert } from 'lucide-react';
+import { AlertIcon } from '../icons';
 import { type InputHTMLAttributes, type ReactNode, type Ref, useId } from 'react';
 import { cn } from '../../lib/cn';
 
@@ -67,7 +67,7 @@ export function TextField({
       </div>
       {error && (
         <p id={errorId} className="mt-1.5 flex items-start gap-1 text-micro text-danger">
-          <CircleAlert aria-hidden="true" className="mt-px size-3.5 shrink-0" strokeWidth={2} />
+          <AlertIcon aria-hidden="true" className="mt-px size-3.5 shrink-0" strokeWidth={2} />
           {error}
         </p>
       )}

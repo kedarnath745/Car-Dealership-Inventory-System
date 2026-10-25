@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { CloseIcon } from '../../components/icons';
 import { Button } from '../../components/ui/Button';
 import { SelectField } from '../../components/ui/SelectField';
 import {
@@ -41,7 +41,7 @@ export function ResultsBar({
             onClick={() => onRemove(chip.key)}
             className="grid size-6 cursor-pointer place-items-center rounded-sm hover:bg-accent/15"
           >
-            <X aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
+            <CloseIcon aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
           </button>
         </span>
       ))}
