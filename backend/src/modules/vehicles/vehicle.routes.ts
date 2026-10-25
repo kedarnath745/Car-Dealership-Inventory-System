@@ -28,3 +28,9 @@ vehicleRouter.put(
   validateBody(updateVehicleSchema),
   vehicleController.update,
 );
+vehicleRouter.delete(
+  '/:id',
+  requireRole('ADMIN'),
+  validateParams(vehicleIdParamsSchema),
+  vehicleController.remove,
+);

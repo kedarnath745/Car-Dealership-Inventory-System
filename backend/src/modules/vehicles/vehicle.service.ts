@@ -47,6 +47,10 @@ export async function updateVehicle(
   return toVehicleResponse(vehicle);
 }
 
+export async function deleteVehicle(id: string): Promise<void> {
+  await withVehicleNotFound(() => prisma.vehicle.delete({ where: { id } }));
+}
+
 export async function getVehicle(id: string): Promise<VehicleResponse> {
   const vehicle = await prisma.vehicle.findUnique({ where: { id } });
   if (!vehicle) {
