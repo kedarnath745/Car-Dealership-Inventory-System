@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireAuth } from '../../middleware/requireAuth';
 import { requireRole } from '../../middleware/requireRole';
 import { validateBody, validateParams } from '../../middleware/validate';
+import { inventoryRouter } from '../inventory/inventory.routes';
 import * as vehicleController from './vehicle.controller';
 import { createVehicleSchema, updateVehicleSchema, vehicleIdParamsSchema } from './vehicle.schemas';
 
@@ -34,3 +35,6 @@ vehicleRouter.delete(
   validateParams(vehicleIdParamsSchema),
   vehicleController.remove,
 );
+
+// Purchase and restock: /api/vehicles/:id/purchase, /api/vehicles/:id/restock
+vehicleRouter.use('/:id', validateParams(vehicleIdParamsSchema), inventoryRouter);
