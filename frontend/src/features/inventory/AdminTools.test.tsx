@@ -274,3 +274,42 @@ describe('admin empty state', () => {
     expect(screen.getAllByRole('button', { name: 'Add Vehicle' }).length).toBeGreaterThan(1);
   });
 });
+
+describe('discarding unsaved changes (Should)', () => {
+  async function openEdit() {
+    await userEvent.click(
+      within(await screen.findByRole('article', { name: 'Hyundai Creta' })).getByRole('button', {
+        name: 'Edit Hyundai Creta',
+      }),
+    );
+    return screen.getByRole('dialog', { name: 'Edit Vehicle' });
+  }
+
+  it('closes at once when nothing was changed', async () => {
+    setup();
+    const sheet = await openEdit();
+
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Cancel' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+
+  it('asks before throwing edits away, and can keep editing', async () => {
+    setup();
+    const sheet = await openEdit();
+    await userEvent.type(within(sheet).getByLabelText('Colour'), ' Matte');
+
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Cancel' }));
+    const confirm = screen.getByRole('alertdialog', { name: 'Discard changes?' });
+    await userEvent.click(within(confirm).getByRole('button', { name: 'Keep Editing' }));
+
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+    expect(within(sheet).getByLabelText('Colour')).toHaveValue('Abyss Black Matte');
+
+    await userEvent.click(within(sheet).getByRole('button', { name: 'Cancel' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Discard' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
