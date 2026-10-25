@@ -58,6 +58,24 @@ export const createVehicleSchema = z.object({
 
 export type CreateVehicleInput = z.infer<typeof createVehicleSchema>;
 
+/**
+ * Partial update of a vehicle's details. Quantity is refused outright (D19):
+ * stock only changes through purchase and restock so every change has a cause.
+ */
+export const updateVehicleSchema = createVehicleSchema
+  .omit({ quantity: true })
+  .partial()
+  .extend({
+    quantity: z
+      .never({ error: 'Quantity can only be changed through purchase or restock' })
+      .optional(),
+  })
+  .refine((fields) => Object.values(fields).some((value) => value !== undefined), {
+    message: 'Provide at least one field to update',
+  });
+
+export type UpdateVehicleInput = z.infer<typeof updateVehicleSchema>;
+
 export const vehicleIdParamsSchema = z.object({
   id: z.uuid('Invalid vehicle id'),
 });

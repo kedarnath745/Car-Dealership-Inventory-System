@@ -3,7 +3,7 @@ import { requireAuth } from '../../middleware/requireAuth';
 import { requireRole } from '../../middleware/requireRole';
 import { validateBody, validateParams } from '../../middleware/validate';
 import * as vehicleController from './vehicle.controller';
-import { createVehicleSchema, vehicleIdParamsSchema } from './vehicle.schemas';
+import { createVehicleSchema, updateVehicleSchema, vehicleIdParamsSchema } from './vehicle.schemas';
 
 export const vehicleRouter = Router();
 
@@ -20,4 +20,11 @@ vehicleRouter.post(
   requireRole('ADMIN'),
   validateBody(createVehicleSchema),
   vehicleController.create,
+);
+vehicleRouter.put(
+  '/:id',
+  requireRole('ADMIN'),
+  validateParams(vehicleIdParamsSchema),
+  validateBody(updateVehicleSchema),
+  vehicleController.update,
 );

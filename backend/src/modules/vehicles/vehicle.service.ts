@@ -1,8 +1,13 @@
 import type { Prisma } from '@prisma/client';
 import { notFound } from '../../errors/AppError';
 import { prisma } from '../../lib/prisma';
+import { PrismaErrorCode, isPrismaError } from '../../lib/prismaErrors';
 import { type VehicleResponse, toVehicleResponse } from './vehicle.dto';
-import type { CreateVehicleInput, SearchVehiclesQuery } from './vehicle.schemas';
+import type {
+  CreateVehicleInput,
+  SearchVehiclesQuery,
+  UpdateVehicleInput,
+} from './vehicle.schemas';
 
 /** Newest first; id breaks ties so the order is stable between requests. */
 const NEWEST_FIRST = [{ createdAt: 'desc' as const }, { id: 'asc' as const }];
@@ -18,6 +23,28 @@ export async function createVehicle(input: CreateVehicleInput): Promise<VehicleR
 export async function listVehicles(): Promise<VehicleResponse[]> {
   const vehicles = await prisma.vehicle.findMany({ orderBy: NEWEST_FIRST });
   return vehicles.map(toVehicleResponse);
+}
+
+/** Runs a write against one vehicle, turning "record not found" into a 404. */
+async function withVehicleNotFound<T>(write: () => Promise<T>): Promise<T> {
+  try {
+    return await write();
+  } catch (error) {
+    if (isPrismaError(error, PrismaErrorCode.RecordNotFound)) {
+      throw notFound('Vehicle not found');
+    }
+    throw error;
+  }
+}
+
+export async function updateVehicle(
+  id: string,
+  { quantity: _quantity, ...details }: UpdateVehicleInput,
+): Promise<VehicleResponse> {
+  const vehicle = await withVehicleNotFound(() =>
+    prisma.vehicle.update({ where: { id }, data: details }),
+  );
+  return toVehicleResponse(vehicle);
 }
 
 export async function getVehicle(id: string): Promise<VehicleResponse> {

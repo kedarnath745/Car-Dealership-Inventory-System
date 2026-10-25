@@ -1,8 +1,9 @@
-import { Prisma, type User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { conflict, unauthorized } from '../../errors/AppError';
 import { signAccessToken } from '../../lib/jwt';
 import { hashPassword, verifyPassword } from '../../lib/password';
 import { prisma } from '../../lib/prisma';
+import { PrismaErrorCode, isPrismaError } from '../../lib/prismaErrors';
 import type { LoginInput, RegisterInput } from './auth.schemas';
 import { type PublicUser, toPublicUser } from './publicUser';
 
@@ -35,7 +36,7 @@ export async function register(input: RegisterInput): Promise<AuthResult> {
     });
     return issueAuthResult(user);
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+    if (isPrismaError(error, PrismaErrorCode.UniqueConstraintFailed)) {
       throw conflict('EMAIL_TAKEN', 'An account with this email already exists');
     }
     throw error;

@@ -24,3 +24,8 @@ export async function search(req: Request, res: Response): Promise<void> {
   const vehicles = await vehicleService.searchVehicles(filters);
   res.status(200).json({ vehicles });
 }
+
+export async function update(req: Request<{ id: string }>, res: Response): Promise<void> {
+  const vehicle = await vehicleService.updateVehicle(req.params.id, req.body);
+  res.status(200).json({ vehicle });
+}
