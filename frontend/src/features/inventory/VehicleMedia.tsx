@@ -29,7 +29,7 @@ export function VehicleMedia({
           className="size-full object-cover dark:brightness-[0.92]"
         />
       ) : (
-        <CategoryArt category={vehicle.category} compact={compact} />
+        <CategoryArt category={vehicle.category} color={vehicle.color} compact={compact} />
       )}
     </div>
   );

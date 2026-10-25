@@ -1,50 +1,52 @@
-import { Bus, Car, CarFront, Truck, Zap } from 'lucide-react';
 import type { Category } from '../../lib/api/types';
-import { categoryLabel } from '../../lib/format';
 import { cn } from '../../lib/cn';
+import { PROFILES } from './carProfiles';
+import { paintFor } from './paint';
 
-const ICONS: Record<Category, typeof Car> = {
-  SEDAN: Car,
-  SUV: CarFront,
-  HATCHBACK: Car,
-  COUPE: Car,
-  CONVERTIBLE: Car,
-  TRUCK: Truck,
-  VAN: Bus,
-  ELECTRIC: Zap,
-};
-
-/** Soft per-category tint so the grid is easy to scan; works in light and dark mode. */
-const TINTS: Record<Category, string> = {
-  SEDAN: 'from-sky-500/20',
-  SUV: 'from-emerald-500/20',
-  HATCHBACK: 'from-amber-500/20',
-  COUPE: 'from-rose-500/20',
-  CONVERTIBLE: 'from-orange-500/20',
-  TRUCK: 'from-stone-500/25',
-  VAN: 'from-violet-500/20',
-  ELECTRIC: 'from-teal-500/20',
-};
-
-/** Placeholder shown when a vehicle has no photo (decision Q14). Decorative. */
+/**
+ * "Studio plate" shown when a vehicle has no photo (visual identity D.10): an
+ * original side profile for its body style, painted in its own colour, standing on a
+ * quiet floor. Decorative, since the card text names the car and its colour.
+ */
 export function CategoryArt({
   category,
+  color,
   compact = false,
 }: {
   category: Category;
+  color: string;
   compact?: boolean;
 }) {
-  const Icon = ICONS[category];
+  const { body, glass, wheels, r, cy } = PROFILES[category];
   return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        'flex size-full flex-col items-center justify-center gap-1.5 bg-gradient-to-br to-transparent bg-surface-2 text-label-2',
-        TINTS[category],
+    <div aria-hidden="true" className="relative size-full bg-plate">
+      {!compact && (
+        <div className="absolute inset-x-0 bottom-0 h-[30%] bg-[color-mix(in_oklab,var(--plate),var(--ink)_5%)]" />
       )}
-    >
-      <Icon className={compact ? 'size-6' : 'size-12'} strokeWidth={1.5} />
-      {!compact && <span className="text-footnote font-medium">{categoryLabel(category)}</span>}
+      <svg
+        viewBox="0 0 240 100"
+        className={cn(
+          'absolute left-1/2 -translate-x-1/2',
+          compact ? 'top-1/2 w-[86%] -translate-y-1/2' : 'bottom-[12%] w-[80%]',
+        )}
+      >
+        <ellipse cx="120" cy={cy + r + 1} rx="104" ry="3" fill="var(--ink)" opacity="0.12" />
+        <path
+          d={body}
+          fill={paintFor(color)}
+          stroke="var(--ink)"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+        {glass && <path d={glass} fill="var(--ink)" opacity="0.72" />}
+        {wheels.map((cx) => (
+          <g key={cx}>
+            <circle cx={cx} cy={cy} r={r} fill="var(--ink)" />
+            <circle cx={cx} cy={cy} r={r * 0.45} fill="#9aa3a7" />
+          </g>
+        ))}
+      </svg>
     </div>
   );
 }
