@@ -60,7 +60,7 @@ export function PurchasesPage() {
       ) : (
         <ul
           aria-label="Purchases"
-          className="divide-y divide-line overflow-hidden rounded-lg bg-surface"
+          className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface"
         >
           {purchases.map((purchase) => (
             <PurchaseRow key={purchase.id} purchase={purchase} />

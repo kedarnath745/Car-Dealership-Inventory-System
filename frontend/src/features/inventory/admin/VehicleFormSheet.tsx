@@ -208,7 +208,7 @@ function VehicleForm({
         {isEdit ? (
           <div className="flex flex-col justify-end sm:col-span-2">
             <p className="rounded-md bg-plate px-3 py-2.5 text-body text-ink-2">
-              Stock: {vehicle.quantity} · use Restock to change
+              {vehicle.quantity} in stock. Use Restock to change it.
             </p>
           </div>
         ) : (

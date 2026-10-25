@@ -191,7 +191,7 @@ describe('editing a vehicle (US-A3)', () => {
 
     expect(scope.getByLabelText('Make')).toHaveValue('Hyundai');
     expect(scope.queryByLabelText('Initial stock')).not.toBeInTheDocument();
-    expect(scope.getByText('Stock: 8 · use Restock to change')).toBeInTheDocument();
+    expect(scope.getByText('8 in stock. Use Restock to change it.')).toBeInTheDocument();
     expect(scope.getByRole('button', { name: 'Save' })).toBeDisabled();
 
     await userEvent.clear(scope.getByLabelText('Price'));

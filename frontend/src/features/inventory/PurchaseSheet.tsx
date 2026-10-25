@@ -94,14 +94,14 @@ function PurchaseForm({
         <VehicleMedia
           vehicle={vehicle}
           compact
-          className="h-[45px] w-[72px] shrink-0 rounded-[8px]"
+          className="h-[45px] w-[72px] shrink-0 rounded-sm border border-line"
         />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-body font-semibold">
-            {vehicle.make} {vehicle.model}
+          <p className="wide truncate text-body font-semibold">
+            {vehicle.year} {vehicle.make} {vehicle.model}
           </p>
           <p className="truncate text-small text-ink-2">
-            {vehicle.year} · {vehicle.color} · {categoryLabel(vehicle.category)}
+            {vehicle.color} {categoryLabel(vehicle.category)}
           </p>
         </div>
       </div>
