@@ -59,7 +59,11 @@ export function VehicleCard({
           {primaryAction ??
             (soldOut ? (
               <>
-                <Button fullWidth disabled>
+                <Button
+                  fullWidth
+                  disabled
+                  className="bg-surface-3 text-label-2 disabled:opacity-100"
+                >
                   Sold out
                 </Button>
                 <p className="mt-1.5 text-center text-footnote text-label-2">

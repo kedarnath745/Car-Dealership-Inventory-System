@@ -64,7 +64,7 @@ export function FilterBar({
       <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_1fr_160px_160px]">
         <TextField
           label="Make"
-          placeholder="e.g. Hyundai"
+          placeholder="Any"
           type="search"
           enterKeyHint="search"
           leading={<Search className="size-4" aria-hidden="true" />}
@@ -73,7 +73,7 @@ export function FilterBar({
         />
         <TextField
           label="Model"
-          placeholder="e.g. Creta"
+          placeholder="Any"
           type="search"
           enterKeyHint="search"
           leading={<Search className="size-4" aria-hidden="true" />}

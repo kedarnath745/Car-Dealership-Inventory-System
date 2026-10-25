@@ -10,7 +10,6 @@ import { ApiError } from '../../lib/api';
 import { vehiclesApi } from '../../lib/api/endpoints';
 import type { Vehicle } from '../../lib/api/types';
 import { categoryLabel, formatINR } from '../../lib/format';
-import { StockBadge } from './StockBadge';
 import { VehicleMedia } from './VehicleMedia';
 import { vehicleKeys } from './useVehicles';
 
@@ -106,7 +105,6 @@ function PurchaseForm({
             {vehicle.year} · {vehicle.color} · {categoryLabel(vehicle.category)}
           </p>
         </div>
-        <StockBadge quantity={vehicle.quantity} />
       </div>
 
       <dl className="divide-y divide-separator rounded-field bg-surface-2">
