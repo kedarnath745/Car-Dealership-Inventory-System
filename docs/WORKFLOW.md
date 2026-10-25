@@ -88,26 +88,26 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [ ] Playwright end-to-end happy paths (register → login → search → purchase; admin CRUD)
 - [ ] **Checkpoint 5**: feedback round, change requests logged
 
-## Phase 6 — Bug & quality audit  `[ ]`
+## Phase 6 — Bug & quality audit  `[x]`
 
-- [ ] Code review pass (correctness, SOLID, naming, comments)
+- [x] Code review pass (`code-review` skill: 10 findings, all reproduced with failing tests and fixed)
 - [x] Re-check backend dependency versions against the two-week rule (zod, ts-jest, typescript-eslint pinned back)
 - [ ] Upgrade frontend Vitest to a patched release (4.1.12+) and clear D34
-- [ ] Security pass: input validation, auth on every protected route, no secrets committed,
+- [x] Security pass (`security-review` skill: no high/medium findings): input validation, auth on every protected route, no secrets committed,
       password never returned, JWT handling, CORS
-- [ ] Concurrency: two purchases on the last car must not drive stock below 0
-- [ ] Edge cases: invalid IDs, negative price or quantity, empty search, expired token
-- [ ] Coverage gaps closed
-- [ ] **Checkpoint 6**: audit findings reviewed
+- [x] Concurrency: two purchases on the last car must not drive stock below 0
+- [x] Edge cases: invalid IDs, negative price or quantity, empty search, expired token
+- [x] Coverage gaps closed
+- [x] **Checkpoint 6**: audit findings reviewed
 
-## Phase 7 — Polish & docs  `[ ]`
+## Phase 7 — Polish & docs  `[~]`
 
 - [ ] UI polish, accessibility (labels, focus, contrast)
-- [ ] README: overview, tech stack, setup (backend and frontend), env vars, API table,
+- [x] README: overview, tech stack, setup (backend and frontend), env vars, API table,
       screenshots, **My AI Usage**, test report
-- [ ] `docs/TEST_REPORT.md`: test and coverage output
-- [ ] Screenshots captured (Playwright)
-- [ ] PROMPTS.md: raw transcripts exported
+- [x] `docs/TEST_REPORT.md`: test and coverage output
+- [x] Screenshots captured (Playwright)
+- [x] PROMPTS.md: raw transcripts exported
 - [ ] **Checkpoint 7**: docs approved
 
 ## Phase 8 — Deployment (optional brownie points)  `[ ]`
