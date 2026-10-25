@@ -173,6 +173,26 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
     expect(await screen.findByText('3 cars')).toBeInTheDocument();
   });
 
+  it('keeps what the user is typing when the page re-renders before it is applied', async () => {
+    setup();
+    await screen.findByText('3 cars');
+    await userEvent.type(screen.getByLabelText('Make'), 'hy');
+    await screen.findByText('2 cars');
+
+    await userEvent.type(screen.getByLabelText('Make'), 'u');
+    await userEvent.selectOptions(screen.getByLabelText('Sort by'), 'Price: Low to High');
+
+    expect(screen.getByLabelText('Make')).toHaveValue('hyu');
+  });
+
+  it('opens a shared link with an inverted price range instead of hanging', async () => {
+    const mock = mockInventoryApi([creta, nexon, verna]);
+    server.use(...mock.handlers);
+    renderApp('/?minPrice=1300000&maxPrice=1000000', { token: TOKENS.shopper });
+
+    expect(await screen.findByText('2 cars')).toBeInTheDocument();
+  });
+
   it('blocks an inverted price range without calling the API', async () => {
     const mock = setup();
     await screen.findByText('3 cars');

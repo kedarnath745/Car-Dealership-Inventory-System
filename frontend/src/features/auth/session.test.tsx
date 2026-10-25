@@ -56,4 +56,17 @@ describe('session and route guards', () => {
     expect(await screen.findByRole('heading', { name: 'Sign in' })).toBeInTheDocument();
     expect(localStorage.getItem(TOKEN_STORAGE_KEY)).toBeNull();
   });
+
+  it('keeps the session when the server cannot be reached at start-up, and retries', async () => {
+    server.use(http.get('/api/auth/me', () => HttpResponse.error()));
+    renderApp('/', { token: TOKENS.shopper });
+
+    expect(await screen.findByText("Couldn't reach Showroom")).toBeInTheDocument();
+    expect(localStorage.getItem(TOKEN_STORAGE_KEY)).toBe(TOKENS.shopper);
+
+    server.use(meHandler);
+    await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
+
+    expect(await screen.findByRole('heading', { name: 'Inventory' })).toBeInTheDocument();
+  });
 });

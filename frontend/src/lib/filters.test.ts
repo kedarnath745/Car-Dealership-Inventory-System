@@ -33,6 +33,19 @@ describe('parseFilters', () => {
     );
   });
 
+  it('drops price values that are not whole rupees, so a bad link cannot stall the page', () => {
+    const filters = parseFilters(new URLSearchParams('minPrice=abc&maxPrice=12x'));
+
+    expect(filters.minPrice).toBe('');
+    expect(filters.maxPrice).toBe('');
+  });
+
+  it('swaps an inverted price range from the URL instead of rejecting it', () => {
+    const filters = parseFilters(new URLSearchParams('minPrice=500000&maxPrice=100000'));
+
+    expect(filters).toMatchObject({ minPrice: '100000', maxPrice: '500000' });
+  });
+
   it('accepts a lowercase category', () => {
     expect(parseFilters(new URLSearchParams('category=suv')).category).toBe('SUV');
   });
