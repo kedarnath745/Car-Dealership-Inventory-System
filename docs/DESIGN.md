@@ -1,5 +1,10 @@
 # Design
 
+> **Product name: Showroom.** The frontend follows the research-driven build spec in
+> [`research/06-recommendations.md`](research/06-recommendations.md) and the design system in
+> [`research/03-design-system.md`](research/03-design-system.md). Where this document and the
+> build spec differ on UI details, the build spec wins (decisions D23–D33).
+
 ## 1. Scope for the 1–2 day deadline
 
 | Tier | Contents |
@@ -136,7 +141,7 @@ Validation rules:
 |-------|------|
 | name | trimmed, 2–60 characters |
 | email | valid email, normalised to lowercase |
-| password | 8–72 characters (72 is bcrypt's input limit) |
+| password | 15–72 characters on register (D23; 72 is bcrypt's input limit); any non-empty value on login |
 | make, model, color | trimmed, 1–50 characters |
 | category | one of the `Category` enum values |
 | year | integer, 1886 (first car) to next year |
@@ -158,8 +163,9 @@ lucide-react (icons). Tests use Vitest + React Testing Library + MSW (mocked API
 | `/purchases` | user | Purchase history table (Should tier) |
 
 - **Vehicle card**: category image placeholder (or `imageUrl`), make/model/year, colour,
-  price in ₹ with Indian digit grouping, stock badge (In stock / Low / Sold out), and a
-  quantity picker + **Purchase** button that is disabled at quantity 0.
+  price in ₹ with Indian digit grouping, stock badge (In stock · N / Only N left / Sold out),
+  and a **Purchase** button that is disabled at quantity 0. The quantity stepper lives in the
+  purchase confirmation sheet, not on the card (D29).
 - **Admin tools** (only rendered for admins, and enforced by the API regardless):
   "Add vehicle" button, plus Edit / Restock / Delete on each card. Add and edit share one
   form modal; delete asks for confirmation.

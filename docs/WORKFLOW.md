@@ -62,11 +62,12 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [x] Coverage target: ≥ 90% backend (98.9% statements, 92.7% branches)
 - [ ] **Checkpoint 3b**: you run the full API yourself (Postman/curl) and give feedback
 
-## Phase 3.5 — User-centric research  `[~]`
+## Phase 3.5 — User-centric research  `[x]`
 
-- [~] Desk research (surveys, papers, UX research, Apple HIG, WCAG, NIST) → `docs/research/`
-- [ ] Fold findings into requirements, design and the frontend spec
-- [ ] **Checkpoint R**: you approve the research-driven changes
+- [x] Desk research (surveys, papers, UX research, Apple HIG, WCAG, NIST) → `docs/research/`
+- [x] Fold findings into requirements, design and the frontend spec (D23–D33)
+- [x] **Checkpoint R**: approved (15-character passwords + rate limiting, name "Showroom", Must then Should)
+- [ ] Backend follow-ups: password minimum 15 (D23), auth rate limiting (D24), sample-vehicle seed
 
 ## Phase 4 — Frontend (React + Tailwind)  `[ ]`
 
@@ -89,6 +90,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 ## Phase 6 — Bug & quality audit  `[ ]`
 
 - [ ] Code review pass (correctness, SOLID, naming, comments)
+- [ ] Re-check backend dependency versions against the two-week rule
 - [ ] Security pass: input validation, auth on every protected route, no secrets committed,
       password never returned, JWT handling, CORS
 - [ ] Concurrency: two purchases on the last car must not drive stock below 0
