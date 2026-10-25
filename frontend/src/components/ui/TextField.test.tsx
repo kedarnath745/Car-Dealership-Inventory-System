@@ -43,3 +43,13 @@ describe('PasswordField', () => {
     );
   });
 });
+
+describe('TextField hint and error', () => {
+  it('shows the error instead of the hint, never both', () => {
+    render(<TextField label="Password" hint="At least 15 characters" error="Too short" />);
+
+    const input = screen.getByLabelText('Password');
+    expect(input).toHaveAccessibleDescription('Too short');
+    expect(screen.queryByText('At least 15 characters')).not.toBeInTheDocument();
+  });
+});

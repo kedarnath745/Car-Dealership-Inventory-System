@@ -86,7 +86,7 @@ export function AccountMenu() {
         </span>
         <span className="sr-only text-subhead font-medium sm:not-sr-only">{user.name}</span>
         {isAdmin && (
-          <Badge tone="accent" className="sr-only sm:not-sr-only">
+          <Badge tone="accent" className="sr-only sm:not-sr-only sm:h-6! sm:px-2!">
             Admin
           </Badge>
         )}

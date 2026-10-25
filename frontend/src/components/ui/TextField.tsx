@@ -31,7 +31,9 @@ export function TextField({
   const inputId = id ?? generatedId;
   const hintId = `${inputId}-hint`;
   const errorId = `${inputId}-error`;
-  const describedBy = [error && errorId, hint && hintId].filter(Boolean).join(' ') || undefined;
+  // While an error is shown it replaces the hint, so the field never says two things at once.
+  const showHint = Boolean(hint) && !error;
+  const describedBy = error ? errorId : showHint ? hintId : undefined;
 
   return (
     <div className={className}>
@@ -69,7 +71,7 @@ export function TextField({
           {error}
         </p>
       )}
-      {hint && (
+      {showHint && (
         <p id={hintId} className="mt-1.5 text-footnote text-label-2">
           {hint}
         </p>
