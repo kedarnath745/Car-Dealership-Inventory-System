@@ -8,6 +8,7 @@ import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import { GuestOnly, RequireAuth } from './features/auth/guards';
 import { InventoryPage } from './features/inventory/InventoryPage';
+import { PurchasesPage } from './features/purchases/PurchasesPage';
 import { createQueryClient } from './lib/queryClient';
 
 export function AppProviders({ children }: { children: ReactNode }) {
@@ -49,6 +50,7 @@ export function AppRoutes() {
         }
       >
         <Route index element={<InventoryPage />} />
+        <Route path="purchases" element={<PurchasesPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -43,7 +43,9 @@ describe('My Purchases (US-S7)', () => {
     setup(() => HttpResponse.json({ purchases }));
 
     expect(await screen.findByRole('heading', { name: 'My Purchases' })).toBeInTheDocument();
-    const rows = within(screen.getByRole('list', { name: 'Purchases' })).getAllByRole('listitem');
+    const rows = within(await screen.findByRole('list', { name: 'Purchases' })).getAllByRole(
+      'listitem',
+    );
     expect(rows).toHaveLength(2);
     expect(rows[0]).toHaveTextContent('Hyundai Creta × 2');
     expect(rows[0]).toHaveTextContent(/25 Oct 2026, 3:42\s?pm/i);
