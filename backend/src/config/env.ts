@@ -29,6 +29,9 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
+/** The value shipped in .env.example; fine locally, never acceptable in production. */
+const PLACEHOLDER_JWT_SECRET = 'change-me-to-a-long-random-string';
+
 /** Validates a set of environment variables; exported so the failure path can be tested. */
 export function parseEnv(source: NodeJS.ProcessEnv): Env {
   const result = envSchema.safeParse(source);
@@ -37,6 +40,12 @@ export function parseEnv(source: NodeJS.ProcessEnv): Env {
       .map((issue) => `  - ${issue.path.join('.')}: ${issue.message}`)
       .join('\n');
     throw new Error(`Invalid environment configuration:\n${problems}`);
+  }
+  if (result.data.NODE_ENV === 'production' && result.data.JWT_SECRET === PLACEHOLDER_JWT_SECRET) {
+    throw new Error(
+      'Invalid environment configuration:\n  - JWT_SECRET is still the placeholder from .env.example; ' +
+        'set a long random value (e.g. `openssl rand -hex 32`).',
+    );
   }
   return result.data;
 }

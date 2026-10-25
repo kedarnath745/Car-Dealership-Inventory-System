@@ -5,7 +5,7 @@
 import { z } from 'zod';
 import { MIN_PASSWORD_LENGTH } from '../src/modules/auth/auth.schemas';
 import { prisma } from '../src/lib/prisma';
-import { seedAdmin } from '../src/seed/seedAdmin';
+import { assertSafeAdminCredentials, seedAdmin } from '../src/seed/seedAdmin';
 import { seedVehicles } from '../src/seed/seedVehicles';
 
 const seedEnv = z
@@ -21,6 +21,7 @@ const seedEnv = z
   .parse(process.env);
 
 async function main(): Promise<void> {
+  assertSafeAdminCredentials(seedEnv.ADMIN_PASSWORD, process.env.NODE_ENV);
   await seedAdmin({ email: seedEnv.ADMIN_EMAIL, password: seedEnv.ADMIN_PASSWORD });
   console.log(`Admin account ready: ${seedEnv.ADMIN_EMAIL}`);
 

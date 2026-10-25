@@ -1,6 +1,18 @@
 import { hashPassword } from '../lib/password';
 import { prisma } from '../lib/prisma';
 
+/** The admin password documented in .env.example; never acceptable in production. */
+const DEFAULT_ADMIN_PASSWORD = 'showroom-admin-2026';
+
+/** Stops a production seed from creating an admin whose password is in the README. */
+export function assertSafeAdminCredentials(password: string, nodeEnv: string | undefined): void {
+  if (nodeEnv === 'production' && password === DEFAULT_ADMIN_PASSWORD) {
+    throw new Error(
+      'ADMIN_PASSWORD is still the default from .env.example; set your own for production.',
+    );
+  }
+}
+
 export interface AdminCredentials {
   email: string;
   password: string;
