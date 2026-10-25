@@ -18,6 +18,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Fixed time zone so date formatting is deterministic on every machine.
+    env: { TZ: 'Asia/Kolkata' },
     coverage: {
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/main.tsx', 'src/test/**', 'src/**/*.d.ts'],
