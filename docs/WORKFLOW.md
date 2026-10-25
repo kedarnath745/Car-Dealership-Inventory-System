@@ -125,7 +125,7 @@ Each slice is committed as **Red → Green → Refactor** (refactor only when ne
 - [ ] README has every mandatory section
 - [ ] PROMPTS.md at the repo root
 - [ ] Fresh-clone test: follow the README from zero on a clean checkout and it works
-- [ ] Interview prep notes (`docs/INTERVIEW_NOTES.md`): design decisions and how AI was used
+- [x] Interview prep notes (`docs/INTERVIEW_NOTES.md`): design decisions and how AI was used
 
 ---
 

@@ -7,7 +7,7 @@ Both suites also run on every push in GitHub Actions (`.github/workflows/ci.yml`
 
 | Suite | Tool | Tests | Statements | Branches | Functions | Lines |
 |-------|------|-------|-----------|----------|-----------|-------|
-| Backend | Jest + Supertest against a real PostgreSQL test database | **166 / 166 passed** (19 files) | 99.21% | 94.84% | 100% | 99.17% |
+| Backend | Jest + Supertest against a real PostgreSQL test database | **171 / 171 passed** (20 files) | 99.23% | 95.23% | 100% | 99.18% |
 | Frontend | Vitest + React Testing Library + MSW | **131 / 131 passed** (16 files) | 98.05% | 92.53% | 94.89% | 98.05% |
 
 How to reproduce:
@@ -21,10 +21,10 @@ cd frontend && npm run test:coverage
 
 - Features, and the bugs found in the code review, were developed test-first: a failing
   `test:` commit (red), then a `feat:` or `fix:` commit that makes it pass (green);
-  `git log --oneline` shows the pairs. Visual fixes found while reviewing screenshots, tooling
-  (`chore:`), styling (`style:`) and documentation (`docs:`) commits have no red step, and one
-  `test: cover …` commit added tests for error paths after the code existed. Each commit message
-  says which kind it is. On this branch: 29 `test:` commits, 32 `feat:`/`fix:` commits, 85 in total.
+  `git log --oneline` shows the pairs. Visual fixes found while reviewing screenshots, the
+  Vercel deployment configuration, tooling (`chore:`), styling (`style:`) and documentation
+  (`docs:`) commits have no red step, and one `test: cover …` commit added tests for error paths after the code existed. Each commit message
+  says which kind it is. On this branch: 30 `test:` commits, 35 `feat:`/`fix:` commits, 92 in total.
 - Backend tests are integration tests through the real HTTP stack and a real PostgreSQL
   database (tables are truncated between tests; the harness refuses to run against a database
   whose name does not contain `_test`). Pure helpers have unit tests.
@@ -43,7 +43,7 @@ cd frontend && npm run test:coverage
 --------------------------|---------|----------|---------|---------|-------------------
 File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 --------------------------|---------|----------|---------|---------|-------------------
-All files                 |   99.21 |    94.84 |     100 |   99.17 |                   
+All files                 |   99.23 |    95.23 |     100 |   99.18 |                   
  src                      |     100 |      100 |     100 |     100 |                   
   app.ts                  |     100 |      100 |     100 |     100 |                   
  src/config               |     100 |      100 |     100 |     100 |                   
@@ -86,15 +86,15 @@ All files                 |   99.21 |    94.84 |     100 |   99.17 |
 --------------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
-Statements   : 99.21% ( 380/383 )
-Branches     : 94.84% ( 92/97 )
-Functions    : 100% ( 82/82 )
-Lines        : 99.17% ( 360/363 )
+Statements   : 99.23% ( 387/390 )
+Branches     : 95.23% ( 100/105 )
+Functions    : 100% ( 83/83 )
+Lines        : 99.18% ( 367/370 )
 ================================================================================
-Test Suites: 19 passed, 19 total
-Tests:       166 passed, 166 total
+Test Suites: 20 passed, 20 total
+Tests:       171 passed, 171 total
 Snapshots:   0 total
-Time:        28.873 s
+Time:        26.438 s
 Ran all test suites.
 ```
 
@@ -174,7 +174,7 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 
 ## Every test
 
-### Backend (Jest + Supertest, real PostgreSQL): 166/166 tests passed in 19 files
+### Backend (Jest + Supertest, real PostgreSQL): 171/171 tests passed in 20 files
 
 <details><summary><code>tests/integration/auth.login.test.ts</code>: 7/7 passed</summary>
 
@@ -402,7 +402,7 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 
 </details>
 
-<details><summary><code>tests/unit/env.test.ts</code>: 7/7 passed</summary>
+<details><summary><code>tests/unit/env.test.ts</code>: 9/9 passed</summary>
 
 - ✅ parseEnv › applies defaults for optional settings
 - ✅ parseEnv › fails fast with a readable list of every problem
@@ -411,6 +411,8 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 - ✅ parseEnv › accepts JWT_EXPIRES_IN "3600s" with a unit
 - ✅ parseEnv › accepts JWT_EXPIRES_IN "12h" with a unit
 - ✅ parseEnv › rejects a JWT_EXPIRES_IN without a unit, which jsonwebtoken would read as milliseconds
+- ✅ parseEnv › refuses the placeholder JWT secret from .env.example in production
+- ✅ parseEnv › allows the placeholder secret in development, where it is convenient
 
 </details>
 
@@ -422,6 +424,14 @@ All files          |   98.05 |    92.53 |   94.89 |   98.05 |
 - ✅ errorHandler › passes through the client status of the "encoding.unsupported" body-parser error
 - ✅ errorHandler › passes through the client status of the "request.aborted" body-parser error
 - ✅ errorHandler › still treats a body-parser error with a server status as a 500
+
+</details>
+
+<details><summary><code>tests/unit/seedCredentials.test.ts</code>: 3/3 passed</summary>
+
+- ✅ assertSafeAdminCredentials › refuses the documented default admin password in production
+- ✅ assertSafeAdminCredentials › accepts a custom password in production
+- ✅ assertSafeAdminCredentials › accepts the default locally
 
 </details>
 

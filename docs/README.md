@@ -5,8 +5,10 @@ How this project was planned, researched, designed and built, in the order it ha
 | Document | What it contains |
 |----------|------------------|
 | [WORKFLOW.md](WORKFLOW.md) | The phase-by-phase plan with checkpoints, commit rules and skills used, kept up to date as work progresses |
-| [REQUIREMENTS.md](REQUIREMENTS.md) | Traceability matrix (every line of the brief → implementation → test) and the decision log D1–D33 with reasoning |
+| [REQUIREMENTS.md](REQUIREMENTS.md) | Traceability matrix (every line of the brief → implementation → test) and the decision log D1–D37 with reasoning |
 | [DESIGN.md](DESIGN.md) | Architecture, data model, API contract, validation rules, testing strategy, deployment |
+| [TEST_REPORT.md](TEST_REPORT.md) | Test results, coverage and every test name |
+| [INTERVIEW_NOTES.md](INTERVIEW_NOTES.md) | Demo script, decisions worth explaining, likely questions and how AI was used |
 | [research/](research/README.md) | **User-centric research pack**: users and market, UX patterns, design system, accessibility/security/performance, engineering evidence, and the build spec |
 
 ## Research pack

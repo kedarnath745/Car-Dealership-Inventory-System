@@ -68,7 +68,7 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
   - Search escapes SQL `LIKE` wildcards. Image URLs must be `http(s)`, which blocks `javascript:` links.
   - Errors return a generic 500 with no stack traces.
 - **Test-first, with history to show it.** Every feature and every bug found in review went red →
-  green in separate commits. 166 backend tests (99% statements) run against a real PostgreSQL
+  green in separate commits. 171 backend tests (99% statements) run against a real PostgreSQL
   database; 131 frontend tests (98% statements) drive the whole app through a mocked API.
 - **Decisions are written down.** 37 decisions (D1–D37), each with its reasoning, from "how does
   someone become admin?" to "why a hand-drawn icon set?".
@@ -145,7 +145,7 @@ The full results, coverage tables and every test name are in **[docs/TEST_REPORT
 
 | Suite | Tests | Statements | Branches |
 |-------|-------|-----------|----------|
-| Backend | 166 passed | 99.2% | 94.8% |
+| Backend | 171 passed | 99.2% | 95.2% |
 | Frontend | 131 passed | 98.1% | 92.5% |
 
 ## API
@@ -219,6 +219,7 @@ The project was planned before it was built, and the planning is part of the sub
 | [docs/DESIGN.md](docs/DESIGN.md) | Architecture, data model, API contract, validation rules, testing strategy |
 | [docs/research/](docs/research/README.md) | User and market research (Indian car buyers, dealers), UX patterns (Baymard, NN/g), accessibility, NIST password guidance, TDD and AI evidence, visual identity study |
 | [docs/TEST_REPORT.md](docs/TEST_REPORT.md) | Test results and coverage |
+| [docs/INTERVIEW_NOTES.md](docs/INTERVIEW_NOTES.md) | Demo script, key decisions and likely interview questions |
 
 Research changed the product in concrete ways:
 - **NIST SP 800-63B-4** led to the 15-character password minimum and the login rate limiting.
