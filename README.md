@@ -85,7 +85,7 @@ Screenshots are captured from the running app with `node scripts/screenshots.cjs
 |-------|--------|
 | Backend | Node.js 22, TypeScript 5.9, Express 5, Prisma 6 (PostgreSQL 16), zod 4, bcryptjs, jsonwebtoken, helmet, express-rate-limit |
 | Frontend | React 19, Vite 7, TypeScript 5.9, Tailwind CSS 4, React Router 7, TanStack Query 5, react-hook-form + zod, sonner |
-| Tests | Jest 30 + Supertest (backend), Vitest 4 + React Testing Library + MSW (frontend), Playwright (screenshots) |
+| Tests | Jest 30 + Supertest (backend), Vitest 4 + React Testing Library + MSW (frontend), Playwright (end-to-end tests and screenshots) |
 | Design | Mona Sans (SIL OFL), original hand-drawn icons and car drawings, WCAG-checked colour tokens |
 | Tooling | ESLint (incl. jsx-a11y), Prettier, GitHub Actions CI, Docker Compose for local Postgres |
 
@@ -96,8 +96,8 @@ All dependencies are pinned to releases that were at least two weeks old when ad
 ### Prerequisites
 - **Node.js 20+** (developed on 22)
 - **PostgreSQL 16**, either with Docker (`docker compose up -d` from the repo root, which creates the
-  `dealership` and `dealership_test` databases) or a local install with those two databases owned by
-  a `dealership` user (password `dealership`).
+  `dealership`, `dealership_test` and `dealership_e2e` databases) or a local install with those
+  databases owned by a `dealership` user (password `dealership`).
 
 ### 1. Backend (API on http://localhost:4000)
 
@@ -142,6 +142,20 @@ cd frontend && npm test
 npm run verify                    # in either folder: typecheck + lint + tests
 npm run test:coverage             # with coverage
 ```
+
+**End-to-end tests** drive the real app (API, PostgreSQL and the React SPA) in Chromium with
+Playwright: a shopper registers, filters, shares a link and buys; sessions and deep links;
+an admin adds, edits, restocks and deletes a car.
+
+```bash
+cd e2e && npm install && npx playwright install chromium   # first time only
+npx playwright test
+```
+
+The suite starts its own API (port 4100) and Vite server (port 5174) on a separate
+`dealership_e2e` database. It empties and seeds that database on
+every run, and refuses to touch any database whose name doesn't end in `_e2e`. CI runs it as a
+third job.
 
 The full results, coverage tables and every test name are in **[docs/TEST_REPORT.md](docs/TEST_REPORT.md)**.
 

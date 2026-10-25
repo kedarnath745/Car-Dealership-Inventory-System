@@ -24,7 +24,7 @@ if command -v pg_lsclusters >/dev/null 2>&1; then
   if [ "$(run_psql "SELECT 1 FROM pg_roles WHERE rolname='dealership'")" != "1" ]; then
     run_psql "CREATE ROLE dealership WITH LOGIN PASSWORD 'dealership' CREATEDB"
   fi
-  for db in dealership dealership_test; do
+  for db in dealership dealership_test dealership_e2e; do
     if [ "$(run_psql "SELECT 1 FROM pg_database WHERE datname='$db'")" != "1" ]; then
       run_psql "CREATE DATABASE $db OWNER dealership"
     fi

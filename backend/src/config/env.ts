@@ -21,7 +21,7 @@ const envSchema = z.object({
   AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
   AUTH_RATE_LIMIT_WINDOW_MINUTES: z.coerce.number().int().positive().default(15),
   /**
-   * Number of reverse proxies in front of the app (e.g. 1 on Render). Lets Express read
+   * Number of reverse proxies in front of the app (1 on Vercel). Lets Express read
    * the real client IP from X-Forwarded-For; 0 means the app is reached directly.
    */
   TRUST_PROXY: z.coerce.number().int().min(0).default(0),
