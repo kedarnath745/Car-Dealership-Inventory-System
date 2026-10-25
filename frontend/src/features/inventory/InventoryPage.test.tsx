@@ -78,14 +78,16 @@ describe('Inventory: browsing (US-S3)', () => {
 
   it('offers a retry when vehicles fail to load', async () => {
     let calls = 0;
+    // Runtime handlers are matched in the order given, so the override goes first.
     server.use(
-      ...mockInventoryApi([]).handlers,
       http.get('/api/vehicles', () => {
         calls += 1;
-        return calls === 1
+        // The first request and the one automatic retry fail; Try Again then succeeds.
+        return calls <= 2
           ? apiError(500, 'INTERNAL_SERVER_ERROR', 'Something went wrong')
           : HttpResponse.json({ vehicles: [creta] });
       }),
+      ...mockInventoryApi([]).handlers,
     );
     renderApp('/', { token: TOKENS.shopper });
 
@@ -107,8 +109,8 @@ describe('Inventory: browsing (US-S3)', () => {
 
   it('sends the user back to sign in when the session has expired', async () => {
     server.use(
-      ...mockInventoryApi([]).handlers,
       http.get('/api/vehicles', () => apiError(401, 'INVALID_TOKEN', 'Invalid or expired token')),
+      ...mockInventoryApi([]).handlers,
     );
     renderApp('/', { token: TOKENS.shopper });
 
