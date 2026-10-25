@@ -18,7 +18,7 @@ export function PurchasesPage() {
     <>
       <header className="mb-5">
         <h1 className="text-display wide font-bold tracking-tight sm:text-display wide">
-          My Purchases
+          My purchases
         </h1>
         {purchases && purchases.length > 0 && <Summary purchases={purchases} />}
       </header>
@@ -34,7 +34,7 @@ export function PurchasesPage() {
               loading={query.isFetching}
               onClick={() => void query.refetch()}
             >
-              Try Again
+              Try again
             </Button>
           }
         />
@@ -47,13 +47,13 @@ export function PurchasesPage() {
         <EmptyState
           icon={<Receipt className="size-6" aria-hidden="true" />}
           title="No purchases yet"
-          description="Vehicles you buy will appear here."
+          description="Cars you buy will appear here."
           action={
             <Link
               to="/"
               className="inline-flex h-11 items-center rounded-full bg-accent px-5 text-body font-semibold text-white hover:brightness-110"
             >
-              Browse Inventory
+              Browse inventory
             </Link>
           }
         />
@@ -76,7 +76,7 @@ function Summary({ purchases }: { purchases: Purchase[] }) {
   const count = purchases.length;
   return (
     <p className="mt-1 text-body text-ink-2 tabular-nums">
-      {count} {count === 1 ? 'purchase' : 'purchases'} · {formatINR(total)} total
+      {count} {count === 1 ? 'purchase' : 'purchases'}, {formatINR(total)} in total
     </p>
   );
 }

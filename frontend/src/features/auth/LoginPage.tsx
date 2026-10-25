@@ -84,10 +84,10 @@ export function LoginPage() {
           size="lg"
           fullWidth
           loading={isSubmitting}
-          loadingText="Signing In…"
+          loadingText="Signing in…"
           className="mt-2"
         >
-          Sign In
+          Sign in
         </Button>
       </form>
     </AuthLayout>

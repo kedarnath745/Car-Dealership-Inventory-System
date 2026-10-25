@@ -26,20 +26,20 @@ export function ResultsBar({
   const chips = activeFilterChips(filters);
   return (
     <div className="mt-4 flex flex-wrap items-center gap-2">
-      <p aria-live="polite" className="mr-1 text-small text-ink-2">
-        {count === null ? '' : `${count} ${count === 1 ? 'vehicle' : 'vehicles'}`}
+      <p aria-live="polite" className="mr-1 text-small font-medium text-ink-2 tabular-nums">
+        {count === null ? '' : `${count} ${count === 1 ? 'car' : 'cars'}`}
       </p>
       {chips.map((chip) => (
         <span
           key={chip.key}
-          className="inline-flex h-8 items-center gap-1 rounded-full bg-accent-tint pr-1 pl-3 text-small font-medium text-accent"
+          className="inline-flex h-8 items-center gap-1 rounded-sm bg-accent-tint pr-1 pl-2.5 text-small font-medium text-accent"
         >
           {chip.label}
           <button
             type="button"
             aria-label={`Remove filter: ${chip.label}`}
             onClick={() => onRemove(chip.key)}
-            className="grid size-6 cursor-pointer place-items-center rounded-full hover:bg-accent/15"
+            className="grid size-6 cursor-pointer place-items-center rounded-sm hover:bg-accent/15"
           >
             <X aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
           </button>
@@ -47,7 +47,7 @@ export function ResultsBar({
       ))}
       {chips.length > 0 && (
         <Button variant="quiet" size="sm" onClick={onClearAll}>
-          Clear All
+          Clear all
         </Button>
       )}
       <SelectField

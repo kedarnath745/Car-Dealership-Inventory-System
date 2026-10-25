@@ -54,7 +54,7 @@ export function VehicleFormSheet({
 
   return (
     <>
-      <Sheet open={open} onClose={requestClose} title={vehicle ? 'Edit Vehicle' : 'Add Vehicle'}>
+      <Sheet open={open} onClose={requestClose} title={vehicle ? 'Edit vehicle' : 'Add vehicle'}>
         {open && <VehicleForm vehicle={vehicle} onDone={close} onDirtyChange={setDirty} />}
       </Sheet>
       <Sheet
@@ -71,7 +71,7 @@ export function VehicleFormSheet({
             data-autofocus
             onClick={() => setConfirmingDiscard(false)}
           >
-            Keep Editing
+            Keep editing
           </Button>
           <Button variant="destructive" fullWidth onClick={close}>
             Discard

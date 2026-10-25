@@ -73,7 +73,7 @@ function RestockForm({ vehicle, onDone }: { vehicle: Vehicle; onDone: () => void
         loadingText="Restocking…"
         onClick={() => restock.mutate()}
       >
-        {`Add ${units} ${units === 1 ? 'Unit' : 'Units'}`}
+        {`Add ${units} ${units === 1 ? 'unit' : 'units'}`}
       </Button>
     </div>
   );

@@ -17,6 +17,6 @@ export function stockLabel(quantity: number): string {
     case 'low':
       return `Only ${quantity} left`;
     default:
-      return `In stock · ${quantity}`;
+      return `${quantity} in stock`;
   }
 }

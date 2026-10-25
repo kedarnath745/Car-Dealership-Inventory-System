@@ -24,10 +24,13 @@ export function formatINR(value: number): string {
 /** Up to two decimals without trailing zeros: 12.50 → "12.5", 1.00 → "1". */
 const compact = (value: number) => String(Number(value.toFixed(2)));
 
-/** `≈ ₹12.5 lakh` / `≈ ₹1.03 crore`: how Indian buyers talk about car prices (D28). */
+/**
+ * `12.5 lakh` / `1.03 crore`: how Indian buyers talk about car prices (D28). No "≈":
+ * the brand font has no glyph for it (visual identity D.13).
+ */
 export function formatPriceHint(value: number): string | null {
-  if (value >= CRORE) return `≈ ₹${compact(value / CRORE)} crore`;
-  if (value >= LAKH) return `≈ ₹${compact(value / LAKH)} lakh`;
+  if (value >= CRORE) return `${compact(value / CRORE)} crore`;
+  if (value >= LAKH) return `${compact(value / LAKH)} lakh`;
   return null;
 }
 

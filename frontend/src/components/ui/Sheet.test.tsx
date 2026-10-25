@@ -13,7 +13,7 @@ function Harness({ dismissible = true }: { dismissible?: boolean }) {
       <Sheet
         open={open}
         onClose={() => setOpen(false)}
-        title="Confirm Purchase"
+        title="Confirm purchase"
         dismissible={dismissible}
       >
         <button type="button">Inside</button>

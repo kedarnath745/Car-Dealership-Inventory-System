@@ -96,7 +96,7 @@ describe('Inventory: browsing (US-S3)', () => {
     renderApp('/', { token: TOKENS.shopper });
 
     expect(
-      await screen.findByText("Couldn't load vehicles", {}, { timeout: 4000 }),
+      await screen.findByText("Couldn't load cars", {}, { timeout: 4000 }),
     ).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
 
@@ -106,7 +106,8 @@ describe('Inventory: browsing (US-S3)', () => {
   it('explains an empty showroom', async () => {
     setup([]);
 
-    expect(await screen.findByText('No cars in stock yet. Check back soon.')).toBeInTheDocument();
+    expect(await screen.findByText('No cars in stock yet')).toBeInTheDocument();
+    expect(screen.getByText('Check back soon.')).toBeInTheDocument();
   });
 
   it('sends the user back to sign in when the session has expired', async () => {
@@ -212,9 +213,12 @@ describe('Inventory: filtering and sorting (US-S4, US-S5)', () => {
 describe('Inventory: purchasing (US-S6)', () => {
   async function openPurchase(name: string) {
     await userEvent.click(
-      within(await screen.findByRole('article', { name })).getByRole('button', {
-        name: 'Purchase',
-      }),
+      within(await screen.findByRole('article', { name: new RegExp(`${name}$`) })).getByRole(
+        'button',
+        {
+          name: 'Purchase',
+        },
+      ),
     );
     return screen.getByRole('dialog', { name: 'Confirm purchase' });
   }

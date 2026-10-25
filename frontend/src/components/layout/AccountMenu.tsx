@@ -112,7 +112,7 @@ export function AccountMenu() {
             className={cn(ITEM, 'text-danger')}
           >
             <LogOut aria-hidden="true" className="size-4" />
-            Sign Out
+            Sign out
           </button>
         </div>
       )}

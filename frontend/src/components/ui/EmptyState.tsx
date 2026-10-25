@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 
-/** Centred message for empty, no-results and error states, with an optional action. */
+/**
+ * Status plus a way out (visual identity D.13): left-aligned on the page with a quiet
+ * icon, no card around it.
+ */
 export function EmptyState({
   icon,
   title,
@@ -13,13 +16,11 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-lg bg-surface px-6 py-14 text-center">
-      <div className="mb-4 grid size-14 place-items-center rounded-full bg-plate text-ink-2">
-        {icon}
-      </div>
-      <h2 className="text-car wide font-semibold">{title}</h2>
-      {description && <p className="mt-1 max-w-sm text-body text-ink-2">{description}</p>}
-      {action && <div className="mt-6">{action}</div>}
+    <div className="flex max-w-md flex-col items-start border-t border-line py-10">
+      <div className="mb-3 text-ink-2">{icon}</div>
+      <h2 className="wide text-title font-semibold">{title}</h2>
+      {description && <p className="mt-1 text-body text-ink-2">{description}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

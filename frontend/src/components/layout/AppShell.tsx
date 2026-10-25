@@ -1,5 +1,4 @@
 import { CarFront, Receipt } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import { cn } from '../../lib/cn';
 import { Wordmark } from '../Wordmark';
@@ -7,21 +6,12 @@ import { AccountMenu } from './AccountMenu';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'flex h-9 items-center rounded-full px-3.5 text-small font-medium transition-colors duration-200',
+    'flex h-9 items-center rounded-md px-3 text-small font-medium transition-colors duration-150',
     isActive ? 'bg-plate text-ink' : 'text-ink-2 hover:text-ink',
   );
 
 /** Layout for signed-in pages: translucent sticky bar (navigation layer) over the content. */
 export function AppShell() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <>
       <a
@@ -33,11 +23,11 @@ export function AppShell() {
       <header
         className={cn(
           'material-bar sticky top-0 z-40 border-b pt-[env(safe-area-inset-top)] transition-colors duration-200',
-          scrolled ? 'border-line' : 'border-transparent',
+          'border-line',
         )}
       >
         <div className="mx-auto flex h-14 max-w-[1280px] items-center gap-4 px-4 sm:px-6 lg:px-8">
-          <Link to="/" aria-label="Showroom home" className="rounded-[10px]">
+          <Link to="/" aria-label="Showroom home" className="rounded-sm">
             <Wordmark />
           </Link>
           <nav aria-label="Main" className="ml-4 hidden items-center gap-1 md:flex">
@@ -45,7 +35,7 @@ export function AppShell() {
               Inventory
             </NavLink>
             <NavLink to="/purchases" className={navLinkClass}>
-              My Purchases
+              My purchases
             </NavLink>
           </nav>
           <div className="ml-auto">

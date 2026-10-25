@@ -10,6 +10,7 @@ const PAINTS: ReadonlyArray<[keywords: readonly string[], paint: string]> = [
   [['silver'], '#B9BEC2'],
   [['grey', 'gray', 'graphite'], '#7D858A'],
   [['red'], '#B3261E'],
+  [['petrol', 'teal'], '#0A5C6B'],
   [['blue'], '#2B4C7E'],
   [['green'], '#2F5D46'],
   [['brown', 'bronze'], '#6B4A35'],

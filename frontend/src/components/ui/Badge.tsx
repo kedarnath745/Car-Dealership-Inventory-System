@@ -10,7 +10,7 @@ const TONES: Record<BadgeTone, string> = {
   accent: 'bg-accent-tint text-accent',
 };
 
-/** Capsule label. Always carries text, so meaning never depends on colour alone. */
+/** Small rectangular label (6px radius). Always carries text, never colour alone. */
 export function Badge({
   tone,
   icon,
@@ -25,7 +25,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex h-6 items-center gap-1 rounded-full px-2 text-micro font-semibold whitespace-nowrap',
+        'inline-flex h-[22px] items-center gap-1 rounded-sm px-1.5 text-micro font-medium whitespace-nowrap',
         TONES[tone],
         className,
       )}

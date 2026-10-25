@@ -28,7 +28,7 @@ import { RestockSheet } from './admin/RestockSheet';
 import { VehicleFormSheet } from './admin/VehicleFormSheet';
 import { useVehicles, vehicleKeys } from './useVehicles';
 
-const GRID = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4';
+const GRID = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
 
 /** The dashboard: every vehicle, with filters, sorting and purchasing (US-S3 to US-S6). */
 export function InventoryPage() {
@@ -63,7 +63,7 @@ export function InventoryPage() {
       icon={<Plus aria-hidden="true" className="size-4" strokeWidth={2.25} />}
       onClick={() => setEditing('new')}
     >
-      Add Vehicle
+      Add vehicle
     </Button>
   );
 
@@ -95,7 +95,7 @@ export function InventoryPage() {
         {vehiclesQuery.isError && !vehicles ? (
           <EmptyState
             icon={<RotateCw className="size-6" aria-hidden="true" />}
-            title="Couldn't load vehicles"
+            title="Couldn't load cars"
             description="Check your connection and try again."
             action={
               <Button
@@ -103,7 +103,7 @@ export function InventoryPage() {
                 onClick={() => void vehiclesQuery.refetch()}
                 loading={vehiclesQuery.isFetching}
               >
-                Try Again
+                Try again
               </Button>
             }
           />
@@ -115,19 +115,15 @@ export function InventoryPage() {
           hasActiveFilters(filters) ? (
             <EmptyState
               icon={<SearchX className="size-6" aria-hidden="true" />}
-              title="No vehicles match these filters"
+              title="No cars match these filters"
               description="Try a wider price range or a different category."
-              action={<Button onClick={clearFilters}>Clear Filters</Button>}
+              action={<Button onClick={clearFilters}>Clear filters</Button>}
             />
           ) : (
             <EmptyState
               icon={<CarFront className="size-6" aria-hidden="true" />}
-              title="No vehicles yet"
-              description={
-                isAdmin
-                  ? 'Add the first vehicle to start selling.'
-                  : 'No vehicles in the showroom yet. Check back soon.'
-              }
+              title="No cars in stock yet"
+              description={isAdmin ? 'Add the first car to start selling.' : 'Check back soon.'}
               action={isAdmin ? addButton : undefined}
             />
           )
@@ -212,7 +208,7 @@ function AdminActions({
   const name = `${vehicle.make} ${vehicle.model}`;
   const icon = 'size-4';
   return (
-    <div className="mt-2 flex justify-between gap-1 border-t border-line pt-2">
+    <div className="mt-3 -ml-2.5 flex gap-1">
       <Button
         variant="quiet"
         size="sm"

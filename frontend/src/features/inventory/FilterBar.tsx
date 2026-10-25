@@ -66,7 +66,7 @@ export function FilterBar({
     activeFilterChips(filters).find((chip) => chip.key === 'price')?.label ?? 'Any';
 
   return (
-    <section aria-label="Filters" className="rounded-lg bg-surface p-3 sm:p-4">
+    <section aria-label="Filters" className="border-b border-line pb-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-[1fr_1fr_160px_160px]">
         <TextField
           label="Make"
@@ -146,7 +146,7 @@ function CategoryChips({
     <div
       role="radiogroup"
       aria-label="Category"
-      className="-mx-3 mt-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] sm:-mx-4 sm:px-4"
+      className="-mx-4 mt-3 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0"
     >
       {options.map((option) => {
         const checked = option.value === value;
@@ -154,7 +154,7 @@ function CategoryChips({
           <label
             key={option.label}
             className={cn(
-              'relative flex h-9 shrink-0 cursor-pointer items-center rounded-full px-3.5 text-small font-medium transition-colors duration-200',
+              'relative flex h-9 shrink-0 cursor-pointer items-center rounded-sm border px-3 text-small font-medium transition-colors duration-150',
               'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent',
               checked ? 'bg-accent text-white' : 'bg-plate text-ink hover:bg-plate',
             )}

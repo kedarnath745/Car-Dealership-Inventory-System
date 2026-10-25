@@ -69,7 +69,7 @@ function PriceForm({
           disabled={hasErrors}
           onClick={() => onApply({ minPrice, maxPrice })}
         >
-          Show Results
+          Show results
         </Button>
       </div>
     </div>

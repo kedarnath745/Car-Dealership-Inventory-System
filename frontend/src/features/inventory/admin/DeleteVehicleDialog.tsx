@@ -76,7 +76,7 @@ export function DeleteVehicleDialog({
               loadingText="Deleting…"
               onClick={() => remove.mutate(vehicle)}
             >
-              Delete Vehicle
+              Delete vehicle
             </Button>
           </div>
         </div>

@@ -113,10 +113,10 @@ export function RegisterPage() {
           size="lg"
           fullWidth
           loading={isSubmitting}
-          loadingText="Creating Account…"
+          loadingText="Creating account…"
           className="mt-2"
         >
-          Create Account
+          Create account
         </Button>
       </form>
     </AuthLayout>

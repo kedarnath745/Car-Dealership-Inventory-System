@@ -31,7 +31,7 @@ export function PurchaseSheet({
   onVehicleGone: () => void;
 }) {
   return (
-    <Sheet open={vehicle !== null} onClose={onClose} title="Confirm Purchase" dismissible>
+    <Sheet open={vehicle !== null} onClose={onClose} title="Confirm purchase" dismissible>
       {vehicle && (
         <PurchaseForm vehicle={vehicle} onClose={onClose} onVehicleGone={onVehicleGone} />
       )}
@@ -64,8 +64,8 @@ function PurchaseForm({
     onSuccess: ({ vehicle: updated, purchase: bought }) => {
       replaceCachedVehicle(queryClient, updated);
       void queryClient.invalidateQueries({ queryKey: ['purchases'] });
-      toast.success(`Purchased ${bought.quantity} × ${bought.make} ${bought.model}`, {
-        action: { label: 'View Purchases', onClick: () => navigate('/purchases') },
+      toast.success(`Bought ${bought.quantity} × ${bought.make} ${bought.model}`, {
+        action: { label: 'View purchases', onClick: () => navigate('/purchases') },
       });
       onClose();
     },
@@ -76,9 +76,9 @@ function PurchaseForm({
         return;
       }
       if (err instanceof ApiError && err.code === 'OUT_OF_STOCK') {
-        setError('This vehicle just sold out.');
+        setError('This car just sold out.');
       } else if (err instanceof ApiError && err.code === 'INSUFFICIENT_STOCK') {
-        setError(`${err.message}. Someone may have just bought one.`);
+        setError(`${err.message}. The quantity has been updated; check it and try again.`);
       } else {
         setError(err instanceof ApiError ? err.message : 'Something went wrong. Please try again.');
       }
