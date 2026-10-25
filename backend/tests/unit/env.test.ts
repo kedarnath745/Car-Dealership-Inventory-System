@@ -23,4 +23,12 @@ describe('parseEnv', () => {
     expect(parse).toThrow(/- JWT_SECRET: JWT_SECRET must be at least 32 characters/);
     expect(parse).toThrow(/- PORT: /);
   });
+
+  it.each(['15m', '1d', '3600s', '12h'])('accepts JWT_EXPIRES_IN "%s" with a unit', (value) => {
+    expect(parseEnv({ ...valid, JWT_EXPIRES_IN: value }).JWT_EXPIRES_IN).toBe(value);
+  });
+
+  it('rejects a JWT_EXPIRES_IN without a unit, which jsonwebtoken would read as milliseconds', () => {
+    expect(() => parseEnv({ ...valid, JWT_EXPIRES_IN: '3600' })).toThrow(/JWT_EXPIRES_IN/);
+  });
 });

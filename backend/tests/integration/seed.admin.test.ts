@@ -23,13 +23,34 @@ describe('seedAdmin', () => {
     await expect(prisma.user.count()).resolves.toBe(1);
   });
 
-  it('promotes an existing account to ADMIN without overwriting its password', async () => {
-    await createUser({ email: 'boss@dealership.com', password: 'their-own-password' });
+  it('refuses to promote an account someone registered with the admin email', async () => {
+    await createUser({
+      email: 'boss@dealership.com',
+      password: 'their-own-password',
+      role: 'USER',
+    });
+
+    await expect(
+      seedAdmin({ email: 'boss@dealership.com', password: 'Admin@12345' }),
+    ).rejects.toThrow(/already registered as a regular user/);
+
+    const account = await prisma.user.findUniqueOrThrow({
+      where: { email: 'boss@dealership.com' },
+    });
+    expect(account.role).toBe('USER');
+  });
+
+  it('leaves an existing admin, and its password, untouched', async () => {
+    await createUser({
+      email: 'boss@dealership.com',
+      password: 'changed-by-the-admin',
+      role: 'ADMIN',
+    });
 
     await seedAdmin({ email: 'boss@dealership.com', password: 'Admin@12345' });
 
     const admin = await prisma.user.findUniqueOrThrow({ where: { email: 'boss@dealership.com' } });
     expect(admin.role).toBe('ADMIN');
-    await expect(verifyPassword('their-own-password', admin.passwordHash)).resolves.toBe(true);
+    await expect(verifyPassword('changed-by-the-admin', admin.passwordHash)).resolves.toBe(true);
   });
 });

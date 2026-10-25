@@ -47,6 +47,22 @@ describe('auth rate limiting (D24)', () => {
     expect(blocked.status).toBe(429);
   });
 
+  it('counts successful registrations too, so accounts cannot be mass-created', async () => {
+    const app = createApp({ authRateLimit: { limit: 2, windowMs: 60_000 } });
+    const register = (n: number) =>
+      request(app)
+        .post('/api/auth/register')
+        .send({
+          name: 'Bulk User',
+          email: `bulk${n}@example.com`,
+          password: 'a-long-passphrase-123',
+        });
+
+    expect((await register(1)).status).toBe(201);
+    expect((await register(2)).status).toBe(201);
+    expect((await register(3)).status).toBe(429);
+  });
+
   it('leaves non-auth routes unaffected', async () => {
     const app = createApp({ authRateLimit: { limit: 1, windowMs: 60_000 } });
 

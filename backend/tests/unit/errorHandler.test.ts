@@ -37,10 +37,23 @@ describe('errorHandler', () => {
     expect(res.body.error.code).toBe('PAYLOAD_TOO_LARGE');
   });
 
-  it('treats an unrecognised body-parser error as a 500', async () => {
+  it.each([
+    ['charset.unsupported', 415],
+    ['encoding.unsupported', 415],
+    ['request.aborted', 400],
+  ])('passes through the client status of the "%s" body-parser error', async (type, status) => {
+    const res = await request(appThrowing({ type, status })).post('/boom');
+
+    expect(res.status).toBe(status);
+    expect(res.body.error.code).toBe('BAD_REQUEST');
+  });
+
+  it('still treats a body-parser error with a server status as a 500', async () => {
     const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
 
-    const res = await request(appThrowing({ type: 'something.else', status: 400 })).post('/boom');
+    const res = await request(appThrowing({ type: 'stream.encoding.set', status: 500 })).post(
+      '/boom',
+    );
 
     expect(res.status).toBe(500);
     consoleError.mockRestore();

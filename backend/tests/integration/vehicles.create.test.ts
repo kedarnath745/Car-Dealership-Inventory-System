@@ -42,6 +42,16 @@ describe('POST /api/vehicles', () => {
     expect(stored.price.toString()).toBe('1249999.99');
   });
 
+  it.each([141813588.33, 275544454.04, 9999999999.99])(
+    'accepts the valid two-decimal price %d (no floating-point false rejections)',
+    async (price) => {
+      const res = await post(adminAuth, { ...validVehicleInput, price });
+
+      expect(res.status).toBe(201);
+      expect(res.body.vehicle.price).toBe(price);
+    },
+  );
+
   it('trims text fields and treats a missing imageUrl as null', async () => {
     const { imageUrl, ...withoutImage } = validVehicleInput;
 
