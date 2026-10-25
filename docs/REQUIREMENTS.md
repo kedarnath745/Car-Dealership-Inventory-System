@@ -70,3 +70,5 @@ Status: `todo` · `wip` · `done`
 | D14 | Auth details | bcrypt-hashed passwords, JWT (HS256, 1-day expiry) sent as `Authorization: Bearer`. Login failure gives the same generic message for wrong email or wrong password. The password hash is never returned. | Standard practice that doesn't reveal which emails are registered. |
 | D15 | Input validation | zod schemas at the request boundary. Emails are normalised to lowercase. Password must be at least 8 characters. | One validation layer, and the error details come from the schema itself. |
 | D16 | Does register log the user in? | Yes, `201` returns `{ token, user }` | One less step for the user in the UI. |
+| D17 | Currency | INR (₹), formatted with Indian digit grouping (`en-IN`, e.g. ₹12,50,000) | Matches the target market. Only affects display; the API stores plain decimal amounts. |
+| D18 | Deployment | Planned: Neon (Postgres) + Render (API) + Vercel (SPA). Config is env-driven from the first commit. | Brownie points, and env-driven config is good practice regardless. |

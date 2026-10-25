@@ -18,14 +18,14 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] PROMPTS.md: raw session transcripts converted to markdown word for word, never summarised
 - [x] **Checkpoint 0**: stack and conventions approved
 
-## Phase 1 — Requirements & doubts  `[~]`
+## Phase 1 — Requirements & doubts  `[x]`
 
-- [ ] Requirement traceability matrix (`docs/REQUIREMENTS.md`): every line of the brief
+- [x] Requirement traceability matrix (`docs/REQUIREMENTS.md`): every line of the brief
       gets an ID (R1…Rn) and is mapped to an endpoint or screen, a test and a status
-- [ ] Ambiguity log: each unclear point, the decision taken and why (to discuss in the interview)
-- [ ] **Checkpoint 1**: matrix and ambiguity decisions approved
+- [x] Ambiguity log: each unclear point, the decision taken and why (to discuss in the interview)
+- [x] **Checkpoint 1**: matrix and ambiguity decisions approved
 
-## Phase 2 — Design  `[ ]`
+## Phase 2 — Design  `[~]`
 
 - [ ] Architecture: layered backend (routes → controllers → services → repositories)
 - [ ] Data model: `User` (id, name, email, passwordHash, role), `Vehicle` (id, make, model,
