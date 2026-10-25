@@ -17,8 +17,9 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-function loadEnv(): Env {
-  const result = envSchema.safeParse(process.env);
+/** Validates a set of environment variables; exported so the failure path can be tested. */
+export function parseEnv(source: NodeJS.ProcessEnv): Env {
+  const result = envSchema.safeParse(source);
   if (!result.success) {
     const problems = result.error.issues
       .map((issue) => `  - ${issue.path.join('.')}: ${issue.message}`)
@@ -28,4 +29,4 @@ function loadEnv(): Env {
   return result.data;
 }
 
-export const env = loadEnv();
+export const env = parseEnv(process.env);
