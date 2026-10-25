@@ -6,7 +6,12 @@ import { prisma } from '../../src/lib/prisma';
 import { resetDatabase } from '../helpers/db';
 
 const app = createApp();
-const validUser = { name: 'Asha Rao', email: 'asha@example.com', password: 'secret123' };
+/** 21 characters: passphrases comfortably clear the 15-character minimum (D23). */
+const validUser = {
+  name: 'Asha Rao',
+  email: 'asha@example.com',
+  password: 'correct horse battery',
+};
 
 describe('POST /api/auth/register', () => {
   beforeEach(resetDatabase);
@@ -73,10 +78,14 @@ describe('POST /api/auth/register', () => {
   });
 
   it.each([
-    ['name is missing', { email: 'a@example.com', password: 'secret123' }, 'name'],
+    ['name is missing', { email: 'a@example.com', password: validUser.password }, 'name'],
     ['name is too short', { ...validUser, name: 'A' }, 'name'],
     ['email is invalid', { ...validUser, email: 'not-an-email' }, 'email'],
-    ['password is shorter than 8 characters', { ...validUser, password: 'short' }, 'password'],
+    [
+      'password is shorter than 15 characters',
+      { ...validUser, password: 'fourteen-chars' },
+      'password',
+    ],
     ['password exceeds 72 characters', { ...validUser, password: 'x'.repeat(73) }, 'password'],
   ])('returns 400 with field details when %s', async (_case, body, field) => {
     const res = await request(app).post('/api/auth/register').send(body);
@@ -86,6 +95,24 @@ describe('POST /api/auth/register', () => {
     expect(res.body.error.details).toEqual(
       expect.arrayContaining([expect.objectContaining({ field })]),
     );
+  });
+
+  it('accepts a password of exactly 15 characters', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ ...validUser, password: 'fifteen-chars!!' });
+
+    expect(res.status).toBe(201);
+  });
+
+  it('explains the 15-character rule in the error message (NIST SP 800-63B-4)', async () => {
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({ ...validUser, password: 'Short1!' });
+
+    expect(res.body.error.details).toEqual([
+      { field: 'password', message: 'Password must be at least 15 characters' },
+    ]);
   });
 
   it('returns 400 for a malformed JSON body', async () => {
